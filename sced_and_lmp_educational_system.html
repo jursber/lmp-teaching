@@ -12,9 +12,10 @@
         :root{
             --bg:#f5f7fa;
             --card:#ffffff;
-            --card-border:#e5e7eb;
+            --card-border:#d1d5db;
             --card-shadow:0 4px 20px -8px rgba(0,0,0,0.05);
-            --divider:#eef2f6;
+            --divider:#c9ced4;
+            --divider2:#d1d5db;
             --ink:#1e293b;
             --body:#334155;
             --muted:#64748b;
@@ -70,8 +71,8 @@
         /* ===== Workspace ===== */
         .workspace{
             flex:1;min-height:0;display:grid;
-            grid-template-columns:300px 1fr 360px;
-            gap:16px;padding:16px;
+            grid-template-columns:340px 1fr 400px;
+            gap:12px;padding:12px;
         }
         .panel{
             min-height:0;display:flex;flex-direction:column;
@@ -81,7 +82,7 @@
         }
         .panel-hd{
             display:flex;align-items:center;justify-content:space-between;
-            padding:0 16px;height:40px;flex-shrink:0;
+            padding:0 12px;height:36px;flex-shrink:0;
             border-bottom:1px solid var(--divider);
         }
         .panel-hd h2{
@@ -90,48 +91,48 @@
             letter-spacing:.04em;text-transform:uppercase;
         }
         .panel-hd svg{width:13px;height:13px;color:var(--muted)}
-        .panel-bd{flex:1;min-height:0;overflow:auto;padding:16px}
+        .panel-bd{flex:1;min-height:0;overflow:auto;padding:12px}
 
         /* ===== Left Panel ===== */
         .sec-label{
-            color:var(--muted);font-size:12px;letter-spacing:.04em;
-            text-transform:uppercase;margin:16px 0 8px;font-weight:600;
-            display:flex;align-items:center;gap:8px;
+            color:var(--muted);font-size:11px;letter-spacing:.04em;
+            text-transform:uppercase;margin:10px 0 5px;font-weight:600;
+            display:flex;align-items:center;gap:6px;
         }
         .sec-label::before{content:"";width:3px;height:14px;background:var(--primary);border-radius:2px}
         .sec-label:first-child{margin-top:0}
         .gen-card,.line-card{
-            background:var(--bg);border-radius:12px;padding:12px;margin-bottom:8px;
+            background:var(--bg);border-radius:8px;padding:8px 10px;margin-bottom:6px;
         }
-        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
         .gen-name{font-size:13px;font-weight:600;color:var(--ink)}
         .gen-desc{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:500}
         .gen-desc-low{background:#dbeafe;color:var(--primary)}
         .gen-desc-mid{background:var(--warning-light);color:#b45309}
         .gen-desc-high{background:#f3f4f6;color:var(--muted)}
-        .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-        .fld{display:flex;flex-direction:column;gap:4px}
+        .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        .fld{display:flex;flex-direction:column;gap:2px}
         .fld label{color:var(--muted);font-size:12px;font-weight:500}
         .fld input[type="number"]{
             width:100%;border:1px solid var(--card-border);background:var(--card);
-            color:var(--ink);border-radius:8px;padding:6px 8px;outline:none;
-            font-size:13px;height:32px;font-family:var(--mono);
+            color:var(--ink);border-radius:6px;padding:4px 6px;outline:none;
+            font-size:12px;height:28px;font-family:var(--mono);
             transition:all .2s;
         }
         .fld input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
-        .fld input[type="range"]{padding:0;border:0;background:transparent;height:16px;-webkit-appearance:none;appearance:none}
-        .fld input[type="range"]::-webkit-slider-track{height:4px;border-radius:2px;background:#e2e8f0}
+        .fld input[type="range"]{padding:0;border:0;background:transparent;height:20px;-webkit-appearance:none;appearance:none;width:100%}
+        .fld input[type="range"]::-webkit-slider-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--primary) 0%,var(--primary) var(--pct,50%),#cbd5e1 var(--pct,50%),#cbd5e1 100%)}
         .fld input[type="range"]::-webkit-slider-thumb{
-            -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+            -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
             background:var(--card);border:2px solid var(--primary);cursor:pointer;margin-top:-6px;
-            transition:all .15s;
+            box-shadow:0 1px 3px rgba(0,0,0,0.1);transition:all .15s;
         }
-        .fld input[type="range"]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(37,99,235,0.15)}
-        .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .fld input[type="range"]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(37,99,235,0.15),0 1px 3px rgba(0,0,0,0.1)}
+        .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
         .btn-run{
             width:100%;border:none;background:var(--ink);color:#fff;
-            padding:12px;border-radius:10px;cursor:pointer;
-            font-weight:600;font-size:14px;margin-top:12px;
+            padding:10px;border-radius:8px;cursor:pointer;
+            font-weight:600;font-size:13px;margin-top:8px;
             transition:all .2s;
         }
         .btn-run:hover{background:#334155;box-shadow:0 4px 12px rgba(15,23,42,0.15)}
@@ -166,7 +167,7 @@
         .data-section-title{color:var(--muted);font-size:11px;font-weight:600;margin-bottom:6px;letter-spacing:.03em;text-transform:uppercase}
         .lmp-row{
             display:flex;justify-content:space-between;align-items:center;
-            padding:5px 0;border-bottom:1px solid var(--divider);font-size:13px;
+            padding:5px 0;border-bottom:1px solid var(--divider2);font-size:13px;
         }
         .lmp-row:last-child{border-bottom:none}
         .lmp-tag{font-weight:600;font-size:13px;color:var(--ink)}
@@ -175,7 +176,7 @@
         .lmp-comp{font-size:10px;color:var(--dim);font-family:var(--mono)}
         .gen-tbl{width:100%;border-collapse:collapse;font-size:13px}
         .gen-tbl th{color:var(--dim);font-size:10px;text-transform:uppercase;text-align:left;padding:4px 0;font-weight:600;letter-spacing:.04em}
-        .gen-tbl td{padding:4px 0;border-bottom:1px solid var(--divider);font-family:var(--mono)}
+        .gen-tbl td{padding:4px 0;border-bottom:1px solid var(--divider2);font-family:var(--mono)}
         .gen-tbl td:last-child,.gen-tbl th:last-child{text-align:right}
         .ptdf-row{font-family:var(--mono);font-size:12px;color:var(--body);padding:2px 0}
 
@@ -289,7 +290,7 @@
         <!-- Left: Parameters -->
         <section class="panel">
             <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h10M4 6h2m4 6h10M4 12h2m4 6h10M4 18h2"></path></svg>申报与边界参数</h2></div>
-            <div class="panel-bd">
+            <div class="panel-bd" style="overflow:hidden">
                 <div class="sec-label">发电机组报价 · 容量</div>
                 <div class="gen-card">
                     <div class="gen-hd"><span class="gen-name">G1 节点 A</span><span class="gen-desc gen-desc-low">低价机组</span></div>
@@ -382,17 +383,17 @@
 
                         <!-- Line labels (glassmorphism) -->
                         <g transform="translate(525 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#e5e7eb"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
                             <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">AB: 0/100M</text>
                             <text id="param_ab" text-anchor="middle" y="30" fill="#94a3b8" font-size="10" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(440 410)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#e5e7eb"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
                             <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">BC: 0/100M</text>
                             <text id="param_bc" text-anchor="middle" y="30" fill="#94a3b8" font-size="10" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(355 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#e5e7eb"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
                             <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">AC: 0/100M</text>
                             <text id="param_ac" text-anchor="middle" y="30" fill="#94a3b8" font-size="10" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">X=1.0</text>
                         </g>
@@ -548,13 +549,19 @@ let aiChatHistory = [];
 let aiAbortController = null;
 const AI_MAX = 8;
 
-function syncSlider(id) { const inp=document.getElementById(id), sl=document.getElementById("slider_"+id); if(inp&&sl) sl.value=inp.value; }
-function syncInput(id) { const inp=document.getElementById(id), sl=document.getElementById("slider_"+id); if(inp&&sl) inp.value=sl.value; }
+function updateSliderPct(sl) {
+    if (!sl) return;
+    const min = +sl.min || 0, max = +sl.max || 100, val = +sl.value;
+    sl.style.setProperty("--pct", ((val - min) / (max - min) * 100) + "%");
+}
+function syncSlider(id) { const inp=document.getElementById(id), sl=document.getElementById("slider_"+id); if(inp&&sl){sl.value=inp.value;updateSliderPct(sl);} }
+function syncInput(id) { const inp=document.getElementById(id), sl=document.getElementById("slider_"+id); if(inp&&sl){inp.value=sl.value;updateSliderPct(sl);} }
 const sliderKeys = ["price_g1","max_g1","price_g2","max_g2","price_g3","max_g3","load_a","load_b","load_c","limit_ab","limit_bc","limit_ac"];
 sliderKeys.forEach(id => {
     const inp=document.getElementById(id), sl=document.getElementById("slider_"+id);
     if(inp) inp.addEventListener("input",()=>{syncSlider(id);runSCED();});
     if(sl) sl.addEventListener("input",()=>{syncInput(id);runSCED();});
+    updateSliderPct(sl);
 });
 
 function loadScenario(key) {
@@ -576,7 +583,7 @@ function loadScenario(key) {
     document.getElementById('x_ab').value = sc.x_ab;
     document.getElementById('x_bc').value = sc.x_bc;
     document.getElementById('x_ac').value = sc.x_ac;
-    sliderKeys.forEach(k => { const sl=document.getElementById("slider_"+k); if(sl) sl.value=sc[k]; });
+    sliderKeys.forEach(k => { const sl=document.getElementById("slider_"+k); if(sl){sl.value=sc[k];updateSliderPct(sl);} });
     document.querySelectorAll(".scenario-btn").forEach(b => b.classList.toggle("active", b.dataset.scenario===key));
     setDefaultAiContent(key);
     runSCED();

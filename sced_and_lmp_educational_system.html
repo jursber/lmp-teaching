@@ -350,6 +350,11 @@
                         <line id="flow_bc_path" x1="690" y1="375" x2="190" y2="375" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
                         <line id="flow_ca_path" x1="190" y1="375" x2="440" y2="65" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
 
+                        <!-- 动态潮流箭头 -->
+                        <polygon id="arrow_ab" points="0,-8 14,0 0,8" fill="#00d896" transform="translate(565,220)"/>
+                        <polygon id="arrow_bc" points="0,-8 14,0 0,8" fill="#00d896" transform="translate(440,375)"/>
+                        <polygon id="arrow_ac" points="0,-8 14,0 0,8" fill="#00d896" transform="translate(315,220)"/>
+
                         <!-- 潮流数据 + 线路参数标注 -->
                         <!-- AB: 中点(565,220) 法线偏移(-30,-20) -->
                         <g transform="translate(530 195)">
@@ -774,25 +779,41 @@ function runSCED() {
     document.getElementById("param_bc").textContent = `X=${XBC}  L=${FBC_max}M`;
     document.getElementById("param_ac").textContent = `X=${XAC}  L=${FAC_max}M`;
 
-    updateFlowLine("flow_ab_path", "flow_txt_ab", flow_ab, FAB_max, 440, 65, 690, 375);
-    updateFlowLine("flow_bc_path", "flow_txt_bc", flow_bc, FBC_max, 690, 375, 190, 375);
-    updateFlowLine("flow_ca_path", "flow_txt_ac", -flow_ac, FAC_max, 190, 375, 440, 65);
+    updateFlowLine("flow_ab_path", "flow_txt_ab", flow_ab, FAB_max, 440, 65, 690, 375, "arrow_ab");
+    updateFlowLine("flow_bc_path", "flow_txt_bc", flow_bc, FBC_max, 690, 375, 190, 375, "arrow_bc");
+    updateFlowLine("flow_ca_path", "flow_txt_ac", -flow_ac, FAC_max, 190, 375, 440, 65, "arrow_ac");
 }
 
-function updateFlowLine(lineId, txtId, flowValue, limit, x1, y1, x2, y2) {
+function updateFlowLine(lineId, txtId, flowValue, limit, x1, y1, x2, y2, arrowId) {
     const line = document.getElementById(lineId);
     const txt = document.getElementById(txtId);
+    const arrow = document.getElementById(arrowId);
     const safeLimit = Math.max(0.001, Math.abs(limit));
     const ratio = Math.min(1, Math.abs(flowValue) / safeLimit);
 
+    // 线条方向
     if (flowValue < -0.1) { line.setAttribute("x1", x2); line.setAttribute("y1", y2); line.setAttribute("x2", x1); line.setAttribute("y2", y1); }
     else { line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2); }
 
+    // 箭头旋转：指向潮流方向
+    if (arrow) {
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+        let angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+        if (flowValue < -0.1) angle += 180;
+        arrow.setAttribute("transform", `translate(${mx},${my}) rotate(${angle})`);
+    }
+
     line.style.animationDuration = Math.max(.4, 3 - ratio * 2.3) + "s";
 
-    if (ratio >= .98) { line.setAttribute("stroke", "#ef4b4b"); line.setAttribute("stroke-width", "4.5"); txt.style.fill = "#ff7a7a"; }
-    else if (ratio >= .75) { line.setAttribute("stroke", "#f2a51a"); line.setAttribute("stroke-width", "4"); txt.style.fill = "#f2a51a"; }
-    else { line.setAttribute("stroke", "#00d896"); line.setAttribute("stroke-width", "3.5"); txt.style.fill = "#9aa8b6"; }
+    // 颜色
+    let color = "#00d896", sw = "3";
+    if (ratio >= .98) { color = "#ef4b4b"; sw = "4.5"; txt.style.fill = "#ff7a7a"; }
+    else if (ratio >= .75) { color = "#f2a51a"; sw = "4"; txt.style.fill = "#f2a51a"; }
+    else { txt.style.fill = "#9aa8b6"; }
+
+    line.setAttribute("stroke", color);
+    line.setAttribute("stroke-width", sw);
+    if (arrow) arrow.setAttribute("fill", color);
 }
 
 /* ===== AI 教学助教 ===== */

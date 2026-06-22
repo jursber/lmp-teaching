@@ -9,227 +9,127 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{
-            --bg:#fff;--bg2:#fbfbfa;--panel:#fff;--panel2:#f7f6f3;
-            --line:#e9e9e7;--line2:#f0f0ee;
-            --ink:#37352f;--muted:#9b9a97;--dim:#6b6b6b;
-            --green:#2d6a2e;--amber:#9a6700;--red:#c44141;--cyan:#0b6e99;
-            --shadow:none;--radius:4px;
-            --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-            --mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+            --ink:#37352f;--muted:#9b9a97;--dim:#787774;
+            --green:#4d7c4f;--amber:#a67c2e;--red:#b55252;--blue:#529cca;
+            --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+            --mono:"JetBrains Mono","SF Mono","Cascadia Code",Consolas,monospace;
         }
         *{box-sizing:border-box;margin:0;padding:0}
         html,body{height:100%;overflow:hidden}
-        body{
-            background:#fff;
-            color:var(--ink);font-family:var(--font);
-            font-size:14px;line-height:1.5;
-            -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-            text-rendering:optimizeLegibility;
-        }
+        body{background:#fff;color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
         button,input,select{font-family:inherit;font-size:inherit}
         .app-shell{height:100vh;display:flex;flex-direction:column}
 
         /* ===== 顶栏 ===== */
-        .topbar{
-            display:flex;align-items:center;justify-content:space-between;
-            gap:16px;padding:10px 20px;
-            border-bottom:1px solid #e9e9e7;
-            background:#fff;
-            flex-shrink:0;
-        }
+        .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 20px;border-bottom:1px solid #e9e9e7;background:#fff;flex-shrink:0}
         .brand{display:flex;align-items:center;gap:10px}
-        .brand-mark{
-            width:32px;height:32px;border-radius:8px;display:grid;place-items:center;
-            background:#f7f6f3;
-            border:1px solid #e9e9e7;color:#0b6e99;flex-shrink:0;
-        }
-        .brand-mark svg{width:16px;height:16px}
-        .brand h1{font-size:14px;font-weight:700;letter-spacing:.02em}
-        .brand p{font-size:12px;color:var(--muted);margin-top:1px}
-        .scenario-strip{display:flex;gap:6px;align-items:center}
-        .scenario-label{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
-        .scenario-btn{
-            border:1px solid #e9e9e7;background:#fff;
-            color:#37352f;border-radius:16px;padding:5px 12px;cursor:pointer;
-            font-size:13px;transition:.15s ease;white-space:nowrap;
-        }
-        .scenario-btn:hover,.scenario-btn.active{
-            border-color:#2eaadc;background:rgba(46,170,220,.08);color:#0b6e99;
-        }
+        .brand-mark{width:28px;height:28px;border-radius:4px;display:grid;place-items:center;background:#f7f6f3;color:#529cca;flex-shrink:0}
+        .brand-mark svg{width:14px;height:14px}
+        .brand h1{font-size:14px;font-weight:600}
+        .brand p{font-size:11px;color:var(--muted);margin-top:1px}
+        .scenario-strip{display:flex;gap:4px;align-items:center}
+        .scenario-label{color:var(--muted);font-size:11px;margin-right:4px}
+        .scenario-btn{border:none;background:transparent;color:var(--dim);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:.1s}
+        .scenario-btn:hover{background:#f1f1ef;color:var(--ink)}
+        .scenario-btn.active{background:#f1f1ef;color:var(--ink);font-weight:500}
 
-        /* ===== 工作区三栏 ===== */
-        .workspace{
-            flex:1;min-height:0;display:grid;
-            grid-template-columns: 24% 1fr 28%;
-            gap:8px;padding:8px 10px;
-        }
-        .panel{
-            min-height:0;display:flex;flex-direction:column;
-            border:1px solid #e9e9e7;border-radius:4px;
-            background:#fff;overflow:hidden;
-        }
-        .panel-hd{
-            display:flex;align-items:center;justify-content:space-between;
-            padding:0 10px;height:30px;flex-shrink:0;
-            border-bottom:1px solid #f0f0ee;background:#fbfbfa;
-        }
-        .panel-hd h2{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
-        .panel-hd svg{width:12px;height:12px;color:var(--green)}
+        /* ===== 工作区 ===== */
+        .workspace{flex:1;min-height:0;display:grid;grid-template-columns:24% 1fr 28%;gap:8px;padding:8px 10px}
+        .panel{min-height:0;display:flex;flex-direction:column;border:1px solid #e9e9e7;border-radius:3px;background:#fff;overflow:hidden}
+        .panel-hd{display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:28px;flex-shrink:0;border-bottom:1px solid #f0f0ee}
+        .panel-hd h2{font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:5px;letter-spacing:.02em}
+        .panel-hd svg{width:11px;height:11px;color:var(--dim)}
         .panel-bd{flex:1;min-height:0;overflow:auto;padding:8px 10px}
 
         /* ===== 左侧参数区 ===== */
-        .sec-label{color:#8a9baa;font-size:11px;letter-spacing:.04em;text-transform:uppercase;margin:8px 0 5px;font-weight:600}
+        .sec-label{color:var(--muted);font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin:10px 0 5px;font-weight:600}
         .sec-label:first-child{margin-top:0}
-        .gen-card,.line-card{
-            border:1px solid rgba(148,163,184,.1);border-radius:5px;
-            background:#f7f6f3;padding:6px 7px;margin-bottom:5px;
-        }
-        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-        .gen-name{font-size:13px;font-weight:700}
-        .gen-desc{color:var(--dim);font-size:12px}
+        .gen-card,.line-card{padding:6px 7px;margin-bottom:4px}
+        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .gen-name{font-size:12px;font-weight:600}
+        .gen-desc{color:var(--muted);font-size:11px}
         .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-        .fld{display:flex;flex-direction:column;gap:2px}
-        .fld label{color:#7a8a98;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
-        .fld input[type="number"]{
-            width:100%;border:1px solid rgba(148,163,184,.12);background:#0c131c;
-            color:#37352f;border-radius:4px;padding:4px 6px;outline:none;font-size:13px;height:26px;background:#f7f6f3;
-        }
-        .fld input:focus{border-color:#2eaadc}
+        .fld{display:flex;flex-direction:column;gap:1px}
+        .fld label{color:var(--muted);font-size:10px;font-weight:500}
+        .fld input[type="number"]{width:100%;border:none;border-bottom:1px solid #e9e9e7;background:transparent;color:var(--ink);padding:3px 0;outline:none;font-size:13px;height:24px}
+        .fld input:focus{border-bottom-color:#529cca}
         .fld input[type="range"]{padding:0;border:0;background:transparent;height:12px}
         .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-        .btn-run{
-            width:100%;border:1px solid #2eaadc;
-            background:rgba(46,170,220,.06);
-            color:#0b6e99;padding:6px;border-radius:4px;cursor:pointer;
-            font-weight:700;font-size:13px;margin-top:6px;
-        }
-        .btn-run:hover{background:rgba(46,170,220,.12)}
+        .btn-run{width:100%;border:none;background:var(--ink);color:#fff;padding:6px;border-radius:4px;cursor:pointer;font-weight:500;font-size:12px;margin-top:8px;transition:.1s}
+        .btn-run:hover{background:#2f2e2a}
 
         /* ===== 中央区域 ===== */
         .center-stack{display:flex;flex-direction:column;gap:8px;min-height:0}
         .topology{position:relative;padding:4px}
         .topology svg{width:100%;height:100%;display:block}
-        .error-overlay{
-            position:absolute;inset:12px;display:grid;place-items:center;gap:8px;text-align:center;
-            background:rgba(255,255,255,.95);border:1px solid #e9e9e7;
-            border-radius:8px;padding:14px;
-        }
+        .error-overlay{position:absolute;inset:12px;display:grid;place-items:center;gap:8px;text-align:center;background:rgba(255,255,255,.95);border:1px solid #e9e9e7;border-radius:4px;padding:14px}
         .hidden{display:none !important}
-        .live-badge{
-            display:inline-flex;align-items:center;padding:2px 7px;border-radius:10px;
-            border:1px solid rgba(46,170,220,.2);background:rgba(46,170,220,.06);
-            color:var(--green);font-size:10px;font-weight:700;
-        }
+        .live-badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:3px;background:#f7f6f3;color:var(--dim);font-size:9px;font-weight:600;letter-spacing:.04em}
 
-        /* ===== 出清数据区（不滚动，紧凑布局） ===== */
+        /* ===== 出清数据区 ===== */
         .result-bd{display:flex;flex-direction:column;gap:6px;overflow:hidden}
         .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-        .kpi{
-            padding:6px 7px;border:1px solid rgba(148,163,184,.1);border-radius:5px;
-            background:#f7f6f3;
-        }
-        .kpi-label{color:#9b9a97;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
-        .kpi-val{font-size:15px;font-weight:800;margin-top:2px}
+        .kpi{padding:6px 7px}
+        .kpi-label{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:500}
+        .kpi-val{font-size:15px;font-weight:700;margin-top:2px}
         .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        .data-section{border:1px solid #f0f0ee;border-radius:4px;padding:5px 6px;background:#f7f6f3}
-        .data-section-title{color:#9b9a97;font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;font-weight:600}
-        .lmp-row{
-            display:flex;justify-content:space-between;align-items:center;
-            padding:3px 0;border-bottom:1px solid #f0f0ee;font-size:14px;
-        }
+        .data-section{padding:4px 0}
+        .data-section-title{color:var(--muted);font-size:10px;font-weight:600;margin-bottom:3px}
+        .lmp-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0ee;font-size:13px}
         .lmp-row:last-child{border-bottom:none}
-        .lmp-tag{font-weight:700;font-size:14px}
+        .lmp-tag{font-weight:600;font-size:13px}
         .lmp-info{display:flex;flex-direction:column;align-items:flex-end;gap:0}
-        .lmp-info strong{font-size:14px}
-        .lmp-comp{font-size:10px;color:var(--dim)}
-        .gen-tbl{width:100%;border-collapse:collapse;font-size:14px}
-        .gen-tbl th{color:#8a9baa;font-size:10px;text-transform:uppercase;text-align:left;padding:2px 0;font-weight:600}
+        .lmp-info strong{font-size:13px}
+        .lmp-comp{font-size:10px;color:var(--muted)}
+        .gen-tbl{width:100%;border-collapse:collapse;font-size:13px}
+        .gen-tbl th{color:var(--muted);font-size:10px;text-transform:uppercase;text-align:left;padding:2px 0;font-weight:500}
         .gen-tbl td{padding:2px 0;border-bottom:1px solid #f0f0ee}
         .gen-tbl td:last-child,.gen-tbl th:last-child{text-align:right}
-        .ptdf-row{font-family:var(--mono);font-size:12px;color:#9b9a97;padding:1px 0}
+        .ptdf-row{font-family:var(--mono);font-size:11px;color:var(--muted);padding:1px 0}
 
-        /* ===== 右侧 AI 区 ===== */
+        /* ===== AI 区 ===== */
         .ai-panel{position:relative}
         #ai_body{flex:1;min-height:0;display:flex;flex-direction:column}
         #ai_messages{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:8px 10px 4px}
         .ai-msg{margin-bottom:8px;max-width:95%;font-size:14px;line-height:1.65;word-break:break-word}
-        .ai-msg.user{
-            margin-left:auto;padding:6px 10px;border-radius:8px 8px 2px 8px;
-            background:#f1f1ef;border:1px solid #e9e9e7;color:#37352f;
-        }
-        .ai-msg.assistant{
-            margin-right:auto;padding:7px 10px;border-radius:8px 8px 8px 2px;
-            background:#f7f6f3;border:1px solid #e9e9e7;color:#37352f;
-        }
-        .ai-msg.error{
-            margin-right:auto;padding:6px 10px;border-radius:8px 8px 8px 2px;
-            background:#ffe2dd;border:1px solid #f3c4c2;color:#c44141;
-        }
+        .ai-msg.user{margin-left:auto;padding:6px 10px;border-radius:3px;background:#f1f1ef;color:var(--ink)}
+        .ai-msg.assistant{margin-right:auto;padding:7px 10px;border-radius:3px;background:#f7f6f3;color:var(--ink)}
+        .ai-msg.error{margin-right:auto;padding:6px 10px;border-radius:3px;background:#fce8e6;color:var(--red)}
         .ai-loading{display:flex;gap:5px;padding:8px 0}
-        .ai-loading span{width:5px;height:5px;border-radius:50%;background:var(--cyan);opacity:.4;animation:dot 1s infinite}
+        .ai-loading span{width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:.4;animation:dot 1s infinite}
         .ai-loading span:nth-child(2){animation-delay:.2s}
         .ai-loading span:nth-child(3){animation-delay:.4s}
         @keyframes dot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
-        .chat-default{padding:6px 2px;color:#9b9a97;font-size:14px;line-height:1.7}
+        .chat-default{padding:6px 2px;color:var(--muted);font-size:14px;line-height:1.7}
         .chat-default strong{color:var(--ink)}
-        .chat-default code{color:var(--cyan);font-family:var(--mono);font-size:13px}
-        .chat-default .formula-block{
-            display:block;margin:6px 0;padding:5px 8px;border-radius:4px;
-            background:rgba(0,0,0,.25);border:1px solid rgba(148,163,184,.08);
-            font-family:var(--mono);font-size:13px;color:#b8c8d4;line-height:1.5;
-        }
+        .chat-default code{color:var(--blue);font-family:var(--mono);font-size:12px}
+        .chat-default .formula-block{display:block;margin:6px 0;padding:6px 10px;border-radius:3px;background:#f7f6f3;font-family:var(--mono);font-size:12px;color:var(--dim);line-height:1.5}
 
-        /* AI 设置浮层 */
-        #ai_settings{
-            display:none;position:absolute;top:34px;right:8px;
-            width:min(320px, calc(100% - 16px));padding:8px;
-            border:1px solid #e9e9e7;border-radius:4px;
-            background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);
-            gap:6px;flex-wrap:wrap;z-index:10;
-        }
+        /* 设置浮层 */
+        #ai_settings{display:none;position:absolute;top:32px;right:8px;width:min(300px,calc(100% - 16px));padding:10px;border:1px solid #e9e9e7;border-radius:4px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08);gap:8px;flex-wrap:wrap;z-index:10}
         #ai_settings.visible{display:flex}
         .set-fld{display:flex;flex-direction:column;gap:2px;flex:1;min-width:100px}
-        .set-fld label{color:#7a8a98;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
-        .set-fld input,.set-fld select{
-            width:100%;border:1px solid rgba(148,163,184,.12);background:#0c131c;
-            color:#37352f;border-radius:4px;padding:4px 6px;outline:none;font-size:13px;background:#fff;
-        }
-        .set-fld input:focus,.set-fld select:focus{border-color:#2eaadc}
+        .set-fld label{color:var(--muted);font-size:10px;font-weight:500}
+        .set-fld input,.set-fld select{width:100%;border:none;border-bottom:1px solid #e9e9e7;background:transparent;color:var(--ink);padding:4px 0;outline:none;font-size:13px}
+        .set-fld input:focus,.set-fld select:focus{border-bottom-color:#529cca}
 
-        /* AI 输入栏 */
-        #ai_input_bar{
-            display:flex;gap:6px;padding:8px 10px;flex-shrink:0;
-            border-top:1px solid rgba(148,163,184,.1);
-            background:#fbfbfa;
-        }
-        #ai_input{
-            flex:1;border:1px solid rgba(255,255,255,.1);border-radius:6px;
-            background:#fff;color:var(--ink);
-            padding:7px 10px;outline:none;font-size:14px;
-        }
-        #ai_input:focus{border-color:#2eaadc}
-        #ai_input::placeholder{color:#9b9a97}
-        #ai_send_btn{
-            border:1px solid #2eaadc;
-            background:rgba(46,170,220,.08);
-            color:#0b6e99;padding:6px 14px;border-radius:6px;
-            cursor:pointer;font-weight:700;font-size:14px;white-space:nowrap;
-        }
+        /* 输入栏 */
+        #ai_input_bar{display:flex;gap:6px;padding:8px 10px;flex-shrink:0;border-top:1px solid #f0f0ee}
+        #ai_input{flex:1;border:1px solid #e9e9e7;border-radius:3px;background:#fff;color:var(--ink);padding:6px 10px;outline:none;font-size:13px}
+        #ai_input:focus{border-color:#529cca}
+        #ai_input::placeholder{color:var(--muted)}
+        #ai_send_btn{border:none;background:var(--ink);color:#fff;padding:6px 14px;border-radius:3px;cursor:pointer;font-weight:500;font-size:13px;white-space:nowrap}
         #ai_send_btn:disabled{opacity:.4;cursor:not-allowed}
-        .ai-hd-right{display:flex;align-items:center;gap:5px}
-        .ai-status{display:inline-flex;align-items:center;gap:4px;color:var(--dim);font-size:11px}
+        .ai-hd-right{display:flex;align-items:center;gap:4px}
+        .ai-status{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:10px}
         .dot{width:5px;height:5px;border-radius:50%;background:#d3d3d0;flex-shrink:0}
         .dot.ok{background:var(--green)}
-        .ico-btn{
-            width:24px;height:24px;display:grid;place-items:center;
-            border:1px solid #e9e9e7;border-radius:4px;
-            background:#fff;color:#9b9a97;cursor:pointer;font-size:12px;
-        }
-        .ico-btn:hover{border-color:#2eaadc;background:rgba(46,170,220,.06);color:#37352f}
+        .ico-btn{width:22px;height:22px;display:grid;place-items:center;border:none;border-radius:3px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}
+        .ico-btn:hover{background:#f1f1ef;color:var(--ink)}
 
-        .ai-cursor{color:var(--cyan);animation:blink 1s infinite}
+        .ai-cursor{color:var(--blue);animation:blink 1s infinite}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-        @keyframes arrowPulse{0%,100%{opacity:1}50%{opacity:.25}}
+        @keyframes arrowPulse{0%,100%{opacity:1}50%{opacity:.3}}
         .flow-line{animation:flow 3s linear infinite}
         @keyframes flow{from{stroke-dashoffset:0}to{stroke-dashoffset:40}}
     </style>
@@ -326,9 +226,9 @@
                 <div class="topology" style="flex:1;min-height:0">
                     <svg id="network_svg" viewBox="0 0 880 440">
                         <defs>
-                            <linearGradient id="grad-A" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d896"/><stop offset="100%" stop-color="#00a876"/></linearGradient>
-                            <linearGradient id="grad-B" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f2a51a"/><stop offset="100%" stop-color="#c97800"/></linearGradient>
-                            <linearGradient id="grad-C" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ef4b4b"/><stop offset="100%" stop-color="#b91c1c"/></linearGradient>
+                            <linearGradient id="grad-A" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4e4d4"/><stop offset="100%" stop-color="#c0d4c0"/></linearGradient>
+                            <linearGradient id="grad-B" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8dcc8"/><stop offset="100%" stop-color="#d8ccac"/></linearGradient>
+                            <linearGradient id="grad-C" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e0cccc"/><stop offset="100%" stop-color="#d0b8b8"/></linearGradient>
                             <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                             <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00d896" opacity=".7"/></marker>
                             <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#f2a51a" opacity=".7"/></marker>
@@ -338,9 +238,9 @@
                         <!-- 等边三角形：A(440,65) B(690,375) C(190,375) -->
                         <!-- 静态底板线路 -->
                         <g opacity=".15">
-                            <line x1="440" y1="65" x2="690" y2="375" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="690" y1="375" x2="190" y2="375" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="190" y1="375" x2="440" y2="65" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#d3d3d0" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#d3d3d0" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#d3d3d0" stroke-width="10" stroke-linecap="round"/>
                             <line x1="440" y1="65" x2="690" y2="375" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
                             <line x1="690" y1="375" x2="190" y2="375" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
                             <line x1="190" y1="375" x2="440" y2="65" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
@@ -358,53 +258,53 @@
 
                         <!-- 潮流数据 + 线路参数标注 -->
                         <g transform="translate(525 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
-                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#475569" font-size="13" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
-                            <text id="param_ab" text-anchor="middle" y="32" fill="#94a3b8" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#787774" font-size="13" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
+                            <text id="param_ab" text-anchor="middle" y="32" fill="#9b9a97" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(440 410)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
                             <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">BC: 0/100M</text>
-                            <text id="param_bc" text-anchor="middle" y="32" fill="#94a3b8" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <text id="param_bc" text-anchor="middle" y="32" fill="#9b9a97" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(355 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
                             <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">AC: 0/100M</text>
-                            <text id="param_ac" text-anchor="middle" y="32" fill="#94a3b8" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <text id="param_ac" text-anchor="middle" y="32" fill="#9b9a97" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
 
                         <!-- 节点 A（顶部） -->
                         <g transform="translate(440,65)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-A)"/>
-                            <text text-anchor="middle" y="-2" fill="#065f46" font-weight="900" font-size="15">A</text>
-                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#065f46" font-size="10" font-weight="900">---</text>
-                            <rect x="-78" y="-48" width="52" height="18" rx="3" fill="#ecfdf5" stroke="#059669"/>
-                            <text id="node_a_gen" x="-52" y="-35" text-anchor="middle" fill="#059669" font-size="12" font-weight="800">G:0M</text>
-                            <rect x="26" y="-48" width="52" height="18" rx="3" fill="#f1f5f9" stroke="#94a3b8"/>
-                            <text id="node_a_load" x="52" y="-35" text-anchor="middle" fill="#64748b" font-size="12" font-weight="800">L:10M</text>
+                            <text text-anchor="middle" y="-2" fill="#3d6b3d" font-weight="700" font-size="14">A</text>
+                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#3d6b3d" font-size="9" font-weight="600">---</text>
+                            <rect x="-78" y="-48" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="node_a_gen" x="-52" y="-35" text-anchor="middle" fill="var(--green)" font-size="11" font-weight="600">G:0M</text>
+                            <rect x="26" y="-48" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="node_a_load" x="52" y="-35" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="600">L:10M</text>
                         </g>
 
                         <!-- 节点 B（右下） -->
                         <g transform="translate(690,375)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-B)"/>
-                            <text text-anchor="middle" y="-2" fill="#92400e" font-weight="900" font-size="15">B</text>
-                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#92400e" font-size="10" font-weight="900">---</text>
-                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#fffbeb" stroke="#d97706"/>
-                            <text id="node_b_gen" x="-60" y="4" text-anchor="middle" fill="#d97706" font-size="12" font-weight="800">G:0M</text>
-                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f1f5f9" stroke="#94a3b8"/>
-                            <text id="node_b_load" x="60" y="4" text-anchor="middle" fill="#64748b" font-size="12" font-weight="800">L:50M</text>
+                            <text text-anchor="middle" y="-2" fill="#8b6914" font-weight="700" font-size="14">B</text>
+                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#8b6914" font-size="9" font-weight="600">---</text>
+                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="node_b_gen" x="-60" y="4" text-anchor="middle" fill="var(--amber)" font-size="11" font-weight="600">G:0M</text>
+                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="node_b_load" x="60" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="600">L:50M</text>
                         </g>
 
                         <!-- 节点 C（左下，平衡参考） -->
                         <g transform="translate(190,375)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-C)"/>
-                            <text text-anchor="middle" y="-2" fill="#991b1b" font-weight="900" font-size="15">C</text>
-                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#991b1b" font-size="10" font-weight="900">---</text>
-                            <text text-anchor="middle" y="46" fill="#dc2626" font-size="12" font-weight="700">平衡参考节点</text>
-                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#fef2f2" stroke="#dc2626"/>
-                            <text id="node_c_gen" x="-60" y="4" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="800">G:0M</text>
-                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f1f5f9" stroke="#94a3b8"/>
-                            <text id="node_c_load" x="60" y="4" text-anchor="middle" fill="#64748b" font-size="12" font-weight="800">L:40M</text>
+                            <text text-anchor="middle" y="-2" fill="#8b3a3a" font-weight="700" font-size="14">C</text>
+                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#8b3a3a" font-size="9" font-weight="600">---</text>
+                            <text text-anchor="middle" y="46" fill="var(--muted)" font-size="11" font-weight="500">平衡参考节点</text>
+                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="node_c_gen" x="-60" y="4" text-anchor="middle" fill="var(--red)" font-size="11" font-weight="600">G:0M</text>
+                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
+                            <text id="node_c_load" x="60" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="600">L:40M</text>
                         </g>
                     </svg>
                     <div id="error_overlay" class="error-overlay hidden">
@@ -805,9 +705,9 @@ function updateFlowLine(lineId, txtId, flowValue, limit, x1, y1, x2, y2, arrowId
 
     // 颜色
     let color = "#00d896", sw = "3";
-    if (ratio >= .98) { color = "#dc2626"; sw = "4.5"; txt.style.fill = "#dc2626"; }
-    else if (ratio >= .75) { color = "#d97706"; sw = "4"; txt.style.fill = "#d97706"; }
-    else { txt.style.fill = "#475569"; }
+    if (ratio >= .98) { color = "#b55252"; sw = "4.5"; txt.style.fill = "#b55252"; }
+    else if (ratio >= .75) { color = "#a67c2e"; sw = "4"; txt.style.fill = "#a67c2e"; }
+    else { txt.style.fill = "#787774"; }
 
     line.setAttribute("stroke", color);
     line.setAttribute("stroke-width", sw);

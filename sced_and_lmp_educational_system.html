@@ -229,6 +229,7 @@
 
         .ai-cursor{color:var(--cyan);animation:blink 1s infinite}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+        @keyframes arrowPulse{0%,100%{opacity:1}50%{opacity:.25}}
         .flow-line{animation:flow 3s linear infinite}
         @keyframes flow{from{stroke-dashoffset:0}to{stroke-dashoffset:40}}
     </style>
@@ -350,29 +351,26 @@
                         <line id="flow_bc_path" x1="690" y1="375" x2="190" y2="375" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
                         <line id="flow_ca_path" x1="190" y1="375" x2="440" y2="65" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
 
-                        <!-- 动态潮流箭头 -->
-                        <polygon id="arrow_ab" points="0,-8 14,0 0,8" fill="#00d896" transform="translate(565,220)"/>
-                        <polygon id="arrow_bc" points="0,-8 14,0 0,8" fill="#00d896" transform="translate(440,375)"/>
-                        <polygon id="arrow_ac" points="0,-8 14,0 0,8" fill="#00d896" transform="translate(315,220)"/>
+                        <!-- 动态潮流箭头（闪烁） -->
+                        <polygon id="arrow_ab" points="0,-9 16,0 0,9" fill="#00d896" transform="translate(565,220)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_bc" points="0,-9 16,0 0,9" fill="#00d896" transform="translate(440,375)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_ac" points="0,-9 16,0 0,9" fill="#00d896" transform="translate(315,220)" style="animation:arrowPulse 1.2s infinite"/>
 
                         <!-- 潮流数据 + 线路参数标注 -->
-                        <!-- AB: 中点(565,220) 法线偏移(-30,-20) -->
-                        <g transform="translate(530 195)">
-                            <rect x="-48" y="-12" width="96" height="24" rx="3" fill="#090f16" stroke="#2a3949"/>
-                            <text id="flow_txt_ab" text-anchor="middle" y="4" fill="#9aa8b6" font-size="10" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
-                            <text id="param_ab" text-anchor="middle" y="26" fill="#556675" font-size="9" font-family="Consolas,monospace">X=1.0</text>
+                        <g transform="translate(525 190)">
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
+                            <text id="param_ab" text-anchor="middle" y="32" fill="#556675" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
-                        <!-- BC: 中点(440,400) -->
-                        <g transform="translate(440 405)">
-                            <rect x="-48" y="-12" width="96" height="24" rx="3" fill="#090f16" stroke="#2a3949"/>
-                            <text id="flow_txt_bc" text-anchor="middle" y="4" fill="#9aa8b6" font-size="10" font-weight="700" font-family="Consolas,monospace">BC: 0/100M</text>
-                            <text id="param_bc" text-anchor="middle" y="26" fill="#556675" font-size="9" font-family="Consolas,monospace">X=1.0</text>
+                        <g transform="translate(440 410)">
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">BC: 0/100M</text>
+                            <text id="param_bc" text-anchor="middle" y="32" fill="#556675" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
-                        <!-- CA: 中点(315,220) 法线偏移(+30,-20) -->
-                        <g transform="translate(350 195)">
-                            <rect x="-48" y="-12" width="96" height="24" rx="3" fill="#090f16" stroke="#2a3949"/>
-                            <text id="flow_txt_ac" text-anchor="middle" y="4" fill="#9aa8b6" font-size="10" font-weight="700" font-family="Consolas,monospace">AC: 0/100M</text>
-                            <text id="param_ac" text-anchor="middle" y="26" fill="#556675" font-size="9" font-family="Consolas,monospace">X=1.0</text>
+                        <g transform="translate(355 190)">
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">AC: 0/100M</text>
+                            <text id="param_ac" text-anchor="middle" y="32" fill="#556675" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
 
                         <!-- 节点 A（顶部） -->
@@ -380,10 +378,10 @@
                             <circle r="28" fill="url(#grad-A)"/>
                             <text text-anchor="middle" y="-2" fill="#06100d" font-weight="900" font-size="15">A</text>
                             <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#03100b" font-size="10" font-weight="900">---</text>
-                            <rect x="-72" y="-46" width="46" height="16" rx="3" fill="#071711" stroke="#00d896"/>
-                            <text id="node_a_gen" x="-49" y="-34" text-anchor="middle" fill="#00d896" font-size="9" font-weight="800">G:0M</text>
-                            <rect x="26" y="-46" width="46" height="16" rx="3" fill="#0e1720" stroke="#415164"/>
-                            <text id="node_a_load" x="49" y="-34" text-anchor="middle" fill="#b7c2ce" font-size="9" font-weight="800">L:10M</text>
+                            <rect x="-78" y="-48" width="52" height="18" rx="3" fill="#071711" stroke="#00d896"/>
+                            <text id="node_a_gen" x="-52" y="-35" text-anchor="middle" fill="#00d896" font-size="12" font-weight="800">G:0M</text>
+                            <rect x="26" y="-48" width="52" height="18" rx="3" fill="#0e1720" stroke="#415164"/>
+                            <text id="node_a_load" x="52" y="-35" text-anchor="middle" fill="#b7c2ce" font-size="12" font-weight="800">L:10M</text>
                         </g>
 
                         <!-- 节点 B（右下） -->
@@ -391,10 +389,10 @@
                             <circle r="28" fill="url(#grad-B)"/>
                             <text text-anchor="middle" y="-2" fill="#170e00" font-weight="900" font-size="15">B</text>
                             <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#170e00" font-size="10" font-weight="900">---</text>
-                            <rect x="-80" y="-8" width="46" height="16" rx="3" fill="#1b1100" stroke="#f2a51a"/>
-                            <text id="node_b_gen" x="-57" y="4" text-anchor="middle" fill="#f2a51a" font-size="9" font-weight="800">G:0M</text>
-                            <rect x="34" y="-8" width="46" height="16" rx="3" fill="#0e1720" stroke="#415164"/>
-                            <text id="node_b_load" x="57" y="4" text-anchor="middle" fill="#b7c2ce" font-size="9" font-weight="800">L:50M</text>
+                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#1b1100" stroke="#f2a51a"/>
+                            <text id="node_b_gen" x="-60" y="4" text-anchor="middle" fill="#f2a51a" font-size="12" font-weight="800">G:0M</text>
+                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#0e1720" stroke="#415164"/>
+                            <text id="node_b_load" x="60" y="4" text-anchor="middle" fill="#b7c2ce" font-size="12" font-weight="800">L:50M</text>
                         </g>
 
                         <!-- 节点 C（左下，平衡参考） -->
@@ -402,11 +400,11 @@
                             <circle r="28" fill="url(#grad-C)"/>
                             <text text-anchor="middle" y="-2" fill="#200606" font-weight="900" font-size="15">C</text>
                             <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#200606" font-size="10" font-weight="900">---</text>
-                            <text text-anchor="middle" y="44" fill="#ff8b8b" font-size="9" font-weight="700">平衡参考节点</text>
-                            <rect x="-80" y="-8" width="46" height="16" rx="3" fill="#1d0909" stroke="#ef4b4b"/>
-                            <text id="node_c_gen" x="-57" y="4" text-anchor="middle" fill="#ff8b8b" font-size="9" font-weight="800">G:0M</text>
-                            <rect x="34" y="-8" width="46" height="16" rx="3" fill="#0e1720" stroke="#415164"/>
-                            <text id="node_c_load" x="57" y="4" text-anchor="middle" fill="#b7c2ce" font-size="9" font-weight="800">L:40M</text>
+                            <text text-anchor="middle" y="46" fill="#ff8b8b" font-size="12" font-weight="700">平衡参考节点</text>
+                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#1d0909" stroke="#ef4b4b"/>
+                            <text id="node_c_gen" x="-60" y="4" text-anchor="middle" fill="#ff8b8b" font-size="12" font-weight="800">G:0M</text>
+                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#0e1720" stroke="#415164"/>
+                            <text id="node_c_load" x="60" y="4" text-anchor="middle" fill="#b7c2ce" font-size="12" font-weight="800">L:40M</text>
                         </g>
                     </svg>
                     <div id="error_overlay" class="error-overlay hidden">
@@ -475,9 +473,9 @@
                 </div>
             </div>
             <div id="ai_settings">
-                <div class="set-fld"><label>Base URL</label><input id="ai_base_url" type="text" placeholder="https://your-api-host.com/v1"></div>
-                <div class="set-fld"><label>API Key</label><input id="ai_api_key" type="password" placeholder="sk-..."></div>
-                <div class="set-fld"><label>模型</label><input id="ai_model" type="text" value="deepseek-chat"></div>
+                <div class="set-fld"><label>Base URL</label><input id="ai_base_url" type="text" value="https://token-plan-cn.xiaomimimo.com/v1"></div>
+                <div class="set-fld"><label>API Key</label><input id="ai_api_key" type="password" value="tp-c6j1ljux5xixc17lwd4mdhu7kdblko3a7ssm81xkijk7fwgg"></div>
+                <div class="set-fld"><label>模型</label><input id="ai_model" type="text" value="mimo-v2.5-pro"></div>
                 <div class="set-fld"><label>温度</label><input id="ai_temp" type="number" step="0.1" min="0" max="2" value="0.2"></div>
                 <div class="set-fld"><label>记住 Key</label><select id="ai_remember_key"><option value="0">仅本次</option><option value="1">存入浏览器</option></select></div>
             </div>

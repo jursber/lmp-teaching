@@ -1,0 +1,9 @@
+{
+  "name": "lmp-ai-teaching",
+  "version": "1.0.0",
+  "description": "电力市场 SCED/LMP AI 教学问答系统",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

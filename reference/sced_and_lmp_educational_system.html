@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SCED / LMP 教学系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg:#0b1117;--bg2:#0f1620;--panel:#111a24;--panel2:#0f1720;
+            --line:rgba(148,163,184,.12);--line2:rgba(148,163,184,.08);
+            --ink:#edf3f8;--muted:#95a4b1;--dim:#6f7d89;
+            --green:#00d896;--amber:#f2a51a;--red:#ef4b4b;--cyan:#6fe8ff;
+            --shadow:0 12px 28px rgba(0,0,0,.25);--radius:6px;
+            --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            --mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;overflow:hidden}
+        body{
+            background: linear-gradient(180deg, #081018, var(--bg));
+            color:var(--ink);font-family:var(--font);
+            font-size:14px;line-height:1.5;
+            -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+            text-rendering:optimizeLegibility;
+        }
+        button,input,select{font-family:inherit;font-size:inherit}
+        .app-shell{height:100vh;display:flex;flex-direction:column}
+
+        /* ===== 顶栏 ===== */
+        .topbar{
+            display:flex;align-items:center;justify-content:space-between;
+            gap:16px;padding:10px 20px;
+            border-bottom:1px solid rgba(255,255,255,.06);
+            background:rgba(10,16,24,.92);backdrop-filter:blur(8px);
+            flex-shrink:0;
+        }
+        .brand{display:flex;align-items:center;gap:10px}
+        .brand-mark{
+            width:32px;height:32px;border-radius:8px;display:grid;place-items:center;
+            background:linear-gradient(135deg, rgba(0,216,150,.15), rgba(111,232,255,.08));
+            border:1px solid rgba(0,216,150,.2);color:var(--green);flex-shrink:0;
+        }
+        .brand-mark svg{width:16px;height:16px}
+        .brand h1{font-size:14px;font-weight:700;letter-spacing:.02em}
+        .brand p{font-size:12px;color:var(--muted);margin-top:1px}
+        .scenario-strip{display:flex;gap:6px;align-items:center}
+        .scenario-label{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
+        .scenario-btn{
+            border:1px solid rgba(148,163,184,.14);background:rgba(255,255,255,.03);
+            color:#c0cad4;border-radius:16px;padding:5px 12px;cursor:pointer;
+            font-size:13px;transition:.15s ease;white-space:nowrap;
+        }
+        .scenario-btn:hover,.scenario-btn.active{
+            border-color:rgba(0,216,150,.3);background:rgba(0,216,150,.1);color:var(--ink);
+        }
+
+        /* ===== 工作区三栏 ===== */
+        .workspace{
+            flex:1;min-height:0;display:grid;
+            grid-template-columns: 24% 1fr 28%;
+            gap:8px;padding:8px 10px;
+        }
+        .panel{
+            min-height:0;display:flex;flex-direction:column;
+            border:1px solid var(--line);border-radius:var(--radius);
+            background:rgba(17,26,36,.96);box-shadow:var(--shadow);overflow:hidden;
+        }
+        .panel-hd{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 10px;height:30px;flex-shrink:0;
+            border-bottom:1px solid var(--line2);background:rgba(255,255,255,.02);
+        }
+        .panel-hd h2{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+        .panel-hd svg{width:12px;height:12px;color:var(--green)}
+        .panel-bd{flex:1;min-height:0;overflow:auto;padding:8px 10px}
+
+        /* ===== 左侧参数区 ===== */
+        .sec-label{color:#8a9baa;font-size:11px;letter-spacing:.04em;text-transform:uppercase;margin:8px 0 5px;font-weight:600}
+        .sec-label:first-child{margin-top:0}
+        .gen-card,.line-card{
+            border:1px solid rgba(148,163,184,.1);border-radius:5px;
+            background:rgba(255,255,255,.025);padding:6px 7px;margin-bottom:5px;
+        }
+        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+        .gen-name{font-size:13px;font-weight:700}
+        .gen-desc{color:var(--dim);font-size:12px}
+        .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+        .fld{display:flex;flex-direction:column;gap:2px}
+        .fld label{color:#7a8a98;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+        .fld input[type="number"]{
+            width:100%;border:1px solid rgba(148,163,184,.12);background:#0c131c;
+            color:#d5dee6;border-radius:4px;padding:4px 6px;outline:none;font-size:13px;height:26px;
+        }
+        .fld input:focus{border-color:rgba(0,216,150,.3)}
+        .fld input[type="range"]{padding:0;border:0;background:transparent;height:12px}
+        .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+        .btn-run{
+            width:100%;border:1px solid rgba(0,216,150,.25);
+            background:linear-gradient(135deg, rgba(0,216,150,.18), rgba(0,216,150,.06));
+            color:var(--green);padding:6px;border-radius:5px;cursor:pointer;
+            font-weight:700;font-size:13px;margin-top:6px;
+        }
+        .btn-run:hover{background:linear-gradient(135deg, rgba(0,216,150,.28), rgba(0,216,150,.12))}
+
+        /* ===== 中央区域 ===== */
+        .center-stack{display:flex;flex-direction:column;gap:8px;min-height:0}
+        .topology{position:relative;padding:4px}
+        .topology svg{width:100%;height:100%;display:block}
+        .error-overlay{
+            position:absolute;inset:12px;display:grid;place-items:center;gap:8px;text-align:center;
+            background:rgba(8,12,17,.85);border:1px solid rgba(239,75,75,.2);
+            border-radius:8px;padding:14px;
+        }
+        .hidden{display:none !important}
+        .live-badge{
+            display:inline-flex;align-items:center;padding:2px 7px;border-radius:10px;
+            border:1px solid rgba(0,216,150,.18);background:rgba(0,216,150,.08);
+            color:var(--green);font-size:10px;font-weight:700;
+        }
+
+        /* ===== 出清数据区（不滚动，紧凑布局） ===== */
+        .result-bd{display:flex;flex-direction:column;gap:6px;overflow:hidden}
+        .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+        .kpi{
+            padding:6px 7px;border:1px solid rgba(148,163,184,.1);border-radius:5px;
+            background:rgba(255,255,255,.025);
+        }
+        .kpi-label{color:#8a9baa;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+        .kpi-val{font-size:15px;font-weight:800;margin-top:2px}
+        .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        .data-section{border:1px solid rgba(148,163,184,.08);border-radius:5px;padding:5px 6px;background:rgba(255,255,255,.015)}
+        .data-section-title{color:#8a9baa;font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;font-weight:600}
+        .lmp-row{
+            display:flex;justify-content:space-between;align-items:center;
+            padding:3px 0;border-bottom:1px solid rgba(148,163,184,.06);font-size:14px;
+        }
+        .lmp-row:last-child{border-bottom:none}
+        .lmp-tag{font-weight:700;font-size:14px}
+        .lmp-info{display:flex;flex-direction:column;align-items:flex-end;gap:0}
+        .lmp-info strong{font-size:14px}
+        .lmp-comp{font-size:10px;color:var(--dim)}
+        .gen-tbl{width:100%;border-collapse:collapse;font-size:14px}
+        .gen-tbl th{color:#8a9baa;font-size:10px;text-transform:uppercase;text-align:left;padding:2px 0;font-weight:600}
+        .gen-tbl td{padding:2px 0;border-bottom:1px solid rgba(148,163,184,.06)}
+        .gen-tbl td:last-child,.gen-tbl th:last-child{text-align:right}
+        .ptdf-row{font-family:var(--mono);font-size:12px;color:#b0bec5;padding:1px 0}
+
+        /* ===== 右侧 AI 区 ===== */
+        .ai-panel{position:relative}
+        #ai_body{flex:1;min-height:0;display:flex;flex-direction:column}
+        #ai_messages{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:8px 10px 4px}
+        .ai-msg{margin-bottom:8px;max-width:95%;font-size:14px;line-height:1.65;word-break:break-word}
+        .ai-msg.user{
+            margin-left:auto;padding:6px 10px;border-radius:8px 8px 2px 8px;
+            background:rgba(0,216,150,.08);border:1px solid rgba(0,216,150,.16);color:#d0dbe3;
+        }
+        .ai-msg.assistant{
+            margin-right:auto;padding:7px 10px;border-radius:8px 8px 8px 2px;
+            background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.1);color:#c0cbd5;
+        }
+        .ai-msg.error{
+            margin-right:auto;padding:6px 10px;border-radius:8px 8px 8px 2px;
+            background:rgba(239,75,75,.06);border:1px solid rgba(239,75,75,.18);color:#ff9a9a;
+        }
+        .ai-loading{display:flex;gap:5px;padding:8px 0}
+        .ai-loading span{width:5px;height:5px;border-radius:50%;background:var(--cyan);opacity:.4;animation:dot 1s infinite}
+        .ai-loading span:nth-child(2){animation-delay:.2s}
+        .ai-loading span:nth-child(3){animation-delay:.4s}
+        @keyframes dot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+        .chat-default{padding:6px 2px;color:#9aabb8;font-size:14px;line-height:1.7}
+        .chat-default strong{color:var(--ink)}
+        .chat-default code{color:var(--cyan);font-family:var(--mono);font-size:13px}
+        .chat-default .formula-block{
+            display:block;margin:6px 0;padding:5px 8px;border-radius:4px;
+            background:rgba(0,0,0,.25);border:1px solid rgba(148,163,184,.08);
+            font-family:var(--mono);font-size:13px;color:#b8c8d4;line-height:1.5;
+        }
+
+        /* AI 设置浮层 */
+        #ai_settings{
+            display:none;position:absolute;top:34px;right:8px;
+            width:min(320px, calc(100% - 16px));padding:8px;
+            border:1px solid rgba(255,255,255,.08);border-radius:8px;
+            background:rgba(12,19,28,.98);box-shadow:0 12px 28px rgba(0,0,0,.35);
+            gap:6px;flex-wrap:wrap;z-index:10;
+        }
+        #ai_settings.visible{display:flex}
+        .set-fld{display:flex;flex-direction:column;gap:2px;flex:1;min-width:100px}
+        .set-fld label{color:#7a8a98;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+        .set-fld input,.set-fld select{
+            width:100%;border:1px solid rgba(148,163,184,.12);background:#0c131c;
+            color:#d5dee6;border-radius:4px;padding:4px 6px;outline:none;font-size:13px;
+        }
+        .set-fld input:focus,.set-fld select:focus{border-color:rgba(0,216,150,.3)}
+
+        /* AI 输入栏 */
+        #ai_input_bar{
+            display:flex;gap:6px;padding:8px 10px;flex-shrink:0;
+            border-top:1px solid rgba(148,163,184,.1);
+            background:rgba(10,15,22,.6);
+        }
+        #ai_input{
+            flex:1;border:1px solid rgba(255,255,255,.1);border-radius:6px;
+            background:rgba(255,255,255,.04);color:#d0dae5;
+            padding:7px 10px;outline:none;font-size:14px;
+        }
+        #ai_input:focus{border-color:rgba(0,216,150,.35)}
+        #ai_input::placeholder{color:#4a5568}
+        #ai_send_btn{
+            border:1px solid rgba(0,216,150,.28);
+            background:linear-gradient(135deg, rgba(0,216,150,.2), rgba(0,216,150,.08));
+            color:var(--green);padding:6px 14px;border-radius:6px;
+            cursor:pointer;font-weight:700;font-size:14px;white-space:nowrap;
+        }
+        #ai_send_btn:disabled{opacity:.4;cursor:not-allowed}
+        .ai-hd-right{display:flex;align-items:center;gap:5px}
+        .ai-status{display:inline-flex;align-items:center;gap:4px;color:var(--dim);font-size:11px}
+        .dot{width:5px;height:5px;border-radius:50%;background:#4a5c6a;flex-shrink:0}
+        .dot.ok{background:var(--green)}
+        .ico-btn{
+            width:24px;height:24px;display:grid;place-items:center;
+            border:1px solid rgba(148,163,184,.12);border-radius:6px;
+            background:rgba(255,255,255,.03);color:#9aabba;cursor:pointer;font-size:12px;
+        }
+        .ico-btn:hover{border-color:rgba(0,216,150,.25);background:rgba(0,216,150,.06);color:var(--ink)}
+
+        .ai-cursor{color:var(--cyan);animation:blink 1s infinite}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+        .flow-line{animation:flow 3s linear infinite}
+        @keyframes flow{from{stroke-dashoffset:0}to{stroke-dashoffset:40}}
+    </style>
+</head>
+<body>
+<div class="app-shell">
+
+    <!-- ===== 顶栏 ===== -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M13 3L4 14h7l-1 7 10-12h-7l0-6z"></path></svg></div>
+            <div>
+                <h1>SCED / LMP 教学系统</h1>
+                <p>直流潮流 · 安全经济调度 · 节点电价拆解 · AI 教学助教</p>
+            </div>
+        </div>
+        <div class="scenario-strip">
+            <span class="scenario-label">教学场景</span>
+            <button class="scenario-btn active" data-scenario="base" onclick="loadScenario('base')">1 无约束出清</button>
+            <button class="scenario-btn" data-scenario="congestion" onclick="loadScenario('congestion')">2 线路拥堵</button>
+            <button class="scenario-btn" data-scenario="negative" onclick="loadScenario('negative')">3 节点负电价</button>
+            <button class="scenario-btn" data-scenario="surplus" onclick="loadScenario('surplus')">4 阻塞盈余</button>
+        </div>
+    </header>
+
+    <!-- ===== 三栏工作区 ===== -->
+    <main class="workspace">
+
+        <!-- 左：申报与边界参数 -->
+        <section class="panel">
+            <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h10M4 6h2m4 6h10M4 12h2m4 6h10M4 18h2"></path></svg>申报与边界参数</h2></div>
+            <div class="panel-bd">
+                <div class="sec-label">发电机组报价 · 容量</div>
+                <div class="gen-card">
+                    <div class="gen-hd"><span class="gen-name" style="color:var(--green)">G1 节点 A</span><span class="gen-desc">低价机组</span></div>
+                    <div class="fgrid">
+                        <div class="fld"><label>报价 元/MWh</label><input id="price_g1" type="number" value="15"><input id="slider_price_g1" type="range" min="0" max="200" value="15"></div>
+                        <div class="fld"><label>容量 MW</label><input id="max_g1" type="number" value="100"><input id="slider_max_g1" type="range" min="0" max="150" value="100"></div>
+                    </div>
+                </div>
+                <div class="gen-card">
+                    <div class="gen-hd"><span class="gen-name" style="color:var(--amber)">G2 节点 B</span><span class="gen-desc">中高成本机组</span></div>
+                    <div class="fgrid">
+                        <div class="fld"><label>报价 元/MWh</label><input id="price_g2" type="number" value="30"><input id="slider_price_g2" type="range" min="0" max="200" value="30"></div>
+                        <div class="fld"><label>容量 MW</label><input id="max_g2" type="number" value="80"><input id="slider_max_g2" type="range" min="0" max="150" value="80"></div>
+                    </div>
+                </div>
+                <div class="gen-card">
+                    <div class="gen-hd"><span class="gen-name" style="color:var(--red)">G3 节点 C</span><span class="gen-desc">参考机组</span></div>
+                    <div class="fgrid">
+                        <div class="fld"><label>报价 元/MWh</label><input id="price_g3" type="number" value="50"><input id="slider_price_g3" type="range" min="0" max="200" value="50"></div>
+                        <div class="fld"><label>容量 MW</label><input id="max_g3" type="number" value="60"><input id="slider_max_g3" type="range" min="0" max="150" value="60"></div>
+                    </div>
+                </div>
+                <div class="sec-label">节点负荷</div>
+                <div class="lgrid">
+                    <div class="fld"><label>负荷 A</label><input id="load_a" type="number" value="10"><input id="slider_load_a" type="range" min="0" max="120" value="10"></div>
+                    <div class="fld"><label>负荷 B</label><input id="load_b" type="number" value="50"><input id="slider_load_b" type="range" min="0" max="120" value="50"></div>
+                    <div class="fld"><label>负荷 C</label><input id="load_c" type="number" value="40"><input id="slider_load_c" type="range" min="0" max="120" value="40"></div>
+                </div>
+                <div class="sec-label">输电线路约束</div>
+                <div class="line-card">
+                    <div class="gen-hd"><span class="gen-name">AB 通道</span><span class="gen-desc">A ↔ B</span></div>
+                    <div class="fgrid">
+                        <div class="fld"><label>限额 MW</label><input id="limit_ab" type="number" value="100"><input id="slider_limit_ab" type="range" min="0" max="200" value="100"></div>
+                        <div class="fld"><label>电抗 p.u.</label><input id="x_ab" type="number" step="0.1" min="0.1" value="1.0"></div>
+                    </div>
+                </div>
+                <div class="line-card">
+                    <div class="gen-hd"><span class="gen-name">BC 通道</span><span class="gen-desc">B ↔ C</span></div>
+                    <div class="fgrid">
+                        <div class="fld"><label>限额 MW</label><input id="limit_bc" type="number" value="100"><input id="slider_limit_bc" type="range" min="0" max="200" value="100"></div>
+                        <div class="fld"><label>电抗 p.u.</label><input id="x_bc" type="number" step="0.1" min="0.1" value="1.0"></div>
+                    </div>
+                </div>
+                <div class="line-card">
+                    <div class="gen-hd"><span class="gen-name">AC 通道</span><span class="gen-desc">A ↔ C</span></div>
+                    <div class="fgrid">
+                        <div class="fld"><label>限额 MW</label><input id="limit_ac" type="number" value="100"><input id="slider_limit_ac" type="range" min="0" max="200" value="100"></div>
+                        <div class="fld"><label>电抗 p.u.</label><input id="x_ac" type="number" step="0.1" min="0.1" value="1.0"></div>
+                    </div>
+                </div>
+                <button class="btn-run" onclick="runSCED()">重新计算出清</button>
+            </div>
+        </section>
+
+        <!-- 中：拓扑 + 出清数据 -->
+        <section class="center-stack">
+            <div class="panel" style="flex:1;min-height:0">
+                <div class="panel-hd">
+                    <h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7l8-4 8 4-8 4-8-4zm0 5l8 4 8-4M4 17l8 4 8-4"></path></svg>物理输网潮流拓扑</h2>
+                    <span class="live-badge">LIVE</span>
+                </div>
+                <div class="topology" style="flex:1;min-height:0">
+                    <svg id="network_svg" viewBox="0 0 880 440">
+                        <defs>
+                            <linearGradient id="grad-A" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d896"/><stop offset="100%" stop-color="#00a876"/></linearGradient>
+                            <linearGradient id="grad-B" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f2a51a"/><stop offset="100%" stop-color="#c97800"/></linearGradient>
+                            <linearGradient id="grad-C" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ef4b4b"/><stop offset="100%" stop-color="#b91c1c"/></linearGradient>
+                            <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                            <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00d896" opacity=".7"/></marker>
+                            <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#f2a51a" opacity=".7"/></marker>
+                            <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#ef4b4b" opacity=".7"/></marker>
+                        </defs>
+
+                        <!-- 等边三角形：A(440,65) B(690,375) C(190,375) -->
+                        <!-- 静态底板线路 -->
+                        <g opacity=".2">
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#263648" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#263648" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#263648" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#0a1017" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#0a1017" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#0a1017" stroke-width="5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- 动态潮流线 -->
+                        <line id="flow_ab_path" x1="440" y1="65" x2="690" y2="375" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
+                        <line id="flow_bc_path" x1="690" y1="375" x2="190" y2="375" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
+                        <line id="flow_ca_path" x1="190" y1="375" x2="440" y2="65" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
+
+                        <!-- 潮流数据 + 线路参数标注 -->
+                        <!-- AB: 中点(565,220) 法线偏移(-30,-20) -->
+                        <g transform="translate(530 195)">
+                            <rect x="-48" y="-12" width="96" height="24" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <text id="flow_txt_ab" text-anchor="middle" y="4" fill="#9aa8b6" font-size="10" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
+                            <text id="param_ab" text-anchor="middle" y="26" fill="#556675" font-size="9" font-family="Consolas,monospace">X=1.0</text>
+                        </g>
+                        <!-- BC: 中点(440,400) -->
+                        <g transform="translate(440 405)">
+                            <rect x="-48" y="-12" width="96" height="24" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <text id="flow_txt_bc" text-anchor="middle" y="4" fill="#9aa8b6" font-size="10" font-weight="700" font-family="Consolas,monospace">BC: 0/100M</text>
+                            <text id="param_bc" text-anchor="middle" y="26" fill="#556675" font-size="9" font-family="Consolas,monospace">X=1.0</text>
+                        </g>
+                        <!-- CA: 中点(315,220) 法线偏移(+30,-20) -->
+                        <g transform="translate(350 195)">
+                            <rect x="-48" y="-12" width="96" height="24" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <text id="flow_txt_ac" text-anchor="middle" y="4" fill="#9aa8b6" font-size="10" font-weight="700" font-family="Consolas,monospace">AC: 0/100M</text>
+                            <text id="param_ac" text-anchor="middle" y="26" fill="#556675" font-size="9" font-family="Consolas,monospace">X=1.0</text>
+                        </g>
+
+                        <!-- 节点 A（顶部） -->
+                        <g transform="translate(440,65)" filter="url(#glow)">
+                            <circle r="28" fill="url(#grad-A)"/>
+                            <text text-anchor="middle" y="-2" fill="#06100d" font-weight="900" font-size="15">A</text>
+                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#03100b" font-size="10" font-weight="900">---</text>
+                            <rect x="-72" y="-46" width="46" height="16" rx="3" fill="#071711" stroke="#00d896"/>
+                            <text id="node_a_gen" x="-49" y="-34" text-anchor="middle" fill="#00d896" font-size="9" font-weight="800">G:0M</text>
+                            <rect x="26" y="-46" width="46" height="16" rx="3" fill="#0e1720" stroke="#415164"/>
+                            <text id="node_a_load" x="49" y="-34" text-anchor="middle" fill="#b7c2ce" font-size="9" font-weight="800">L:10M</text>
+                        </g>
+
+                        <!-- 节点 B（右下） -->
+                        <g transform="translate(690,375)" filter="url(#glow)">
+                            <circle r="28" fill="url(#grad-B)"/>
+                            <text text-anchor="middle" y="-2" fill="#170e00" font-weight="900" font-size="15">B</text>
+                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#170e00" font-size="10" font-weight="900">---</text>
+                            <rect x="-80" y="-8" width="46" height="16" rx="3" fill="#1b1100" stroke="#f2a51a"/>
+                            <text id="node_b_gen" x="-57" y="4" text-anchor="middle" fill="#f2a51a" font-size="9" font-weight="800">G:0M</text>
+                            <rect x="34" y="-8" width="46" height="16" rx="3" fill="#0e1720" stroke="#415164"/>
+                            <text id="node_b_load" x="57" y="4" text-anchor="middle" fill="#b7c2ce" font-size="9" font-weight="800">L:50M</text>
+                        </g>
+
+                        <!-- 节点 C（左下，平衡参考） -->
+                        <g transform="translate(190,375)" filter="url(#glow)">
+                            <circle r="28" fill="url(#grad-C)"/>
+                            <text text-anchor="middle" y="-2" fill="#200606" font-weight="900" font-size="15">C</text>
+                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#200606" font-size="10" font-weight="900">---</text>
+                            <text text-anchor="middle" y="44" fill="#ff8b8b" font-size="9" font-weight="700">平衡参考节点</text>
+                            <rect x="-80" y="-8" width="46" height="16" rx="3" fill="#1d0909" stroke="#ef4b4b"/>
+                            <text id="node_c_gen" x="-57" y="4" text-anchor="middle" fill="#ff8b8b" font-size="9" font-weight="800">G:0M</text>
+                            <rect x="34" y="-8" width="46" height="16" rx="3" fill="#0e1720" stroke="#415164"/>
+                            <text id="node_c_load" x="57" y="4" text-anchor="middle" fill="#b7c2ce" font-size="9" font-weight="800">L:40M</text>
+                        </g>
+                    </svg>
+                    <div id="error_overlay" class="error-overlay hidden">
+                        <div style="color:var(--red);font-size:28px;line-height:1">!</div>
+                        <div style="font-weight:800;font-size:13px">SCED 安全出清失败</div>
+                        <div style="color:#8fa0ad;font-size:11px" id="error_desc">请放宽输电断面或减少负荷。</div>
+                        <button class="scenario-btn" onclick="loadScenario('base')">恢复基准场景</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" style="flex:0 0 auto">
+                <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2></div>
+                <div class="panel-bd result-bd">
+                    <div class="kpi-row">
+                        <div class="kpi"><div class="kpi-label">购电总成本</div><div class="kpi-val" id="total_cost" style="color:var(--green)">0.00 元</div></div>
+                        <div class="kpi"><div class="kpi-label">阻塞盈余</div><div class="kpi-val" id="congestion_rent" style="color:var(--amber)">0.00 元</div></div>
+                        <div class="kpi"><div class="kpi-label">边际机组</div><div class="kpi-val" id="marginal_unit" style="color:var(--cyan)">G1</div></div>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-section">
+                            <div class="data-section-title">各节点 LMP</div>
+                            <div class="lmp-row"><span class="lmp-tag" style="color:var(--green)">A</span><div class="lmp-info"><strong id="lmp_a_val">0.00</strong><span class="lmp-comp" id="lmp_a_comp">能量:0 阻塞:0</span></div></div>
+                            <div class="lmp-row"><span class="lmp-tag" style="color:var(--amber)">B</span><div class="lmp-info"><strong id="lmp_b_val">0.00</strong><span class="lmp-comp" id="lmp_b_comp">能量:0 阻塞:0</span></div></div>
+                            <div class="lmp-row"><span class="lmp-tag" style="color:var(--red)">C</span><div class="lmp-info"><strong id="lmp_c_val">0.00</strong><span class="lmp-comp" id="lmp_c_comp">能量:0 阻塞:0</span></div></div>
+                        </div>
+                        <div class="data-section">
+                            <div class="data-section-title">机组结算</div>
+                            <table class="gen-tbl">
+                                <tr><th>机组</th><th>出力</th><th>电价/收益</th></tr>
+                                <tr><td style="color:var(--green);font-weight:700">G1</td><td id="tbl_gen_g1">0</td><td id="tbl_rev_g1">0/0</td></tr>
+                                <tr><td style="color:var(--amber);font-weight:700">G2</td><td id="tbl_gen_g2">0</td><td id="tbl_rev_g2">0/0</td></tr>
+                                <tr><td style="color:var(--red);font-weight:700">G3</td><td id="tbl_gen_g3">0</td><td id="tbl_rev_g3">0/0</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="data-section">
+                        <div class="data-section-title">PTDF 矩阵</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+                            <div class="ptdf-row" id="ptdf_val_ab_a">PTDF(AB,A)=+0.00</div>
+                            <div class="ptdf-row" id="ptdf_val_bc_a">PTDF(BC,A)=+0.00</div>
+                            <div class="ptdf-row" id="ptdf_val_ac_a">PTDF(AC,A)=+0.00</div>
+                            <div class="ptdf-row" id="ptdf_val_ab_b">PTDF(AB,B)=+0.00</div>
+                            <div class="ptdf-row" id="ptdf_val_bc_b">PTDF(BC,B)=+0.00</div>
+                            <div class="ptdf-row" id="ptdf_val_ac_b">PTDF(AC,B)=+0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右：AI 教学助教 -->
+        <section class="panel ai-panel">
+            <div class="panel-hd">
+                <h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m6 6l-3.8-3.8A7.5 7.5 0 1018 11.5a7.5 7.5 0 00-2.8-5.8"></path></svg>AI 教学助教</h2>
+                <div class="ai-hd-right">
+                    <span class="ai-status"><span id="ai_dot" class="dot"></span><span id="ai_stxt">未配置</span></span>
+                    <button class="ico-btn" onclick="toggleAiSettings()" title="配置 API">⚙</button>
+                    <button class="ico-btn" onclick="clearAiChat()" title="重置">↺</button>
+                </div>
+            </div>
+            <div id="ai_body">
+                <div id="ai_messages"></div>
+                <div id="ai_input_bar">
+                    <input id="ai_input" type="text" placeholder="输入问题，例如：为什么 B 点 LMP 更高？">
+                    <button id="ai_send_btn" type="button" onclick="sendAiMessage()">发送</button>
+                </div>
+            </div>
+            <div id="ai_settings">
+                <div class="set-fld"><label>Base URL</label><input id="ai_base_url" type="text" value="https://token-plan-cn.xiaomimimo.com/v1"></div>
+                <div class="set-fld"><label>API Key</label><input id="ai_api_key" type="password" value="tp-c6j1ljux5xixc17lwd4mdhu7kdblko3a7ssm81xkijk7fwgg"></div>
+                <div class="set-fld"><label>模型</label><input id="ai_model" type="text" value="mimo-v2.5-pro"></div>
+                <div class="set-fld"><label>温度</label><input id="ai_temp" type="number" step="0.1" min="0" max="2" value="0.2"></div>
+                <div class="set-fld"><label>记住 Key</label><select id="ai_remember_key"><option value="0">仅本次</option><option value="1">存入浏览器</option></select></div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+/* ===== 场景预设（与参考文件一致） ===== */
+const scenarios = {
+    base:       {max_g1:100,price_g1:15, max_g2:80,price_g2:30, max_g3:60,price_g3:50, load_a:10,load_b:50,load_c:40, limit_ab:100,limit_bc:100,limit_ac:100, x_ab:1,x_bc:1,x_ac:1},
+    congestion: {max_g1:100,price_g1:15, max_g2:80,price_g2:30, max_g3:60,price_g3:50, load_a:10,load_b:80,load_c:10, limit_ab:20,limit_bc:100,limit_ac:100, x_ab:1,x_bc:1,x_ac:1},
+    negative:   {max_g1:100,price_g1:10, max_g2:80,price_g2:150,max_g3:60,price_g3:50, load_a:0,load_b:90,load_c:0,  limit_ab:20,limit_bc:100,limit_ac:100, x_ab:0.5,x_bc:1,x_ac:1},
+    surplus:    {max_g1:100,price_g1:10, max_g2:80,price_g2:40, max_g3:60,price_g3:100,load_a:5,load_b:65,load_c:30, limit_ab:15,limit_bc:50,limit_ac:50,  x_ab:1,x_bc:1,x_ac:1}
+};
+
+/* 场景教学文本（三分区：边界条件 / 调度逻辑 / 定价机制） */
+const scenarioExplanations = {
+    base: {
+        badge: "1. 无约束完美出清",
+        border: "<b>物理形态：</b>全网通道非常宽敞（输电线路限额高达 100 MW），相当于理想无阻碍网络，节点负荷处于常规状态（总需求 100 MW）。",
+        dispatch: "<b>出清机制：</b>SCED 优化器采取纯粹的经济性考量。便宜机组 G1（15元/MWh）出力直奔其最大限制 100 MW 以满足全网负荷。此时全网 100 MW 的用电全部由 G1 发电。本地更贵的 G2（30元）与 G3（50元）则完全不被调用（出力为 0）。",
+        pricing: "<b>电价本质：</b>由于没有触及任何物理线路的安全极限（无阻塞），任意节点的拉格朗日阴影价格 μk = 0。此时各节点的 LMP 完全由电网系统电能基准价 λ = 15 元决定，全网实现「单一电价一致出清」。"
+    },
+    congestion: {
+        badge: "2. 线路拥堵价格分裂",
+        border: "<b>物理形态：</b>通道 AB（连接节点 A 与 B）的传输容量从 100 MW 被骤然压缩至 20 MW。与此同时，节点 B 爆发了 80 MW 的重负荷用电需求。",
+        dispatch: "<b>出清机制：</b>便宜的 G1 机组试图通过 AB、AC 路径向负荷集中的 B 送电。然而，根据基尔霍夫电流定律，当外送潮流在 AB 上达到 20 MW 极限时，G1 出力无法继续增加（被迫卡在 40 MW）。SCED 被迫启动节点 B 昂贵的本地备用机组 G2（30元）增发 50 MW，来补足用电缺口。",
+        pricing: "<b>电价本质：</b>通道 AB 产生严重阻塞，产生巨大的阴影价格 μAB。节点 B 为满足负荷增量不得不购买本地高昂的 G2（30元）电能，使其 LMP 暴涨到 30.00 元。由于阻塞导致的屏障，节点间发生了物理上的「空间市场分裂」与大范围价格剪刀差。"
+    },
+    negative: {
+        badge: "3. 节点负电价奇观",
+        border: "<b>物理形态：</b>通道 AB 极度受限（仅 20 MW），且节点 B 正发生 90 MW 的极端重负荷。同时，发电机报价梯级拉开（G1=10元，中等的G3=50元，本地高昂的G2=150元）。",
+        dispatch: "<b>出清机制：</b>为了满足节点 B 的负荷并避免极其昂贵的本地 G2（150元）大面积出力，系统极力想要增加节点 A 的低成本 G1 出力。但受制于 Line AB 20 MW 阻塞限制，G1 增发受限。此时，如果节点 A 新增 1 MW 用电需求（负荷），这 1 MW 注入会有 1/3 的电力分流并倒灌 Line AB，这反而拓宽了 Line AB 上的安全裕度，使得 G1 能多发，从而减少了 G2 的购买开销。",
+        pricing: "<b>电价本质：</b>因基尔霍夫物理定律的分流作用，节点 A 的负荷每增加 1 MW，全网总采购成本反而减少了 50 元。这种「负电能增量成本」直接导致了<b>节点 A 电价坠入 -50.00 元/MWh 的负值！</b> 它是电网拓扑阻抗作用下最奇特、最严密的市场奇观。"
+    },
+    surplus: {
+        badge: "4. 高额阻塞盈余",
+        border: "<b>物理形态：</b>全电网通道普遍偏紧（AB 限制 15 MW，BC、AC 限制 50 MW），节点负荷分散且需求总量较高（共 100 MW）。",
+        dispatch: "<b>出清机制：</b>由于全电网多通道同时紧绷、重叠阻塞，SCED 的出力分配逻辑异常复杂。G1 虽极其便宜但送电无门，中高成本的 G2、G3 被迫混合出力，全网潮流在安全红色临界值处动态平衡。",
+        pricing: "<b>电价本质：</b>全网三个节点的电价出现了阶梯式分裂（A=10, B=40, C=100 元/MWh）。此时，用电侧按各节点的出清价总共支付了较高的购电费，而发电侧则按各节点电价结算。<b>二者间由于空间阻塞产生的财务巨额价差即为【阻塞盈余】</b>。这反映了输电资源的稀缺经济价值。"
+    }
+};
+
+let currentActiveScenario = "base";
+let aiChatHistory = [];
+let aiAbortController = null;
+const AI_MAX = 8;
+
+/* ===== 滑块同步 ===== */
+function syncSlider(id) {
+    const inp = document.getElementById(id);
+    const sl = document.getElementById("slider_" + id);
+    if (inp && sl) sl.value = inp.value;
+}
+function syncInput(id) {
+    const inp = document.getElementById(id);
+    const sl = document.getElementById("slider_" + id);
+    if (inp && sl) inp.value = sl.value;
+}
+const sliderKeys = ["price_g1","max_g1","price_g2","max_g2","price_g3","max_g3","load_a","load_b","load_c","limit_ab","limit_bc","limit_ac"];
+sliderKeys.forEach(id => {
+    const inp = document.getElementById(id);
+    const sl = document.getElementById("slider_" + id);
+    if (inp) inp.addEventListener("input", () => { syncSlider(id); runSCED(); });
+    if (sl) sl.addEventListener("input", () => { syncInput(id); runSCED(); });
+});
+
+/* ===== 场景加载（参考文件逻辑：逐字段显式赋值） ===== */
+function loadScenario(key) {
+    currentActiveScenario = key;
+    const sc = scenarios[key];
+    if (!sc) return;
+
+    // 逐个设置输入框（与参考文件完全一致）
+    document.getElementById('price_g1').value = sc.price_g1;
+    document.getElementById('max_g1').value = sc.max_g1;
+    document.getElementById('price_g2').value = sc.price_g2;
+    document.getElementById('max_g2').value = sc.max_g2;
+    document.getElementById('price_g3').value = sc.price_g3;
+    document.getElementById('max_g3').value = sc.max_g3;
+
+    document.getElementById('load_a').value = sc.load_a;
+    document.getElementById('load_b').value = sc.load_b;
+    document.getElementById('load_c').value = sc.load_c;
+
+    document.getElementById('limit_ab').value = sc.limit_ab;
+    document.getElementById('limit_bc').value = sc.limit_bc;
+    document.getElementById('limit_ac').value = sc.limit_ac;
+
+    document.getElementById('x_ab').value = sc.x_ab;
+    document.getElementById('x_bc').value = sc.x_bc;
+    document.getElementById('x_ac').value = sc.x_ac;
+
+    // 同步全部 Slider
+    sliderKeys.forEach(k => {
+        const sl = document.getElementById("slider_" + k);
+        if (sl) sl.value = sc[k];
+    });
+
+    // 高亮当前场景按钮
+    document.querySelectorAll(".scenario-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.scenario === key);
+    });
+
+    // 更新场景解释
+    setDefaultAiContent(key);
+    runSCED();
+}
+
+/* ===== SCED 求解器（顶点枚举法，与参考文件一致） ===== */
+function solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC) {
+    const L_tot = LA + LB + LC;
+    const B_AA = 1 / XAB + 1 / XAC;
+    const B_BB = 1 / XAB + 1 / XBC;
+    const B_AB = -1 / XAB;
+    const det = B_AA * B_BB - B_AB * B_AB;
+
+    if (Math.abs(det) < 1e-6) return { error: "电网导纳矩阵奇异，请勿将电抗设为零。" };
+
+    const Z_AA = B_BB / det;
+    const Z_BB = B_AA / det;
+    const Z_AB = -B_AB / det;
+
+    const PTDF_AB_A = (Z_AA - Z_AB) / XAB;
+    const PTDF_BC_A = Z_AB / XBC;
+    const PTDF_AC_A = Z_AA / XAC;
+    const PTDF_AB_B = (Z_AB - Z_BB) / XAB;
+    const PTDF_BC_B = Z_BB / XBC;
+    const PTDF_AC_B = Z_AB / XAC;
+
+    const C_AB = PTDF_AB_A * LA + PTDF_AB_B * LB;
+    const C_BC = PTDF_BC_A * LA + PTDF_BC_B * LB;
+    const C_AC = PTDF_AC_A * LA + PTDF_AC_B * LB;
+
+    const lines = [
+        { a: 1, b: 0, c: 0 },
+        { a: 1, b: 0, c: GA_max },
+        { a: 0, b: 1, c: 0 },
+        { a: 0, b: 1, c: GB_max },
+        { a: 1, b: 1, c: L_tot },
+        { a: 1, b: 1, c: L_tot - GC_max },
+        { a: PTDF_AB_A, b: PTDF_AB_B, c: FAB_max + C_AB },
+        { a: PTDF_AB_A, b: PTDF_AB_B, c: -FAB_max + C_AB },
+        { a: PTDF_BC_A, b: PTDF_BC_B, c: FBC_max + C_BC },
+        { a: PTDF_BC_A, b: PTDF_BC_B, c: -FBC_max + C_BC },
+        { a: PTDF_AC_A, b: PTDF_AC_B, c: FAC_max + C_AC },
+        { a: PTDF_AC_A, b: PTDF_AC_B, c: -FAC_max + C_AC }
+    ];
+
+    let candidates = [];
+    const eps = 1e-4;
+
+    for (let i = 0; i < lines.length; i++) {
+        for (let j = i + 1; j < lines.length; j++) {
+            const l1 = lines[i], l2 = lines[j];
+            const d = l1.a * l2.b - l1.b * l2.a;
+            if (Math.abs(d) > 1e-8) {
+                const ga = (l1.c * l2.b - l1.b * l2.c) / d;
+                const gb = (l1.a * l2.c - l1.c * l2.a) / d;
+                const gc = L_tot - ga - gb;
+
+                if (ga >= -eps && ga <= GA_max + eps && gb >= -eps && gb <= GB_max + eps && gc >= -eps && gc <= GC_max + eps) {
+                    const f_AB = PTDF_AB_A * (ga - LA) + PTDF_AB_B * (gb - LB);
+                    const f_BC = PTDF_BC_A * (ga - LA) + PTDF_BC_B * (gb - LB);
+                    const f_AC = PTDF_AC_A * (ga - LA) + PTDF_AC_B * (gb - LB);
+
+                    if (f_AB >= -FAB_max - eps && f_AB <= FAB_max + eps &&
+                        f_BC >= -FBC_max - eps && f_BC <= FBC_max + eps &&
+                        f_AC >= -FAC_max - eps && f_AC <= FAC_max + eps) {
+                        const c_ga = Math.max(0, Math.min(GA_max, ga));
+                        const c_gb = Math.max(0, Math.min(GB_max, gb));
+                        const c_gc = Math.max(0, Math.min(GC_max, gc));
+                        candidates.push({ GA: c_ga, GB: c_gb, GC: c_gc, cost: priceA * c_ga + priceB * c_gb + priceC * c_gc });
+                    }
+                }
+            }
+        }
+    }
+
+    if (candidates.length === 0) return { error: "电网过载或装机容量不足，SCED 安全校核无解！" };
+    candidates.sort((x, y) => x.cost - y.cost);
+    return candidates[0];
+}
+
+function calculateLMPs(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC) {
+    const baseSol = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC);
+    if (baseSol.error) return baseSol;
+
+    const delta = 0.05;
+    let lmpA, lmpB, lmpC;
+
+    let solA = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA + delta, LB, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC);
+    if (!solA.error) { lmpA = (solA.cost - baseSol.cost) / delta; }
+    else { let solANeg = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA - delta, LB, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC); lmpA = !solANeg.error ? (baseSol.cost - solANeg.cost) / delta : priceA; }
+
+    let solB = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB + delta, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC);
+    if (!solB.error) { lmpB = (solB.cost - baseSol.cost) / delta; }
+    else { let solBNeg = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB - delta, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC); lmpB = !solBNeg.error ? (baseSol.cost - solBNeg.cost) / delta : priceB; }
+
+    let solC = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB, LC + delta, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC);
+    if (!solC.error) { lmpC = (solC.cost - baseSol.cost) / delta; }
+    else { let solCNeg = solveSCED(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB, LC - delta, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC); lmpC = !solCNeg.error ? (baseSol.cost - solCNeg.cost) / delta : priceC; }
+
+    return { base: baseSol, lmpA, lmpB, lmpC };
+}
+
+/* ===== runSCED（与参考文件一致） ===== */
+function runSCED() {
+    const priceA = parseFloat(document.getElementById('price_g1').value);
+    const GA_max = parseFloat(document.getElementById('max_g1').value);
+    const priceB = parseFloat(document.getElementById('price_g2').value);
+    const GB_max = parseFloat(document.getElementById('max_g2').value);
+    const priceC = parseFloat(document.getElementById('price_g3').value);
+    const GC_max = parseFloat(document.getElementById('max_g3').value);
+    const LA = parseFloat(document.getElementById('load_a').value);
+    const LB = parseFloat(document.getElementById('load_b').value);
+    const LC = parseFloat(document.getElementById('load_c').value);
+    const FAB_max = parseFloat(document.getElementById('limit_ab').value);
+    const FBC_max = parseFloat(document.getElementById('limit_bc').value);
+    const FAC_max = parseFloat(document.getElementById('limit_ac').value);
+    const XAB = parseFloat(document.getElementById('x_ab').value);
+    const XBC = parseFloat(document.getElementById('x_bc').value);
+    const XAC = parseFloat(document.getElementById('x_ac').value);
+
+    const result = calculateLMPs(GA_max, GB_max, GC_max, priceA, priceB, priceC, LA, LB, LC, FAB_max, FBC_max, FAC_max, XAB, XBC, XAC);
+    const ov = document.getElementById("error_overlay");
+
+    if (result.error) {
+        ov.classList.remove("hidden");
+        document.getElementById("error_desc").textContent = result.error;
+        return;
+    }
+    ov.classList.add("hidden");
+
+    const sol = result.base, lmpA = result.lmpA, lmpB = result.lmpB, lmpC = result.lmpC;
+
+    // PTDF 重算
+    const B_AA = 1/XAB + 1/XAC, B_BB = 1/XAB + 1/XBC, B_AB = -1/XAB;
+    const det = B_AA * B_BB - B_AB * B_AB;
+    const Z_AA = B_BB/det, Z_BB = B_AA/det, Z_AB = -B_AB/det;
+    const PTDF_AB_A = (Z_AA-Z_AB)/XAB, PTDF_BC_A = Z_AB/XBC, PTDF_AC_A = Z_AA/XAC;
+    const PTDF_AB_B = (Z_AB-Z_BB)/XAB, PTDF_BC_B = Z_BB/XBC, PTDF_AC_B = Z_AB/XAC;
+
+    const flow_ab = PTDF_AB_A * (sol.GA - LA) + PTDF_AB_B * (sol.GB - LB);
+    const flow_bc = PTDF_BC_A * (sol.GA - LA) + PTDF_BC_B * (sol.GB - LB);
+    const flow_ac = PTDF_AC_A * (sol.GA - LA) + PTDF_AC_B * (sol.GB - LB);
+
+    // KPI
+    const rev = sol.GA * priceA + sol.GB * priceB + sol.GC * priceC;
+    const paid = LA * lmpA + LB * lmpB + LC * lmpC;
+    const gp = sol.GA * lmpA + sol.GB * lmpB + sol.GC * lmpC;
+    document.getElementById("total_cost").textContent = rev.toFixed(2) + " 元";
+    document.getElementById("congestion_rent").textContent = Math.max(0, paid - gp).toFixed(2) + " 元";
+    document.getElementById("marginal_unit").textContent = sol.GA > 0 && sol.GA < GA_max ? "G1" : (sol.GB > 0 && sol.GB < GB_max ? "G2" : "G3");
+
+    // LMP
+    const bp = lmpC;
+    document.getElementById("lmp_a_val").textContent = lmpA.toFixed(2);
+    document.getElementById("lmp_a_comp").textContent = `能量:${bp.toFixed(1)} 阻塞:${(lmpA-bp).toFixed(1)}`;
+    document.getElementById("lmp_b_val").textContent = lmpB.toFixed(2);
+    document.getElementById("lmp_b_comp").textContent = `能量:${bp.toFixed(1)} 阻塞:${(lmpB-bp).toFixed(1)}`;
+    document.getElementById("lmp_c_val").textContent = lmpC.toFixed(2);
+    document.getElementById("lmp_c_comp").textContent = `能量:${bp.toFixed(1)} 阻塞:${(lmpC-bp).toFixed(1)}`;
+
+    // 机组结算
+    document.getElementById("tbl_gen_g1").textContent = sol.GA.toFixed(1);
+    document.getElementById("tbl_rev_g1").textContent = lmpA.toFixed(1) + "/" + (sol.GA * lmpA).toFixed(1);
+    document.getElementById("tbl_gen_g2").textContent = sol.GB.toFixed(1);
+    document.getElementById("tbl_rev_g2").textContent = lmpB.toFixed(1) + "/" + (sol.GB * lmpB).toFixed(1);
+    document.getElementById("tbl_gen_g3").textContent = sol.GC.toFixed(1);
+    document.getElementById("tbl_rev_g3").textContent = lmpC.toFixed(1) + "/" + (sol.GC * lmpC).toFixed(1);
+
+    // PTDF
+    document.getElementById("ptdf_val_ab_a").textContent = `PTDF(AB,A)=${PTDF_AB_A>=0?"+":""}${PTDF_AB_A.toFixed(2)}`;
+    document.getElementById("ptdf_val_ab_b").textContent = `PTDF(AB,B)=${PTDF_AB_B>=0?"+":""}${PTDF_AB_B.toFixed(2)}`;
+    document.getElementById("ptdf_val_bc_a").textContent = `PTDF(BC,A)=${PTDF_BC_A>=0?"+":""}${PTDF_BC_A.toFixed(2)}`;
+    document.getElementById("ptdf_val_bc_b").textContent = `PTDF(BC,B)=${PTDF_BC_B>=0?"+":""}${PTDF_BC_B.toFixed(2)}`;
+    document.getElementById("ptdf_val_ac_a").textContent = `PTDF(AC,A)=${PTDF_AC_A>=0?"+":""}${PTDF_AC_A.toFixed(2)}`;
+    document.getElementById("ptdf_val_ac_b").textContent = `PTDF(AC,B)=${PTDF_AC_B>=0?"+":""}${PTDF_AC_B.toFixed(2)}`;
+
+    // 拓扑标注
+    document.getElementById("node_a_gen").textContent = `G:${sol.GA.toFixed(0)}M`;
+    document.getElementById("node_b_gen").textContent = `G:${sol.GB.toFixed(0)}M`;
+    document.getElementById("node_c_gen").textContent = `G:${sol.GC.toFixed(0)}M`;
+    document.getElementById("node_a_load").textContent = `L:${LA}M`;
+    document.getElementById("node_b_load").textContent = `L:${LB}M`;
+    document.getElementById("node_c_load").textContent = `L:${LC}M`;
+    document.getElementById("lmp_lbl_a").textContent = lmpA.toFixed(1) + "￥";
+    document.getElementById("lmp_lbl_b").textContent = lmpB.toFixed(1) + "￥";
+    document.getElementById("lmp_lbl_c").textContent = lmpC.toFixed(1) + "￥";
+
+    // 潮流 + 线路参数
+    document.getElementById("flow_txt_ab").textContent = `AB: ${Math.abs(flow_ab).toFixed(1)}/${FAB_max}M`;
+    document.getElementById("flow_txt_bc").textContent = `BC: ${Math.abs(flow_bc).toFixed(1)}/${FBC_max}M`;
+    document.getElementById("flow_txt_ac").textContent = `AC: ${Math.abs(flow_ac).toFixed(1)}/${FAC_max}M`;
+    document.getElementById("param_ab").textContent = `X=${XAB}  L=${FAB_max}M`;
+    document.getElementById("param_bc").textContent = `X=${XBC}  L=${FBC_max}M`;
+    document.getElementById("param_ac").textContent = `X=${XAC}  L=${FAC_max}M`;
+
+    updateFlowLine("flow_ab_path", "flow_txt_ab", flow_ab, FAB_max, 440, 65, 690, 375);
+    updateFlowLine("flow_bc_path", "flow_txt_bc", flow_bc, FBC_max, 690, 375, 190, 375);
+    updateFlowLine("flow_ca_path", "flow_txt_ac", -flow_ac, FAC_max, 190, 375, 440, 65);
+}
+
+function updateFlowLine(lineId, txtId, flowValue, limit, x1, y1, x2, y2) {
+    const line = document.getElementById(lineId);
+    const txt = document.getElementById(txtId);
+    const safeLimit = Math.max(0.001, Math.abs(limit));
+    const ratio = Math.min(1, Math.abs(flowValue) / safeLimit);
+
+    if (flowValue < -0.1) { line.setAttribute("x1", x2); line.setAttribute("y1", y2); line.setAttribute("x2", x1); line.setAttribute("y2", y1); }
+    else { line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2); }
+
+    line.style.animationDuration = Math.max(.4, 3 - ratio * 2.3) + "s";
+
+    if (ratio >= .98) { line.setAttribute("stroke", "#ef4b4b"); line.setAttribute("stroke-width", "4.5"); txt.style.fill = "#ff7a7a"; }
+    else if (ratio >= .75) { line.setAttribute("stroke", "#f2a51a"); line.setAttribute("stroke-width", "4"); txt.style.fill = "#f2a51a"; }
+    else { line.setAttribute("stroke", "#00d896"); line.setAttribute("stroke-width", "3.5"); txt.style.fill = "#9aa8b6"; }
+}
+
+/* ===== AI 教学助教 ===== */
+function setDefaultAiContent(key) {
+    const exp = scenarioExplanations[key] || scenarioExplanations.base;
+    aiChatHistory = [];
+    const box = document.getElementById("ai_messages");
+    if (!box) return;
+    box.innerHTML = `<div class="chat-default">
+        <div style="color:var(--cyan);font-weight:700;margin-bottom:8px;font-size:13px">${exp.badge}</div>
+        <div style="margin-bottom:8px">${exp.border}</div>
+        <div style="margin-bottom:8px">${exp.dispatch}</div>
+        <div>${exp.pricing}</div>
+        <div style="margin-top:12px;color:#6a7b89;font-size:11px">试试问：为什么 B 点 LMP 更高？PTDF 怎么影响价格？什么是阻塞盈余？<br>输入框在下方，回车发送。需要先配置 API Key。</div>
+    </div>`;
+}
+
+function addMsg(role, content, isHtml) {
+    const box = document.getElementById("ai_messages");
+    const d = document.createElement("div");
+    d.className = "ai-msg " + role;
+    d.innerHTML = isHtml ? content : content.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");
+    box.appendChild(d);
+    box.scrollTop = box.scrollHeight;
+}
+
+function clearAiChat() {
+    aiChatHistory = [];
+    if (aiAbortController) { aiAbortController.abort(); aiAbortController = null; }
+    setDefaultAiContent(currentActiveScenario);
+}
+
+function toggleAiSettings() { document.getElementById("ai_settings").classList.toggle("visible"); }
+
+function loadAiSettings() {
+    const s = JSON.parse(sessionStorage.getItem("ai_s") || localStorage.getItem("ai_s") || "null");
+    if (s) { if(s.bu) ai_base_url.value=s.bu; if(s.md) ai_model.value=s.md; if(s.tp!==undefined) ai_temp.value=s.tp; if(s.rk) ai_remember_key.value="1"; }
+    const k = sessionStorage.getItem("ai_k") || localStorage.getItem("ai_k");
+    if (k) ai_api_key.value = k;
+    updStatus();
+}
+
+function saveAiSettings() {
+    const p = JSON.stringify({bu:ai_base_url.value.trim(),md:ai_model.value.trim(),tp:+ai_temp.value||.2,rk:ai_remember_key.value==="1"});
+    if (ai_remember_key.value==="1") { localStorage.setItem("ai_s",p); localStorage.setItem("ai_k",ai_api_key.value.trim()); }
+    else { sessionStorage.setItem("ai_s",p); sessionStorage.setItem("ai_k",ai_api_key.value.trim()); localStorage.removeItem("ai_s"); localStorage.removeItem("ai_k"); }
+    updStatus();
+}
+
+function updStatus() {
+    const k=ai_api_key.value.trim(), u=ai_base_url.value.trim();
+    document.getElementById("ai_dot").className = k&&u ? "dot ok" : "dot";
+    document.getElementById("ai_stxt").textContent = k&&u ? "已配置 · "+(ai_model.value.trim()||"deepseek-chat") : "未配置";
+}
+
+function buildCtx() {
+    return {
+        scenario:currentActiveScenario,
+        generators:[{name:"G1",node:"A",price:+price_g1.value,max:+max_g1.value},{name:"G2",node:"B",price:+price_g2.value,max:+max_g2.value},{name:"G3",node:"C",price:+price_g3.value,max:+max_g3.value}],
+        loads:{A:+load_a.value,B:+load_b.value,C:+load_c.value},
+        lines:[{name:"AB",limit:+limit_ab.value,reactance:+x_ab.value},{name:"BC",limit:+limit_bc.value,reactance:+x_bc.value},{name:"AC",limit:+limit_ac.value,reactance:+x_ac.value}],
+        explanation:scenarioExplanations[currentActiveScenario]
+    };
+}
+
+async function sendAiMessage() {
+    const q = document.getElementById("ai_input").value.trim();
+    if (!q) return;
+    const bu=ai_base_url.value.trim(), ak=ai_api_key.value.trim(), md=ai_model.value.trim()||"deepseek-chat", tp=+ai_temp.value||.2;
+    if (!bu||!ak) { addMsg("error","请先点击右上角 ⚙ 配置 Base URL 和 API Key。"); return; }
+    saveAiSettings();
+    addMsg("user",q);
+    document.getElementById("ai_input").value="";
+    document.getElementById("ai_send_btn").disabled=true;
+
+    // 创建流式消息容器
+    const box = document.getElementById("ai_messages");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "ai-msg assistant";
+    msgDiv.innerHTML = '<span class="ai-cursor">▊</span>';
+    box.appendChild(msgDiv);
+    box.scrollTop = box.scrollHeight;
+
+    const ctx = buildCtx();
+    const msgs = [
+        {role:"system",content:"你是电力市场 SCED/LMP 教学助教。必须只基于 teachingContext 回答。全程中文，不能编造数值；涉及成本、潮流、PTDF、LMP 时必须引用当前上下文。"},
+        {role:"system",content:"当前页面计算状态：\n```json\n"+JSON.stringify(ctx,null,2)+"\n```"},
+        ...aiChatHistory.slice(-AI_MAX*2),
+        {role:"user",content:q}
+    ];
+
+    try {
+        aiAbortController = new AbortController();
+        const r = await fetch("/api/chat", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({baseUrl:bu, apiKey:ak, model:md, messages:msgs, temperature:tp, stream:true}),
+            signal: aiAbortController.signal
+        });
+
+        if (!r.ok) {
+            const e = await r.json().catch(()=>({}));
+            msgDiv.innerHTML = e.error || r.statusText;
+            msgDiv.classList.add("error");
+            return;
+        }
+
+        // 判断是否为 SSE 流
+        const ct = r.headers.get("content-type") || "";
+        if (!ct.includes("text/event-stream")) {
+            // 普通 JSON 响应（API 不支持流式）
+            const d = await r.json();
+            const fullText = d.choices?.[0]?.message?.content || "（模型未返回内容）";
+            msgDiv.innerHTML = renderMarkdown(fullText);
+            aiChatHistory.push({role:"user", content:q}, {role:"assistant", content:fullText});
+            if (aiChatHistory.length > AI_MAX*2) aiChatHistory = aiChatHistory.slice(-AI_MAX*2);
+            return;
+        }
+
+        // 解析 SSE 流
+        const reader = r.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+        let buffer = "";
+
+        while (true) {
+            const {done, value} = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, {stream: true});
+
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+                if (!line.startsWith("data: ")) continue;
+                const data = line.slice(6).trim();
+                if (data === "[DONE]") continue;
+                try {
+                    const parsed = JSON.parse(data);
+                    const token = parsed.choices?.[0]?.delta?.content;
+                    if (token) {
+                        fullText += token;
+                        msgDiv.innerHTML = renderMarkdown(fullText);
+                        box.scrollTop = box.scrollHeight;
+                    }
+                } catch (e) { /* 跳过非 JSON 行 */ }
+            }
+        }
+
+        if (!fullText) {
+            msgDiv.innerHTML = "（模型未返回内容）";
+        } else {
+            msgDiv.innerHTML = renderMarkdown(fullText);
+        }
+
+        aiChatHistory.push({role:"user", content:q}, {role:"assistant", content:fullText});
+        if (aiChatHistory.length > AI_MAX*2) aiChatHistory = aiChatHistory.slice(-AI_MAX*2);
+    } catch (e) {
+        if (e.name !== "AbortError") {
+            msgDiv.innerHTML = "请求失败：" + e.message;
+            msgDiv.classList.add("error");
+        }
+    } finally {
+        aiAbortController = null;
+        document.getElementById("ai_send_btn").disabled = false;
+    }
+}
+
+function renderMarkdown(text) {
+    return text
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(/`([^`]+)`/g,"<code>$1</code>")
+        .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+        .replace(/\n/g,"<br>");
+}
+
+/* ===== 初始化 ===== */
+document.getElementById("ai_input").addEventListener("keydown",e=>{if(e.key==="Enter")sendAiMessage();});
+document.querySelectorAll("#ai_base_url,#ai_api_key,#ai_model,#ai_temp,#ai_remember_key").forEach(el=>el.addEventListener("change",updStatus));
+loadAiSettings();
+loadScenario("base");
+</script>
+</body>
+</html>

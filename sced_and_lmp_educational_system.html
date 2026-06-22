@@ -9,18 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{
-            --bg:#0b1117;--bg2:#0f1620;--panel:#111a24;--panel2:#0f1720;
-            --line:rgba(148,163,184,.12);--line2:rgba(148,163,184,.08);
-            --ink:#edf3f8;--muted:#95a4b1;--dim:#6f7d89;
-            --green:#00d896;--amber:#f2a51a;--red:#ef4b4b;--cyan:#6fe8ff;
-            --shadow:0 12px 28px rgba(0,0,0,.25);--radius:6px;
+            --bg:#f5f7fa;--bg2:#eef1f5;--panel:#ffffff;--panel2:#f8f9fb;
+            --line:rgba(0,0,0,.08);--line2:rgba(0,0,0,.05);
+            --ink:#1a1f2e;--muted:#64748b;--dim:#94a3b8;
+            --green:#059669;--amber:#d97706;--red:#dc2626;--cyan:#0891b2;
+            --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);--radius:6px;
             --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
             --mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
         }
         *{box-sizing:border-box;margin:0;padding:0}
         html,body{height:100%;overflow:hidden}
         body{
-            background: linear-gradient(180deg, #081018, var(--bg));
+            background:var(--bg);
             color:var(--ink);font-family:var(--font);
             font-size:14px;line-height:1.5;
             -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
@@ -33,15 +33,15 @@
         .topbar{
             display:flex;align-items:center;justify-content:space-between;
             gap:16px;padding:10px 20px;
-            border-bottom:1px solid rgba(255,255,255,.06);
-            background:rgba(10,16,24,.92);backdrop-filter:blur(8px);
+            border-bottom:1px solid var(--line);
+            background:#fff;
             flex-shrink:0;
         }
         .brand{display:flex;align-items:center;gap:10px}
         .brand-mark{
             width:32px;height:32px;border-radius:8px;display:grid;place-items:center;
-            background:linear-gradient(135deg, rgba(0,216,150,.15), rgba(111,232,255,.08));
-            border:1px solid rgba(0,216,150,.2);color:var(--green);flex-shrink:0;
+            background:rgba(5,150,105,.08);
+            border:1px solid rgba(5,150,105,.2);color:var(--green);flex-shrink:0;
         }
         .brand-mark svg{width:16px;height:16px}
         .brand h1{font-size:14px;font-weight:700;letter-spacing:.02em}
@@ -49,12 +49,12 @@
         .scenario-strip{display:flex;gap:6px;align-items:center}
         .scenario-label{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
         .scenario-btn{
-            border:1px solid rgba(148,163,184,.14);background:rgba(255,255,255,.03);
-            color:#c0cad4;border-radius:16px;padding:5px 12px;cursor:pointer;
+            border:1px solid var(--line);background:#fff;
+            color:var(--ink);border-radius:16px;padding:5px 12px;cursor:pointer;
             font-size:13px;transition:.15s ease;white-space:nowrap;
         }
         .scenario-btn:hover,.scenario-btn.active{
-            border-color:rgba(0,216,150,.3);background:rgba(0,216,150,.1);color:var(--ink);
+            border-color:var(--green);background:rgba(5,150,105,.08);color:var(--green);
         }
 
         /* ===== 工作区三栏 ===== */
@@ -66,12 +66,12 @@
         .panel{
             min-height:0;display:flex;flex-direction:column;
             border:1px solid var(--line);border-radius:var(--radius);
-            background:rgba(17,26,36,.96);box-shadow:var(--shadow);overflow:hidden;
+            background:var(--panel);box-shadow:var(--shadow);overflow:hidden;
         }
         .panel-hd{
             display:flex;align-items:center;justify-content:space-between;
             padding:0 10px;height:30px;flex-shrink:0;
-            border-bottom:1px solid var(--line2);background:rgba(255,255,255,.02);
+            border-bottom:1px solid var(--line2);background:var(--panel2);
         }
         .panel-hd h2{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
         .panel-hd svg{width:12px;height:12px;color:var(--green)}
@@ -82,7 +82,7 @@
         .sec-label:first-child{margin-top:0}
         .gen-card,.line-card{
             border:1px solid rgba(148,163,184,.1);border-radius:5px;
-            background:rgba(255,255,255,.025);padding:6px 7px;margin-bottom:5px;
+            background:var(--panel2);padding:6px 7px;margin-bottom:5px;
         }
         .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
         .gen-name{font-size:13px;font-weight:700}
@@ -92,18 +92,18 @@
         .fld label{color:#7a8a98;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
         .fld input[type="number"]{
             width:100%;border:1px solid rgba(148,163,184,.12);background:#0c131c;
-            color:#d5dee6;border-radius:4px;padding:4px 6px;outline:none;font-size:13px;height:26px;
+            color:var(--ink);border-radius:4px;padding:4px 6px;outline:none;font-size:13px;height:26px;background:#fff;
         }
-        .fld input:focus{border-color:rgba(0,216,150,.3)}
+        .fld input:focus{border-color:var(--green)}
         .fld input[type="range"]{padding:0;border:0;background:transparent;height:12px}
         .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
         .btn-run{
-            width:100%;border:1px solid rgba(0,216,150,.25);
-            background:linear-gradient(135deg, rgba(0,216,150,.18), rgba(0,216,150,.06));
+            width:100%;border:1px solid rgba(5,150,105,.3);
+            background:rgba(5,150,105,.06);
             color:var(--green);padding:6px;border-radius:5px;cursor:pointer;
             font-weight:700;font-size:13px;margin-top:6px;
         }
-        .btn-run:hover{background:linear-gradient(135deg, rgba(0,216,150,.28), rgba(0,216,150,.12))}
+        .btn-run:hover{background:rgba(5,150,105,.12)}
 
         /* ===== 中央区域 ===== */
         .center-stack{display:flex;flex-direction:column;gap:8px;min-height:0}
@@ -111,13 +111,13 @@
         .topology svg{width:100%;height:100%;display:block}
         .error-overlay{
             position:absolute;inset:12px;display:grid;place-items:center;gap:8px;text-align:center;
-            background:rgba(8,12,17,.85);border:1px solid rgba(239,75,75,.2);
+            background:rgba(255,255,255,.92);border:1px solid rgba(220,38,38,.2);
             border-radius:8px;padding:14px;
         }
         .hidden{display:none !important}
         .live-badge{
             display:inline-flex;align-items:center;padding:2px 7px;border-radius:10px;
-            border:1px solid rgba(0,216,150,.18);background:rgba(0,216,150,.08);
+            border:1px solid rgba(5,150,105,.2);background:rgba(5,150,105,.06);
             color:var(--green);font-size:10px;font-weight:700;
         }
 
@@ -126,16 +126,16 @@
         .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
         .kpi{
             padding:6px 7px;border:1px solid rgba(148,163,184,.1);border-radius:5px;
-            background:rgba(255,255,255,.025);
+            background:var(--panel2);
         }
-        .kpi-label{color:#8a9baa;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+        .kpi-label{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
         .kpi-val{font-size:15px;font-weight:800;margin-top:2px}
         .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        .data-section{border:1px solid rgba(148,163,184,.08);border-radius:5px;padding:5px 6px;background:rgba(255,255,255,.015)}
-        .data-section-title{color:#8a9baa;font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;font-weight:600}
+        .data-section{border:1px solid var(--line2);border-radius:5px;padding:5px 6px;background:var(--panel2)}
+        .data-section-title{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;font-weight:600}
         .lmp-row{
             display:flex;justify-content:space-between;align-items:center;
-            padding:3px 0;border-bottom:1px solid rgba(148,163,184,.06);font-size:14px;
+            padding:3px 0;border-bottom:1px solid var(--line2);font-size:14px;
         }
         .lmp-row:last-child{border-bottom:none}
         .lmp-tag{font-weight:700;font-size:14px}
@@ -144,9 +144,9 @@
         .lmp-comp{font-size:10px;color:var(--dim)}
         .gen-tbl{width:100%;border-collapse:collapse;font-size:14px}
         .gen-tbl th{color:#8a9baa;font-size:10px;text-transform:uppercase;text-align:left;padding:2px 0;font-weight:600}
-        .gen-tbl td{padding:2px 0;border-bottom:1px solid rgba(148,163,184,.06)}
+        .gen-tbl td{padding:2px 0;border-bottom:1px solid var(--line2)}
         .gen-tbl td:last-child,.gen-tbl th:last-child{text-align:right}
-        .ptdf-row{font-family:var(--mono);font-size:12px;color:#b0bec5;padding:1px 0}
+        .ptdf-row{font-family:var(--mono);font-size:12px;color:var(--muted);padding:1px 0}
 
         /* ===== 右侧 AI 区 ===== */
         .ai-panel{position:relative}
@@ -155,22 +155,22 @@
         .ai-msg{margin-bottom:8px;max-width:95%;font-size:14px;line-height:1.65;word-break:break-word}
         .ai-msg.user{
             margin-left:auto;padding:6px 10px;border-radius:8px 8px 2px 8px;
-            background:rgba(0,216,150,.08);border:1px solid rgba(0,216,150,.16);color:#d0dbe3;
+            background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.12);color:var(--ink);
         }
         .ai-msg.assistant{
             margin-right:auto;padding:7px 10px;border-radius:8px 8px 8px 2px;
-            background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.1);color:#c0cbd5;
+            background:#f8f9fb;border:1px solid var(--line);color:var(--ink);
         }
         .ai-msg.error{
             margin-right:auto;padding:6px 10px;border-radius:8px 8px 8px 2px;
-            background:rgba(239,75,75,.06);border:1px solid rgba(239,75,75,.18);color:#ff9a9a;
+            background:rgba(220,38,38,.05);border:1px solid rgba(220,38,38,.15);color:#b91c1c;
         }
         .ai-loading{display:flex;gap:5px;padding:8px 0}
         .ai-loading span{width:5px;height:5px;border-radius:50%;background:var(--cyan);opacity:.4;animation:dot 1s infinite}
         .ai-loading span:nth-child(2){animation-delay:.2s}
         .ai-loading span:nth-child(3){animation-delay:.4s}
         @keyframes dot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
-        .chat-default{padding:6px 2px;color:#9aabb8;font-size:14px;line-height:1.7}
+        .chat-default{padding:6px 2px;color:var(--muted);font-size:14px;line-height:1.7}
         .chat-default strong{color:var(--ink)}
         .chat-default code{color:var(--cyan);font-family:var(--mono);font-size:13px}
         .chat-default .formula-block{
@@ -183,8 +183,8 @@
         #ai_settings{
             display:none;position:absolute;top:34px;right:8px;
             width:min(320px, calc(100% - 16px));padding:8px;
-            border:1px solid rgba(255,255,255,.08);border-radius:8px;
-            background:rgba(12,19,28,.98);box-shadow:0 12px 28px rgba(0,0,0,.35);
+            border:1px solid var(--line);border-radius:8px;
+            background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.12);
             gap:6px;flex-wrap:wrap;z-index:10;
         }
         #ai_settings.visible{display:flex}
@@ -192,40 +192,40 @@
         .set-fld label{color:#7a8a98;font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
         .set-fld input,.set-fld select{
             width:100%;border:1px solid rgba(148,163,184,.12);background:#0c131c;
-            color:#d5dee6;border-radius:4px;padding:4px 6px;outline:none;font-size:13px;
+            color:var(--ink);border-radius:4px;padding:4px 6px;outline:none;font-size:13px;background:#fff;
         }
-        .set-fld input:focus,.set-fld select:focus{border-color:rgba(0,216,150,.3)}
+        .set-fld input:focus,.set-fld select:focus{border-color:var(--green)}
 
         /* AI 输入栏 */
         #ai_input_bar{
             display:flex;gap:6px;padding:8px 10px;flex-shrink:0;
             border-top:1px solid rgba(148,163,184,.1);
-            background:rgba(10,15,22,.6);
+            background:var(--panel2);
         }
         #ai_input{
             flex:1;border:1px solid rgba(255,255,255,.1);border-radius:6px;
-            background:rgba(255,255,255,.04);color:#d0dae5;
+            background:#fff;color:var(--ink);
             padding:7px 10px;outline:none;font-size:14px;
         }
-        #ai_input:focus{border-color:rgba(0,216,150,.35)}
-        #ai_input::placeholder{color:#4a5568}
+        #ai_input:focus{border-color:var(--green)}
+        #ai_input::placeholder{color:#94a3b8}
         #ai_send_btn{
-            border:1px solid rgba(0,216,150,.28);
-            background:linear-gradient(135deg, rgba(0,216,150,.2), rgba(0,216,150,.08));
+            border:1px solid rgba(5,150,105,.3);
+            background:rgba(5,150,105,.08);
             color:var(--green);padding:6px 14px;border-radius:6px;
             cursor:pointer;font-weight:700;font-size:14px;white-space:nowrap;
         }
         #ai_send_btn:disabled{opacity:.4;cursor:not-allowed}
         .ai-hd-right{display:flex;align-items:center;gap:5px}
         .ai-status{display:inline-flex;align-items:center;gap:4px;color:var(--dim);font-size:11px}
-        .dot{width:5px;height:5px;border-radius:50%;background:#4a5c6a;flex-shrink:0}
+        .dot{width:5px;height:5px;border-radius:50%;background:#cbd5e1;flex-shrink:0}
         .dot.ok{background:var(--green)}
         .ico-btn{
             width:24px;height:24px;display:grid;place-items:center;
-            border:1px solid rgba(148,163,184,.12);border-radius:6px;
-            background:rgba(255,255,255,.03);color:#9aabba;cursor:pointer;font-size:12px;
+            border:1px solid var(--line);border-radius:6px;
+            background:#fff;color:var(--muted);cursor:pointer;font-size:12px;
         }
-        .ico-btn:hover{border-color:rgba(0,216,150,.25);background:rgba(0,216,150,.06);color:var(--ink)}
+        .ico-btn:hover{border-color:var(--green);background:rgba(5,150,105,.06);color:var(--ink)}
 
         .ai-cursor{color:var(--cyan);animation:blink 1s infinite}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -337,13 +337,13 @@
 
                         <!-- 等边三角形：A(440,65) B(690,375) C(190,375) -->
                         <!-- 静态底板线路 -->
-                        <g opacity=".2">
-                            <line x1="440" y1="65" x2="690" y2="375" stroke="#263648" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="690" y1="375" x2="190" y2="375" stroke="#263648" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="190" y1="375" x2="440" y2="65" stroke="#263648" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="440" y1="65" x2="690" y2="375" stroke="#0a1017" stroke-width="5" stroke-linecap="round"/>
-                            <line x1="690" y1="375" x2="190" y2="375" stroke="#0a1017" stroke-width="5" stroke-linecap="round"/>
-                            <line x1="190" y1="375" x2="440" y2="65" stroke="#0a1017" stroke-width="5" stroke-linecap="round"/>
+                        <g opacity=".15">
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
                         </g>
 
                         <!-- 动态潮流线 -->
@@ -358,53 +358,53 @@
 
                         <!-- 潮流数据 + 线路参数标注 -->
                         <g transform="translate(525 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#090f16" stroke="#2a3949"/>
-                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
-                            <text id="param_ab" text-anchor="middle" y="32" fill="#556675" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
+                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#475569" font-size="13" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
+                            <text id="param_ab" text-anchor="middle" y="32" fill="#94a3b8" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(440 410)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
                             <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">BC: 0/100M</text>
-                            <text id="param_bc" text-anchor="middle" y="32" fill="#556675" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <text id="param_bc" text-anchor="middle" y="32" fill="#94a3b8" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(355 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#090f16" stroke="#2a3949"/>
+                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
                             <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">AC: 0/100M</text>
-                            <text id="param_ac" text-anchor="middle" y="32" fill="#556675" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <text id="param_ac" text-anchor="middle" y="32" fill="#94a3b8" font-size="12" font-family="Consolas,monospace">X=1.0</text>
                         </g>
 
                         <!-- 节点 A（顶部） -->
                         <g transform="translate(440,65)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-A)"/>
-                            <text text-anchor="middle" y="-2" fill="#06100d" font-weight="900" font-size="15">A</text>
-                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#03100b" font-size="10" font-weight="900">---</text>
-                            <rect x="-78" y="-48" width="52" height="18" rx="3" fill="#071711" stroke="#00d896"/>
-                            <text id="node_a_gen" x="-52" y="-35" text-anchor="middle" fill="#00d896" font-size="12" font-weight="800">G:0M</text>
-                            <rect x="26" y="-48" width="52" height="18" rx="3" fill="#0e1720" stroke="#415164"/>
-                            <text id="node_a_load" x="52" y="-35" text-anchor="middle" fill="#b7c2ce" font-size="12" font-weight="800">L:10M</text>
+                            <text text-anchor="middle" y="-2" fill="#065f46" font-weight="900" font-size="15">A</text>
+                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#065f46" font-size="10" font-weight="900">---</text>
+                            <rect x="-78" y="-48" width="52" height="18" rx="3" fill="#ecfdf5" stroke="#059669"/>
+                            <text id="node_a_gen" x="-52" y="-35" text-anchor="middle" fill="#059669" font-size="12" font-weight="800">G:0M</text>
+                            <rect x="26" y="-48" width="52" height="18" rx="3" fill="#f1f5f9" stroke="#94a3b8"/>
+                            <text id="node_a_load" x="52" y="-35" text-anchor="middle" fill="#64748b" font-size="12" font-weight="800">L:10M</text>
                         </g>
 
                         <!-- 节点 B（右下） -->
                         <g transform="translate(690,375)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-B)"/>
-                            <text text-anchor="middle" y="-2" fill="#170e00" font-weight="900" font-size="15">B</text>
-                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#170e00" font-size="10" font-weight="900">---</text>
-                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#1b1100" stroke="#f2a51a"/>
-                            <text id="node_b_gen" x="-60" y="4" text-anchor="middle" fill="#f2a51a" font-size="12" font-weight="800">G:0M</text>
-                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#0e1720" stroke="#415164"/>
-                            <text id="node_b_load" x="60" y="4" text-anchor="middle" fill="#b7c2ce" font-size="12" font-weight="800">L:50M</text>
+                            <text text-anchor="middle" y="-2" fill="#92400e" font-weight="900" font-size="15">B</text>
+                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#92400e" font-size="10" font-weight="900">---</text>
+                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#fffbeb" stroke="#d97706"/>
+                            <text id="node_b_gen" x="-60" y="4" text-anchor="middle" fill="#d97706" font-size="12" font-weight="800">G:0M</text>
+                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f1f5f9" stroke="#94a3b8"/>
+                            <text id="node_b_load" x="60" y="4" text-anchor="middle" fill="#64748b" font-size="12" font-weight="800">L:50M</text>
                         </g>
 
                         <!-- 节点 C（左下，平衡参考） -->
                         <g transform="translate(190,375)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-C)"/>
-                            <text text-anchor="middle" y="-2" fill="#200606" font-weight="900" font-size="15">C</text>
-                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#200606" font-size="10" font-weight="900">---</text>
-                            <text text-anchor="middle" y="46" fill="#ff8b8b" font-size="12" font-weight="700">平衡参考节点</text>
-                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#1d0909" stroke="#ef4b4b"/>
-                            <text id="node_c_gen" x="-60" y="4" text-anchor="middle" fill="#ff8b8b" font-size="12" font-weight="800">G:0M</text>
-                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#0e1720" stroke="#415164"/>
-                            <text id="node_c_load" x="60" y="4" text-anchor="middle" fill="#b7c2ce" font-size="12" font-weight="800">L:40M</text>
+                            <text text-anchor="middle" y="-2" fill="#991b1b" font-weight="900" font-size="15">C</text>
+                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#991b1b" font-size="10" font-weight="900">---</text>
+                            <text text-anchor="middle" y="46" fill="#dc2626" font-size="12" font-weight="700">平衡参考节点</text>
+                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#fef2f2" stroke="#dc2626"/>
+                            <text id="node_c_gen" x="-60" y="4" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="800">G:0M</text>
+                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f1f5f9" stroke="#94a3b8"/>
+                            <text id="node_c_load" x="60" y="4" text-anchor="middle" fill="#64748b" font-size="12" font-weight="800">L:40M</text>
                         </g>
                     </svg>
                     <div id="error_overlay" class="error-overlay hidden">
@@ -805,9 +805,9 @@ function updateFlowLine(lineId, txtId, flowValue, limit, x1, y1, x2, y2, arrowId
 
     // 颜色
     let color = "#00d896", sw = "3";
-    if (ratio >= .98) { color = "#ef4b4b"; sw = "4.5"; txt.style.fill = "#ff7a7a"; }
-    else if (ratio >= .75) { color = "#f2a51a"; sw = "4"; txt.style.fill = "#f2a51a"; }
-    else { txt.style.fill = "#9aa8b6"; }
+    if (ratio >= .98) { color = "#dc2626"; sw = "4.5"; txt.style.fill = "#dc2626"; }
+    else if (ratio >= .75) { color = "#d97706"; sw = "4"; txt.style.fill = "#d97706"; }
+    else { txt.style.fill = "#475569"; }
 
     line.setAttribute("stroke", color);
     line.setAttribute("stroke-width", sw);

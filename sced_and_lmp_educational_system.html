@@ -381,55 +381,55 @@
                         <polygon id="arrow_bc" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(440,375)" style="animation:arrowPulse 1.2s infinite"/>
                         <polygon id="arrow_ac" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(315,220)" style="animation:arrowPulse 1.2s infinite"/>
 
-                        <!-- Line labels (glassmorphism) -->
-                        <g transform="translate(525 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
-                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">AB: 0/100M</text>
-                            <text id="param_ab" text-anchor="middle" y="30" fill="#94a3b8" font-size="10" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">X=1.0</text>
+                        <!-- Line labels -->
+                        <g transform="translate(520 182)">
+                            <rect x="-60" y="-16" width="120" height="46" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
+                            <text text-anchor="middle" y="0" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">L<tspan font-size="8" baseline-shift="sub">AB</tspan>: <tspan id="flow_txt_ab">0</tspan>/<tspan id="flow_lim_ab">100</tspan>MW</text>
+                            <text id="param_ab" text-anchor="start" x="-50" y="16" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono','SF Mono',Consolas,monospace"><tspan>X=1.0 p.u.</tspan><tspan x="-50" dy="12">L=100 MW</tspan></text>
                         </g>
-                        <g transform="translate(440 410)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
-                            <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">BC: 0/100M</text>
-                            <text id="param_bc" text-anchor="middle" y="30" fill="#94a3b8" font-size="10" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">X=1.0</text>
+                        <g transform="translate(440 405)">
+                            <rect x="-60" y="-16" width="120" height="46" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
+                            <text text-anchor="middle" y="0" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">L<tspan font-size="8" baseline-shift="sub">BC</tspan>: <tspan id="flow_txt_bc">0</tspan>/<tspan id="flow_lim_bc">100</tspan>MW</text>
+                            <text id="param_bc" text-anchor="start" x="-50" y="16" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono','SF Mono',Consolas,monospace"><tspan>X=1.0 p.u.</tspan><tspan x="-50" dy="12">L=100 MW</tspan></text>
                         </g>
-                        <g transform="translate(355 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
-                            <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">AC: 0/100M</text>
-                            <text id="param_ac" text-anchor="middle" y="30" fill="#94a3b8" font-size="10" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">X=1.0</text>
+                        <g transform="translate(350 182)">
+                            <rect x="-60" y="-16" width="120" height="46" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
+                            <text text-anchor="middle" y="0" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">L<tspan font-size="8" baseline-shift="sub">AC</tspan>: <tspan id="flow_txt_ac">0</tspan>/<tspan id="flow_lim_ac">100</tspan>MW</text>
+                            <text id="param_ac" text-anchor="start" x="-50" y="16" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono','SF Mono',Consolas,monospace"><tspan>X=1.0 p.u.</tspan><tspan x="-50" dy="12">L=100 MW</tspan></text>
                         </g>
 
                         <!-- Node A -->
                         <g transform="translate(440,65)" filter="url(#nodeShadow)">
                             <circle r="30" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
                             <text text-anchor="middle" y="-2" fill="#1e293b" font-weight="700" font-size="15">A</text>
-                            <text id="lmp_lbl_a" text-anchor="middle" y="14" fill="#64748b" font-size="10" font-weight="500">---</text>
-                            <rect x="-78" y="-50" width="52" height="16" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
-                            <text id="node_a_gen" x="-52" y="-38" text-anchor="middle" fill="#10b981" font-size="10" font-weight="600">G:0M</text>
-                            <rect x="26" y="-50" width="52" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
-                            <text id="node_a_load" x="52" y="-38" text-anchor="middle" fill="#2563eb" font-size="10" font-weight="600">L:10M</text>
+                            <text id="lmp_lbl_a" text-anchor="middle" y="14" fill="#64748b" font-size="9" font-weight="500">---</text>
+                            <rect x="-86" y="-50" width="60" height="16" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
+                            <text x="-56" y="-38" text-anchor="middle" fill="#10b981" font-size="9" font-weight="600">Gen<tspan font-size="7" baseline-shift="sub">A</tspan>:<tspan id="node_a_gen">0</tspan>MW</text>
+                            <rect x="26" y="-50" width="64" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+                            <text x="58" y="-38" text-anchor="middle" fill="#2563eb" font-size="9" font-weight="600">Load<tspan font-size="7" baseline-shift="sub">A</tspan>:<tspan id="node_a_load">0</tspan>MW</text>
                         </g>
 
                         <!-- Node B -->
                         <g transform="translate(690,375)" filter="url(#nodeShadow)">
                             <circle r="30" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
                             <text text-anchor="middle" y="-2" fill="#1e293b" font-weight="700" font-size="15">B</text>
-                            <text id="lmp_lbl_b" text-anchor="middle" y="14" fill="#64748b" font-size="10" font-weight="500">---</text>
-                            <rect x="-86" y="-10" width="52" height="16" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
-                            <text id="node_b_gen" x="-60" y="2" text-anchor="middle" fill="#10b981" font-size="10" font-weight="600">G:0M</text>
-                            <rect x="34" y="-10" width="52" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
-                            <text id="node_b_load" x="60" y="2" text-anchor="middle" fill="#2563eb" font-size="10" font-weight="600">L:50M</text>
+                            <text id="lmp_lbl_b" text-anchor="middle" y="14" fill="#64748b" font-size="9" font-weight="500">---</text>
+                            <rect x="-94" y="-10" width="60" height="16" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
+                            <text x="-64" y="2" text-anchor="middle" fill="#10b981" font-size="9" font-weight="600">Gen<tspan font-size="7" baseline-shift="sub">B</tspan>:<tspan id="node_b_gen">0</tspan>MW</text>
+                            <rect x="34" y="-10" width="64" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+                            <text x="66" y="2" text-anchor="middle" fill="#2563eb" font-size="9" font-weight="600">Load<tspan font-size="7" baseline-shift="sub">B</tspan>:<tspan id="node_b_load">0</tspan>MW</text>
                         </g>
 
                         <!-- Node C (reference) -->
                         <g transform="translate(190,375)" filter="url(#nodeShadow)">
                             <circle r="30" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 2"/>
                             <text text-anchor="middle" y="-2" fill="#1e293b" font-weight="700" font-size="15">C</text>
-                            <text id="lmp_lbl_c" text-anchor="middle" y="14" fill="#64748b" font-size="10" font-weight="500">---</text>
+                            <text id="lmp_lbl_c" text-anchor="middle" y="14" fill="#64748b" font-size="9" font-weight="500">---</text>
                             <text text-anchor="middle" y="46" fill="#94a3b8" font-size="10" font-style="italic">平衡参考节点</text>
-                            <rect x="-86" y="-10" width="52" height="16" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
-                            <text id="node_c_gen" x="-60" y="2" text-anchor="middle" fill="#10b981" font-size="10" font-weight="600">G:0M</text>
-                            <rect x="34" y="-10" width="52" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
-                            <text id="node_c_load" x="60" y="2" text-anchor="middle" fill="#2563eb" font-size="10" font-weight="600">L:40M</text>
+                            <rect x="-94" y="-10" width="60" height="16" rx="4" fill="#f0fdf4" stroke="#bbf7d0"/>
+                            <text x="-64" y="2" text-anchor="middle" fill="#10b981" font-size="9" font-weight="600">Gen<tspan font-size="7" baseline-shift="sub">C</tspan>:<tspan id="node_c_gen">0</tspan>MW</text>
+                            <rect x="34" y="-10" width="64" height="16" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>
+                            <text x="66" y="2" text-anchor="middle" fill="#2563eb" font-size="9" font-weight="600">Load<tspan font-size="7" baseline-shift="sub">C</tspan>:<tspan id="node_c_load">0</tspan>MW</text>
                         </g>
                     </svg>
                     <div id="error_overlay" class="error-overlay hidden">
@@ -675,21 +675,24 @@ function runSCED() {
     document.getElementById("ptdf_val_bc_b").textContent=`PTDF(BC,B)=${PTDF_BC_B>=0?"+":""}${PTDF_BC_B.toFixed(2)}`;
     document.getElementById("ptdf_val_ac_a").textContent=`PTDF(AC,A)=${PTDF_AC_A>=0?"+":""}${PTDF_AC_A.toFixed(2)}`;
     document.getElementById("ptdf_val_ac_b").textContent=`PTDF(AC,B)=${PTDF_AC_B>=0?"+":""}${PTDF_AC_B.toFixed(2)}`;
-    document.getElementById("node_a_gen").textContent=`G:${sol.GA.toFixed(0)}M`;
-    document.getElementById("node_b_gen").textContent=`G:${sol.GB.toFixed(0)}M`;
-    document.getElementById("node_c_gen").textContent=`G:${sol.GC.toFixed(0)}M`;
-    document.getElementById("node_a_load").textContent=`L:${LA}M`;
-    document.getElementById("node_b_load").textContent=`L:${LB}M`;
-    document.getElementById("node_c_load").textContent=`L:${LC}M`;
-    document.getElementById("lmp_lbl_a").textContent=lmpA.toFixed(1)+"￥";
-    document.getElementById("lmp_lbl_b").textContent=lmpB.toFixed(1)+"￥";
-    document.getElementById("lmp_lbl_c").textContent=lmpC.toFixed(1)+"￥";
-    document.getElementById("flow_txt_ab").textContent=`AB: ${Math.abs(flow_ab).toFixed(1)}/${FAB_max}M`;
-    document.getElementById("flow_txt_bc").textContent=`BC: ${Math.abs(flow_bc).toFixed(1)}/${FBC_max}M`;
-    document.getElementById("flow_txt_ac").textContent=`AC: ${Math.abs(flow_ac).toFixed(1)}/${FAC_max}M`;
-    document.getElementById("param_ab").textContent=`X=${XAB}  L=${FAB_max}M`;
-    document.getElementById("param_bc").textContent=`X=${XBC}  L=${FBC_max}M`;
-    document.getElementById("param_ac").textContent=`X=${XAC}  L=${FAC_max}M`;
+    document.getElementById("node_a_gen").textContent=sol.GA.toFixed(0);
+    document.getElementById("node_b_gen").textContent=sol.GB.toFixed(0);
+    document.getElementById("node_c_gen").textContent=sol.GC.toFixed(0);
+    document.getElementById("node_a_load").textContent=LA;
+    document.getElementById("node_b_load").textContent=LB;
+    document.getElementById("node_c_load").textContent=LC;
+    document.getElementById("lmp_lbl_a").textContent=lmpA.toFixed(1)+"元/MWh";
+    document.getElementById("lmp_lbl_b").textContent=lmpB.toFixed(1)+"元/MWh";
+    document.getElementById("lmp_lbl_c").textContent=lmpC.toFixed(1)+"元/MWh";
+    document.getElementById("flow_txt_ab").textContent=Math.abs(flow_ab).toFixed(1);
+    document.getElementById("flow_lim_ab").textContent=FAB_max;
+    document.getElementById("flow_txt_bc").textContent=Math.abs(flow_bc).toFixed(1);
+    document.getElementById("flow_lim_bc").textContent=FBC_max;
+    document.getElementById("flow_txt_ac").textContent=Math.abs(flow_ac).toFixed(1);
+    document.getElementById("flow_lim_ac").textContent=FAC_max;
+    const paramAb=document.getElementById("param_ab");paramAb.querySelector("tspan:first-child").textContent=`X=${XAB} p.u.`;paramAb.querySelector("tspan:last-child").textContent=`L=${FAB_max} MW`;
+    const paramBc=document.getElementById("param_bc");paramBc.querySelector("tspan:first-child").textContent=`X=${XBC} p.u.`;paramBc.querySelector("tspan:last-child").textContent=`L=${FBC_max} MW`;
+    const paramAc=document.getElementById("param_ac");paramAc.querySelector("tspan:first-child").textContent=`X=${XAC} p.u.`;paramAc.querySelector("tspan:last-child").textContent=`L=${FAC_max} MW`;
     updateFlowLine("flow_ab_path","flow_txt_ab",flow_ab,FAB_max,440,65,690,375,"arrow_ab");
     updateFlowLine("flow_bc_path","flow_txt_bc",flow_bc,FBC_max,690,375,190,375,"arrow_bc");
     updateFlowLine("flow_ca_path","flow_txt_ac",-flow_ac,FAC_max,190,375,440,65,"arrow_ac");

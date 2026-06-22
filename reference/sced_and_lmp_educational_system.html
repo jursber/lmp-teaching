@@ -559,10 +559,26 @@ function syncInput(id) { const inp=document.getElementById(id), sl=document.getE
 const sliderKeys = ["price_g1","max_g1","price_g2","max_g2","price_g3","max_g3","load_a","load_b","load_c","limit_ab","limit_bc","limit_ac"];
 sliderKeys.forEach(id => {
     const inp=document.getElementById(id), sl=document.getElementById("slider_"+id);
-    if(inp) inp.addEventListener("input",()=>{syncSlider(id);runSCED();});
-    if(sl) sl.addEventListener("input",()=>{syncInput(id);runSCED();});
+    if(inp) inp.addEventListener("input",()=>{syncSlider(id);runSCED();if(id.startsWith("price_"))updateGenLabels();});
+    if(sl) sl.addEventListener("input",()=>{syncInput(id);runSCED();if(id.startsWith("price_"))updateGenLabels();});
     updateSliderPct(sl);
 });
+
+/* 机组标签随报价动态变化 */
+function updateGenLabels() {
+    const gens = [
+        {priceId:"price_g1", labelEl:document.querySelector(".gen-card:nth-child(1) .gen-desc")},
+        {priceId:"price_g2", labelEl:document.querySelector(".gen-card:nth-child(2) .gen-desc")},
+        {priceId:"price_g3", labelEl:document.querySelector(".gen-card:nth-child(3) .gen-desc")}
+    ];
+    gens.forEach(g => {
+        const p = +document.getElementById(g.priceId).value;
+        if (!g.labelEl) return;
+        if (p <= 20) { g.labelEl.textContent="低价机组"; g.labelEl.className="gen-desc gen-desc-low"; }
+        else if (p <= 80) { g.labelEl.textContent="中价机组"; g.labelEl.className="gen-desc gen-desc-mid"; }
+        else { g.labelEl.textContent="高价机组"; g.labelEl.className="gen-desc gen-desc-high"; }
+    });
+}
 
 function loadScenario(key) {
     currentActiveScenario = key;
@@ -585,6 +601,7 @@ function loadScenario(key) {
     document.getElementById('x_ac').value = sc.x_ac;
     sliderKeys.forEach(k => { const sl=document.getElementById("slider_"+k); if(sl){sl.value=sc[k];updateSliderPct(sl);} });
     document.querySelectorAll(".scenario-btn").forEach(b => b.classList.toggle("active", b.dataset.scenario===key));
+    updateGenLabels();
     setDefaultAiContent(key);
     runSCED();
 }
@@ -655,7 +672,28 @@ function runSCED() {
     const paid=LA*lmpA+LB*lmpB+LC*lmpC, gp=sol.GA*lmpA+sol.GB*lmpB+sol.GC*lmpC;
     document.getElementById("total_cost").textContent=rev.toFixed(2)+" 元";
     document.getElementById("congestion_rent").textContent=Math.max(0,paid-gp).toFixed(2)+" 元";
-    document.getElementById("marginal_unit").textContent=sol.GA>0&&sol.GA<GA_max?"G1":(sol.GB>0&&sol.GB<GB_max?"G2":"G3");
+    const marginal=sol.GA>0&&sol.GA<GA_max?"G1":(sol.GB>0&&sol.GB<GB_max?"G2":"G3");
+    document.getElementById("marginal_unit").textContent=marginal;
+
+    /* 边际机组节点深蓝色 */
+    const nodeGroups = {
+        "G1": {g:document.querySelector('[transform="translate(440,65)"]'), texts:["lmp_lbl_a"]},
+        "G2": {g:document.querySelector('[transform="translate(690,375)"]'), texts:["lmp_lbl_b"]},
+        "G3": {g:document.querySelector('[transform="translate(190,375)"]'), texts:["lmp_lbl_c"]}
+    };
+    Object.entries(nodeGroups).forEach(([gName, {g, texts}]) => {
+        if (!g) return;
+        const circle = g.querySelector("circle");
+        if (!circle) return;
+        const isMarginal = gName === marginal;
+        circle.setAttribute("fill", isMarginal ? "#2563eb" : "#ffffff");
+        circle.setAttribute("stroke", isMarginal ? "#1d4ed8" : "#cbd5e1");
+        /* 节点字母和LMP文字颜色 */
+        const letterText = g.querySelector("text:first-of-type");
+        const lmpText = g.querySelector("[id^='lmp_lbl']");
+        if (letterText) letterText.setAttribute("fill", isMarginal ? "#ffffff" : "#1e293b");
+        if (lmpText) lmpText.setAttribute("fill", isMarginal ? "rgba(255,255,255,0.85)" : "#64748b");
+    });
     const bp=lmpC;
     document.getElementById("lmp_a_val").textContent=lmpA.toFixed(2);
     document.getElementById("lmp_a_comp").textContent=`能量:${bp.toFixed(1)} 阻塞:${(lmpA-bp).toFixed(1)}`;

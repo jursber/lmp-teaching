@@ -9,125 +9,145 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{
-            --ink:#37352f;--muted:#9b9a97;--dim:#787774;
-            --green:#4d7c4f;--amber:#a67c2e;--red:#b55252;--blue:#529cca;
+            --bg:#F8FAFC;--panel:#FFFFFF;--canvas:#F1F5F9;
+            --line:#E2E8F0;--line2:#F1F5F9;
+            --ink:#0F172A;--body:#334155;--muted:#64748B;--dim:#94A3B8;
+            --primary:#2563EB;--primary-h:#1D4ED8;--secondary:#0EA5E9;
+            --amber:#F59E0B;--green:#10B981;--orange:#F97316;--red:#EF4444;
             --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
-            --mono:"JetBrains Mono","SF Mono","Cascadia Code",Consolas,monospace;
+            --mono:"SF Mono","JetBrains Mono",Consolas,monospace;
         }
         *{box-sizing:border-box;margin:0;padding:0}
         html,body{height:100%;overflow:hidden}
-        body{background:#fff;color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+        body{background:var(--bg);color:var(--body);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
         button,input,select{font-family:inherit;font-size:inherit}
         .app-shell{height:100vh;display:flex;flex-direction:column}
 
-        /* ===== 顶栏 ===== */
-        .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 20px;border-bottom:1px solid #e9e9e7;background:#fff;flex-shrink:0}
-        .brand{display:flex;align-items:center;gap:10px}
-        .brand-mark{width:28px;height:28px;border-radius:4px;display:grid;place-items:center;background:#f7f6f3;color:#529cca;flex-shrink:0}
-        .brand-mark svg{width:14px;height:14px}
-        .brand h1{font-size:14px;font-weight:600}
-        .brand p{font-size:11px;color:var(--muted);margin-top:1px}
-        .scenario-strip{display:flex;gap:4px;align-items:center}
-        .scenario-label{color:var(--muted);font-size:11px;margin-right:4px}
-        .scenario-btn{border:none;background:transparent;color:var(--dim);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:.1s}
-        .scenario-btn:hover{background:#f1f1ef;color:var(--ink)}
-        .scenario-btn.active{background:#f1f1ef;color:var(--ink);font-weight:500}
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar{width:4px;height:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:2px}
+        ::-webkit-scrollbar-thumb:hover{background:#94A3B8}
+
+        /* ===== 顶栏 (56px) ===== */
+        .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px;height:56px;border-bottom:1px solid var(--line);background:var(--panel);flex-shrink:0}
+        .brand{display:flex;align-items:center;gap:12px}
+        .brand-mark{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--canvas);color:var(--primary);flex-shrink:0}
+        .brand-mark svg{width:16px;height:16px}
+        .brand h1{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+        .brand p{font-size:12px;color:var(--muted);margin-top:2px}
+        .scenario-strip{display:flex;gap:2px;align-items:center}
+        .scenario-label{color:var(--muted);font-size:11px;margin-right:8px;font-weight:500;letter-spacing:.03em}
+        .scenario-btn{border:none;background:transparent;color:var(--muted);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+        .scenario-btn:hover{background:var(--canvas);color:var(--body)}
+        .scenario-btn.active{background:#EFF6FF;color:var(--primary);font-weight:600}
 
         /* ===== 工作区 ===== */
-        .workspace{flex:1;min-height:0;display:grid;grid-template-columns:24% 1fr 28%;gap:8px;padding:8px 10px}
-        .panel{min-height:0;display:flex;flex-direction:column;border:1px solid #e9e9e7;border-radius:3px;background:#fff;overflow:hidden}
-        .panel-hd{display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:28px;flex-shrink:0;border-bottom:1px solid #f0f0ee}
-        .panel-hd h2{font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:5px;letter-spacing:.02em}
-        .panel-hd svg{width:11px;height:11px;color:var(--dim)}
-        .panel-bd{flex:1;min-height:0;overflow:auto;padding:8px 10px}
+        .workspace{flex:1;min-height:0;display:grid;grid-template-columns:320px 1fr 360px;gap:12px;padding:12px 16px}
+        .panel{min-height:0;display:flex;flex-direction:column;background:var(--panel);border-radius:12px;border:1px solid var(--line);overflow:hidden}
+        .panel-hd{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:40px;flex-shrink:0}
+        .panel-hd h2{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;letter-spacing:.03em}
+        .panel-hd svg{width:13px;height:13px;color:var(--muted)}
+        .panel-bd{flex:1;min-height:0;overflow:auto;padding:16px}
 
         /* ===== 左侧参数区 ===== */
-        .sec-label{color:var(--muted);font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin:10px 0 5px;font-weight:600}
+        .sec-label{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;font-weight:600;display:flex;align-items:center;gap:6px}
+        .sec-label::before{content:"";width:3px;height:14px;background:var(--primary);border-radius:2px}
         .sec-label:first-child{margin-top:0}
-        .gen-card,.line-card{padding:6px 7px;margin-bottom:4px}
-        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-        .gen-name{font-size:12px;font-weight:600}
-        .gen-desc{color:var(--muted);font-size:11px}
-        .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-        .fld{display:flex;flex-direction:column;gap:1px}
-        .fld label{color:var(--muted);font-size:10px;font-weight:500}
-        .fld input[type="number"]{width:100%;border:none;border-bottom:1px solid #e9e9e7;background:transparent;color:var(--ink);padding:3px 0;outline:none;font-size:13px;height:24px}
-        .fld input:focus{border-bottom-color:#529cca}
-        .fld input[type="range"]{padding:0;border:0;background:transparent;height:12px}
-        .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-        .btn-run{width:100%;border:none;background:var(--ink);color:#fff;padding:6px;border-radius:4px;cursor:pointer;font-weight:500;font-size:12px;margin-top:8px;transition:.1s}
-        .btn-run:hover{background:#2f2e2a}
+        .gen-card,.line-card{background:var(--panel);border-radius:8px;padding:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+        .gen-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .gen-name{font-size:13px;font-weight:600;color:var(--ink)}
+        .gen-desc{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:500}
+        .gen-desc-low{background:#DBEAFE;color:var(--primary)}
+        .gen-desc-mid{background:#FEF3C7;color:var(--amber)}
+        .gen-desc-high{background:#F3F4F6;color:var(--muted)}
+        .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .fld{display:flex;flex-direction:column;gap:4px}
+        .fld label{color:var(--muted);font-size:11px;font-weight:500}
+        .fld input[type="number"]{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:6px 8px;outline:none;font-size:13px;height:32px;font-family:var(--mono)}
+        .fld input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+        .fld input[type="range"]{padding:0;border:0;background:transparent;height:16px;-webkit-appearance:none;appearance:none}
+        .fld input[type="range"]::-webkit-slider-track{height:4px;border-radius:2px;background:var(--line)}
+        .fld input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--panel);border:2px solid var(--primary);cursor:pointer;margin-top:-6px}
+        .fld input[type="range"]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(37,99,235,.15)}
+        .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .btn-run{width:100%;border:none;background:var(--ink);color:#fff;padding:12px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px;margin-top:12px;transition:all .2s;position:relative;overflow:hidden}
+        .btn-run:hover{background:#1E293B;box-shadow:0 4px 12px rgba(15,23,42,.15)}
 
         /* ===== 中央区域 ===== */
-        .center-stack{display:flex;flex-direction:column;gap:8px;min-height:0}
-        .topology{position:relative;padding:4px}
+        .center-stack{display:flex;flex-direction:column;gap:12px;min-height:0}
+        .topology{position:relative;padding:8px}
         .topology svg{width:100%;height:100%;display:block}
-        .error-overlay{position:absolute;inset:12px;display:grid;place-items:center;gap:8px;text-align:center;background:rgba(255,255,255,.95);border:1px solid #e9e9e7;border-radius:4px;padding:14px}
+        .error-overlay{position:absolute;inset:16px;display:grid;place-items:center;gap:8px;text-align:center;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:12px;padding:20px}
         .hidden{display:none !important}
-        .live-badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:3px;background:#f7f6f3;color:var(--dim);font-size:9px;font-weight:600;letter-spacing:.04em}
+        .live-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:#F0FDF4;color:var(--green);font-size:11px;font-weight:600}
+        .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:livePulse 2s infinite}
+        @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
 
         /* ===== 出清数据区 ===== */
-        .result-bd{display:flex;flex-direction:column;gap:6px;overflow:hidden}
-        .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-        .kpi{padding:6px 7px}
-        .kpi-label{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:500}
-        .kpi-val{font-size:15px;font-weight:700;margin-top:2px}
-        .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        .data-section{padding:4px 0}
-        .data-section-title{color:var(--muted);font-size:10px;font-weight:600;margin-bottom:3px}
-        .lmp-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0ee;font-size:13px}
+        .result-bd{display:flex;flex-direction:column;gap:12px;overflow:hidden}
+        .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+        .kpi{padding:12px 16px;border-right:1px solid var(--line2)}
+        .kpi:last-child{border-right:none}
+        .kpi-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+        .kpi-val{font-size:22px;font-weight:700;margin-top:4px;color:var(--ink);font-family:var(--mono)}
+        .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .data-section{padding:0}
+        .data-section-title{color:var(--muted);font-size:11px;font-weight:600;margin-bottom:6px;letter-spacing:.03em}
+        .lmp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line2);font-size:13px}
         .lmp-row:last-child{border-bottom:none}
-        .lmp-tag{font-weight:600;font-size:13px}
+        .lmp-tag{font-weight:600;font-size:13px;color:var(--ink)}
         .lmp-info{display:flex;flex-direction:column;align-items:flex-end;gap:0}
-        .lmp-info strong{font-size:13px}
-        .lmp-comp{font-size:10px;color:var(--muted)}
+        .lmp-info strong{font-size:14px;font-family:var(--mono);color:var(--ink)}
+        .lmp-comp{font-size:10px;color:var(--dim);font-family:var(--mono)}
         .gen-tbl{width:100%;border-collapse:collapse;font-size:13px}
-        .gen-tbl th{color:var(--muted);font-size:10px;text-transform:uppercase;text-align:left;padding:2px 0;font-weight:500}
-        .gen-tbl td{padding:2px 0;border-bottom:1px solid #f0f0ee}
+        .gen-tbl th{color:var(--muted);font-size:10px;text-transform:uppercase;text-align:left;padding:4px 0;font-weight:600;letter-spacing:.04em}
+        .gen-tbl td{padding:4px 0;border-bottom:1px solid var(--line2);font-family:var(--mono)}
         .gen-tbl td:last-child,.gen-tbl th:last-child{text-align:right}
-        .ptdf-row{font-family:var(--mono);font-size:11px;color:var(--muted);padding:1px 0}
+        .ptdf-row{font-family:var(--mono);font-size:12px;color:var(--body);padding:2px 0}
 
         /* ===== AI 区 ===== */
         .ai-panel{position:relative}
         #ai_body{flex:1;min-height:0;display:flex;flex-direction:column}
-        #ai_messages{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:8px 10px 4px}
-        .ai-msg{margin-bottom:8px;max-width:95%;font-size:14px;line-height:1.65;word-break:break-word}
-        .ai-msg.user{margin-left:auto;padding:6px 10px;border-radius:3px;background:#f1f1ef;color:var(--ink)}
-        .ai-msg.assistant{margin-right:auto;padding:7px 10px;border-radius:3px;background:#f7f6f3;color:var(--ink)}
-        .ai-msg.error{margin-right:auto;padding:6px 10px;border-radius:3px;background:#fce8e6;color:var(--red)}
-        .ai-loading{display:flex;gap:5px;padding:8px 0}
-        .ai-loading span{width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:.4;animation:dot 1s infinite}
+        #ai_messages{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px}
+        .ai-msg{margin-bottom:10px;max-width:95%;font-size:14px;line-height:1.7;word-break:break-word}
+        .ai-msg.user{margin-left:auto;padding:8px 12px;border-radius:8px;background:#EFF6FF;color:var(--ink);font-weight:500}
+        .ai-msg.assistant{margin-right:auto;padding:10px 12px;border-radius:8px;background:var(--canvas);color:var(--body)}
+        .ai-msg.error{margin-right:auto;padding:8px 12px;border-radius:8px;background:#FEF2F2;color:var(--red)}
+        .ai-loading{display:flex;gap:5px;padding:10px 0}
+        .ai-loading span{width:5px;height:5px;border-radius:50%;background:var(--primary);opacity:.3;animation:dot 1s infinite}
         .ai-loading span:nth-child(2){animation-delay:.2s}
         .ai-loading span:nth-child(3){animation-delay:.4s}
-        @keyframes dot{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
-        .chat-default{padding:6px 2px;color:var(--muted);font-size:14px;line-height:1.7}
+        @keyframes dot{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+        .chat-default{padding:4px 0;color:var(--body);font-size:14px;line-height:1.7}
         .chat-default strong{color:var(--ink)}
-        .chat-default code{color:var(--blue);font-family:var(--mono);font-size:12px}
-        .chat-default .formula-block{display:block;margin:6px 0;padding:6px 10px;border-radius:3px;background:#f7f6f3;font-family:var(--mono);font-size:12px;color:var(--dim);line-height:1.5}
+        .chat-default code{color:var(--primary);font-family:var(--mono);font-size:12px;background:#EFF6FF;padding:1px 4px;border-radius:3px}
+        .chat-default .formula-block{display:block;margin:8px 0;padding:8px 12px;border-radius:6px;background:var(--canvas);font-family:var(--mono);font-size:12px;color:var(--body);line-height:1.5;border:1px solid var(--line2)}
 
         /* 设置浮层 */
-        #ai_settings{display:none;position:absolute;top:32px;right:8px;width:min(300px,calc(100% - 16px));padding:10px;border:1px solid #e9e9e7;border-radius:4px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08);gap:8px;flex-wrap:wrap;z-index:10}
+        #ai_settings{display:none;position:absolute;top:40px;right:12px;width:min(320px,calc(100% - 24px));padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);box-shadow:0 8px 24px rgba(0,0,0,.08);gap:10px;flex-wrap:wrap;z-index:10}
         #ai_settings.visible{display:flex}
-        .set-fld{display:flex;flex-direction:column;gap:2px;flex:1;min-width:100px}
-        .set-fld label{color:var(--muted);font-size:10px;font-weight:500}
-        .set-fld input,.set-fld select{width:100%;border:none;border-bottom:1px solid #e9e9e7;background:transparent;color:var(--ink);padding:4px 0;outline:none;font-size:13px}
-        .set-fld input:focus,.set-fld select:focus{border-bottom-color:#529cca}
+        .set-fld{display:flex;flex-direction:column;gap:4px;flex:1;min-width:100px}
+        .set-fld label{color:var(--muted);font-size:11px;font-weight:500}
+        .set-fld input,.set-fld select{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:6px 8px;outline:none;font-size:13px}
+        .set-fld input:focus,.set-fld select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
 
         /* 输入栏 */
-        #ai_input_bar{display:flex;gap:6px;padding:8px 10px;flex-shrink:0;border-top:1px solid #f0f0ee}
-        #ai_input{flex:1;border:1px solid #e9e9e7;border-radius:3px;background:#fff;color:var(--ink);padding:6px 10px;outline:none;font-size:13px}
-        #ai_input:focus{border-color:#529cca}
-        #ai_input::placeholder{color:var(--muted)}
-        #ai_send_btn{border:none;background:var(--ink);color:#fff;padding:6px 14px;border-radius:3px;cursor:pointer;font-weight:500;font-size:13px;white-space:nowrap}
-        #ai_send_btn:disabled{opacity:.4;cursor:not-allowed}
-        .ai-hd-right{display:flex;align-items:center;gap:4px}
-        .ai-status{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:10px}
-        .dot{width:5px;height:5px;border-radius:50%;background:#d3d3d0;flex-shrink:0}
+        #ai_input_bar{display:flex;gap:8px;padding:12px 16px;flex-shrink:0;border-top:1px solid var(--line2)}
+        #ai_input{flex:1;border:1px solid transparent;border-radius:10px;background:var(--canvas);color:var(--ink);padding:10px 14px;outline:none;font-size:14px;transition:all .2s}
+        #ai_input:focus{border-color:var(--primary);background:var(--panel);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+        #ai_input::placeholder{color:var(--dim)}
+        #ai_send_btn{border:none;background:var(--primary);color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;display:grid;place-items:center;transition:all .2s;flex-shrink:0}
+        #ai_send_btn:hover{background:var(--primary-h);transform:scale(1.05)}
+        #ai_send_btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+        .ai-hd-right{display:flex;align-items:center;gap:6px}
+        .ai-status{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:11px}
+        .dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0}
         .dot.ok{background:var(--green)}
-        .ico-btn{width:22px;height:22px;display:grid;place-items:center;border:none;border-radius:3px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}
-        .ico-btn:hover{background:#f1f1ef;color:var(--ink)}
+        .ico-btn{width:28px;height:28px;display:grid;place-items:center;border:none;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;transition:all .15s}
+        .ico-btn:hover{background:var(--canvas);color:var(--ink)}
 
-        .ai-cursor{color:var(--blue);animation:blink 1s infinite}
+        .ai-cursor{color:var(--primary);animation:blink 1s infinite}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
         @keyframes arrowPulse{0%,100%{opacity:1}50%{opacity:.3}}
         .flow-line{animation:flow 3s linear infinite}
@@ -148,10 +168,10 @@
         </div>
         <div class="scenario-strip">
             <span class="scenario-label">教学场景</span>
-            <button class="scenario-btn active" data-scenario="base" onclick="loadScenario('base')">1 无约束出清</button>
-            <button class="scenario-btn" data-scenario="congestion" onclick="loadScenario('congestion')">2 线路拥堵</button>
-            <button class="scenario-btn" data-scenario="negative" onclick="loadScenario('negative')">3 节点负电价</button>
-            <button class="scenario-btn" data-scenario="surplus" onclick="loadScenario('surplus')">4 阻塞盈余</button>
+            <button class="scenario-btn active" data-scenario="base" onclick="loadScenario('base')">无约束出清</button>
+            <button class="scenario-btn" data-scenario="congestion" onclick="loadScenario('congestion')">线路拥堵</button>
+            <button class="scenario-btn" data-scenario="negative" onclick="loadScenario('negative')">节点负电价</button>
+            <button class="scenario-btn" data-scenario="surplus" onclick="loadScenario('surplus')">阻塞盈余</button>
         </div>
     </header>
 
@@ -164,21 +184,21 @@
             <div class="panel-bd">
                 <div class="sec-label">发电机组报价 · 容量</div>
                 <div class="gen-card">
-                    <div class="gen-hd"><span class="gen-name" style="color:var(--green)">G1 节点 A</span><span class="gen-desc">低价机组</span></div>
+                    <div class="gen-hd"><span class="gen-name">G1 节点 A</span><span class="gen-desc gen-desc-low">低价机组</span></div>
                     <div class="fgrid">
                         <div class="fld"><label>报价 元/MWh</label><input id="price_g1" type="number" value="15"><input id="slider_price_g1" type="range" min="0" max="200" value="15"></div>
                         <div class="fld"><label>容量 MW</label><input id="max_g1" type="number" value="100"><input id="slider_max_g1" type="range" min="0" max="150" value="100"></div>
                     </div>
                 </div>
                 <div class="gen-card">
-                    <div class="gen-hd"><span class="gen-name" style="color:var(--amber)">G2 节点 B</span><span class="gen-desc">中高成本机组</span></div>
+                    <div class="gen-hd"><span class="gen-name">G2 节点 B</span><span class="gen-desc gen-desc-mid">中高价机组</span></div>
                     <div class="fgrid">
                         <div class="fld"><label>报价 元/MWh</label><input id="price_g2" type="number" value="30"><input id="slider_price_g2" type="range" min="0" max="200" value="30"></div>
                         <div class="fld"><label>容量 MW</label><input id="max_g2" type="number" value="80"><input id="slider_max_g2" type="range" min="0" max="150" value="80"></div>
                     </div>
                 </div>
                 <div class="gen-card">
-                    <div class="gen-hd"><span class="gen-name" style="color:var(--red)">G3 节点 C</span><span class="gen-desc">参考机组</span></div>
+                    <div class="gen-hd"><span class="gen-name">G3 节点 C</span><span class="gen-desc gen-desc-high">参考机组</span></div>
                     <div class="fgrid">
                         <div class="fld"><label>报价 元/MWh</label><input id="price_g3" type="number" value="50"><input id="slider_price_g3" type="range" min="0" max="200" value="50"></div>
                         <div class="fld"><label>容量 MW</label><input id="max_g3" type="number" value="60"><input id="slider_max_g3" type="range" min="0" max="150" value="60"></div>
@@ -221,14 +241,14 @@
             <div class="panel" style="flex:1;min-height:0">
                 <div class="panel-hd">
                     <h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7l8-4 8 4-8 4-8-4zm0 5l8 4 8-4M4 17l8 4 8-4"></path></svg>物理输网潮流拓扑</h2>
-                    <span class="live-badge">LIVE</span>
+                    <span class="live-badge"><span class="live-dot"></span>实时仿真</span>
                 </div>
                 <div class="topology" style="flex:1;min-height:0">
                     <svg id="network_svg" viewBox="0 0 880 440">
                         <defs>
-                            <linearGradient id="grad-A" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4e4d4"/><stop offset="100%" stop-color="#c0d4c0"/></linearGradient>
-                            <linearGradient id="grad-B" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8dcc8"/><stop offset="100%" stop-color="#d8ccac"/></linearGradient>
-                            <linearGradient id="grad-C" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e0cccc"/><stop offset="100%" stop-color="#d0b8b8"/></linearGradient>
+                            <linearGradient id="grad-A" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#EFF6FF"/><stop offset="100%" stop-color="#DBEAFE"/></linearGradient>
+                            <linearGradient id="grad-B" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F0F9FF"/><stop offset="100%" stop-color="#E0F2FE"/></linearGradient>
+                            <linearGradient id="grad-C" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F8FAFC"/><stop offset="100%" stop-color="#F1F5F9"/></linearGradient>
                             <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                             <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00d896" opacity=".7"/></marker>
                             <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#f2a51a" opacity=".7"/></marker>
@@ -237,74 +257,74 @@
 
                         <!-- 等边三角形：A(440,65) B(690,375) C(190,375) -->
                         <!-- 静态底板线路 -->
-                        <g opacity=".15">
-                            <line x1="440" y1="65" x2="690" y2="375" stroke="#d3d3d0" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="690" y1="375" x2="190" y2="375" stroke="#d3d3d0" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="190" y1="375" x2="440" y2="65" stroke="#d3d3d0" stroke-width="10" stroke-linecap="round"/>
-                            <line x1="440" y1="65" x2="690" y2="375" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-                            <line x1="690" y1="375" x2="190" y2="375" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-                            <line x1="190" y1="375" x2="440" y2="65" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+                        <g opacity=".4">
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
                         </g>
 
                         <!-- 动态潮流线 -->
-                        <line id="flow_ab_path" x1="440" y1="65" x2="690" y2="375" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
-                        <line id="flow_bc_path" x1="690" y1="375" x2="190" y2="375" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
-                        <line id="flow_ca_path" x1="190" y1="375" x2="440" y2="65" class="flow-line" stroke="#00d896" stroke-width="3" stroke-linecap="round"/>
+                        <line id="flow_ab_path" x1="440" y1="65" x2="690" y2="375" class="flow-line" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+                        <line id="flow_bc_path" x1="690" y1="375" x2="190" y2="375" class="flow-line" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+                        <line id="flow_ca_path" x1="190" y1="375" x2="440" y2="65" class="flow-line" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
 
                         <!-- 动态潮流箭头（闪烁） -->
-                        <polygon id="arrow_ab" points="0,-9 16,0 0,9" fill="#00d896" transform="translate(565,220)" style="animation:arrowPulse 1.2s infinite"/>
-                        <polygon id="arrow_bc" points="0,-9 16,0 0,9" fill="#00d896" transform="translate(440,375)" style="animation:arrowPulse 1.2s infinite"/>
-                        <polygon id="arrow_ac" points="0,-9 16,0 0,9" fill="#00d896" transform="translate(315,220)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_ab" points="0,-9 16,0 0,9" fill="#CBD5E1" transform="translate(565,220)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_bc" points="0,-9 16,0 0,9" fill="#CBD5E1" transform="translate(440,375)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_ac" points="0,-9 16,0 0,9" fill="#CBD5E1" transform="translate(315,220)" style="animation:arrowPulse 1.2s infinite"/>
 
                         <!-- 潮流数据 + 线路参数标注 -->
                         <g transform="translate(525 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#787774" font-size="13" font-weight="700" font-family="Consolas,monospace">AB: 0/100M</text>
-                            <text id="param_ab" text-anchor="middle" y="32" fill="#9b9a97" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,.9)" stroke="#E2E8F0"/>
+                            <text id="flow_txt_ab" text-anchor="middle" y="5" fill="#0F172A" font-size="12" font-weight="600" font-family="SF Mono,JetBrains Mono,Consolas,monospace">AB: 0/100M</text>
+                            <text id="param_ab" text-anchor="middle" y="32" fill="#94A3B8" font-size="10" font-family="SF Mono,JetBrains Mono,Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(440 410)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">BC: 0/100M</text>
-                            <text id="param_bc" text-anchor="middle" y="32" fill="#9b9a97" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,.9)" stroke="#E2E8F0"/>
+                            <text id="flow_txt_bc" text-anchor="middle" y="5" fill="#0F172A" font-size="12" font-weight="600" font-family="SF Mono,JetBrains Mono,Consolas,monospace">BC: 0/100M</text>
+                            <text id="param_bc" text-anchor="middle" y="32" fill="#94A3B8" font-size="10" font-family="SF Mono,JetBrains Mono,Consolas,monospace">X=1.0</text>
                         </g>
                         <g transform="translate(355 190)">
-                            <rect x="-56" y="-14" width="112" height="28" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#9aa8b6" font-size="13" font-weight="700" font-family="Consolas,monospace">AC: 0/100M</text>
-                            <text id="param_ac" text-anchor="middle" y="32" fill="#9b9a97" font-size="12" font-family="Consolas,monospace">X=1.0</text>
+                            <rect x="-56" y="-14" width="112" height="28" rx="6" fill="rgba(255,255,255,.9)" stroke="#E2E8F0"/>
+                            <text id="flow_txt_ac" text-anchor="middle" y="5" fill="#0F172A" font-size="12" font-weight="600" font-family="SF Mono,JetBrains Mono,Consolas,monospace">AC: 0/100M</text>
+                            <text id="param_ac" text-anchor="middle" y="32" fill="#94A3B8" font-size="10" font-family="SF Mono,JetBrains Mono,Consolas,monospace">X=1.0</text>
                         </g>
 
                         <!-- 节点 A（顶部） -->
                         <g transform="translate(440,65)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-A)"/>
-                            <text text-anchor="middle" y="-2" fill="#3d6b3d" font-weight="700" font-size="14">A</text>
-                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#3d6b3d" font-size="9" font-weight="600">---</text>
-                            <rect x="-78" y="-48" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="node_a_gen" x="-52" y="-35" text-anchor="middle" fill="var(--green)" font-size="11" font-weight="600">G:0M</text>
-                            <rect x="26" y="-48" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="node_a_load" x="52" y="-35" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="600">L:10M</text>
+                            <circle r="32" fill="url(#grad-A)" stroke="#2563EB" stroke-width="2"/>
+                            <text text-anchor="middle" y="-2" fill="#0F172A" font-weight="700" font-size="15">A</text>
+                            <text id="lmp_lbl_a" text-anchor="middle" y="13" fill="#64748B" font-size="9" font-weight="500">---</text>
+                            <rect x="-78" y="-50" width="52" height="18" rx="4" fill="#F0FDF4" stroke="#D1FAE5"/>
+                            <text id="node_a_gen" x="-52" y="-37" text-anchor="middle" fill="#10B981" font-size="11" font-weight="600">G:0M</text>
+                            <rect x="26" y="-50" width="52" height="18" rx="4" fill="#EFF6FF" stroke="#DBEAFE"/>
+                            <text id="node_a_load" x="52" y="-37" text-anchor="middle" fill="#2563EB" font-size="11" font-weight="600">L:10M</text>
                         </g>
 
                         <!-- 节点 B（右下） -->
                         <g transform="translate(690,375)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-B)"/>
-                            <text text-anchor="middle" y="-2" fill="#8b6914" font-weight="700" font-size="14">B</text>
-                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#8b6914" font-size="9" font-weight="600">---</text>
-                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="node_b_gen" x="-60" y="4" text-anchor="middle" fill="var(--amber)" font-size="11" font-weight="600">G:0M</text>
-                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="node_b_load" x="60" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="600">L:50M</text>
+                            <circle r="32" fill="url(#grad-B)" stroke="#2563EB" stroke-width="2"/>
+                            <text text-anchor="middle" y="-2" fill="#0F172A" font-weight="700" font-size="15">B</text>
+                            <text id="lmp_lbl_b" text-anchor="middle" y="13" fill="#64748B" font-size="9" font-weight="500">---</text>
+                            <rect x="-86" y="-10" width="52" height="18" rx="4" fill="#F0FDF4" stroke="#D1FAE5"/>
+                            <text id="node_b_gen" x="-60" y="3" text-anchor="middle" fill="#10B981" font-size="11" font-weight="600">G:0M</text>
+                            <rect x="34" y="-10" width="52" height="18" rx="4" fill="#EFF6FF" stroke="#DBEAFE"/>
+                            <text id="node_b_load" x="60" y="3" text-anchor="middle" fill="#2563EB" font-size="11" font-weight="600">L:50M</text>
                         </g>
 
                         <!-- 节点 C（左下，平衡参考） -->
                         <g transform="translate(190,375)" filter="url(#glow)">
                             <circle r="28" fill="url(#grad-C)"/>
-                            <text text-anchor="middle" y="-2" fill="#8b3a3a" font-weight="700" font-size="14">C</text>
-                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#8b3a3a" font-size="9" font-weight="600">---</text>
-                            <text text-anchor="middle" y="46" fill="var(--muted)" font-size="11" font-weight="500">平衡参考节点</text>
-                            <rect x="-86" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="node_c_gen" x="-60" y="4" text-anchor="middle" fill="var(--red)" font-size="11" font-weight="600">G:0M</text>
-                            <rect x="34" y="-9" width="52" height="18" rx="3" fill="#f7f6f3" stroke="#e9e9e7"/>
-                            <text id="node_c_load" x="60" y="4" text-anchor="middle" fill="var(--muted)" font-size="11" font-weight="600">L:40M</text>
+                            <circle r="32" fill="url(#grad-C)" stroke="#CBD5E1" stroke-width="2"/>
+                            <text text-anchor="middle" y="-2" fill="#0F172A" font-weight="700" font-size="15">C</text>
+                            <text id="lmp_lbl_c" text-anchor="middle" y="13" fill="#64748B" font-size="9" font-weight="500">---</text>
+                            <text text-anchor="middle" y="46" fill="#94A3B8" font-size="10" font-style="italic">平衡参考节点</text>
+                            <rect x="-86" y="-10" width="52" height="18" rx="4" fill="#F0FDF4" stroke="#D1FAE5"/>
+                            <text id="node_c_gen" x="-60" y="3" text-anchor="middle" fill="#10B981" font-size="11" font-weight="600">G:0M</text>
+                            <rect x="34" y="-10" width="52" height="18" rx="4" fill="#EFF6FF" stroke="#DBEAFE"/>
+                            <text id="node_c_load" x="60" y="3" text-anchor="middle" fill="#2563EB" font-size="11" font-weight="600">L:40M</text>
                         </g>
                     </svg>
                     <div id="error_overlay" class="error-overlay hidden">
@@ -319,24 +339,24 @@
                 <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2></div>
                 <div class="panel-bd result-bd">
                     <div class="kpi-row">
-                        <div class="kpi"><div class="kpi-label">购电总成本</div><div class="kpi-val" id="total_cost" style="color:var(--green)">0.00 元</div></div>
-                        <div class="kpi"><div class="kpi-label">阻塞盈余</div><div class="kpi-val" id="congestion_rent" style="color:var(--amber)">0.00 元</div></div>
-                        <div class="kpi"><div class="kpi-label">边际机组</div><div class="kpi-val" id="marginal_unit" style="color:var(--cyan)">G1</div></div>
+                        <div class="kpi"><div class="kpi-label">购电总成本</div><div class="kpi-val" id="total_cost">0.00 元</div></div>
+                        <div class="kpi"><div class="kpi-label">阻塞盈余</div><div class="kpi-val" id="congestion_rent">0.00 元</div></div>
+                        <div class="kpi"><div class="kpi-label">边际机组</div><div class="kpi-val" id="marginal_unit" style="color:var(--primary)">G1</div></div>
                     </div>
                     <div class="data-grid">
                         <div class="data-section">
                             <div class="data-section-title">各节点 LMP</div>
-                            <div class="lmp-row"><span class="lmp-tag" style="color:var(--green)">A</span><div class="lmp-info"><strong id="lmp_a_val">0.00</strong><span class="lmp-comp" id="lmp_a_comp">能量:0 阻塞:0</span></div></div>
-                            <div class="lmp-row"><span class="lmp-tag" style="color:var(--amber)">B</span><div class="lmp-info"><strong id="lmp_b_val">0.00</strong><span class="lmp-comp" id="lmp_b_comp">能量:0 阻塞:0</span></div></div>
-                            <div class="lmp-row"><span class="lmp-tag" style="color:var(--red)">C</span><div class="lmp-info"><strong id="lmp_c_val">0.00</strong><span class="lmp-comp" id="lmp_c_comp">能量:0 阻塞:0</span></div></div>
+                            <div class="lmp-row"><span class="lmp-tag" style="color:#10B981">A</span><div class="lmp-info"><strong id="lmp_a_val">0.00</strong><span class="lmp-comp" id="lmp_a_comp">能量:0 阻塞:0</span></div></div>
+                            <div class="lmp-row"><span class="lmp-tag" style="color:#F59E0B">B</span><div class="lmp-info"><strong id="lmp_b_val">0.00</strong><span class="lmp-comp" id="lmp_b_comp">能量:0 阻塞:0</span></div></div>
+                            <div class="lmp-row"><span class="lmp-tag" style="color:#EF4444">C</span><div class="lmp-info"><strong id="lmp_c_val">0.00</strong><span class="lmp-comp" id="lmp_c_comp">能量:0 阻塞:0</span></div></div>
                         </div>
                         <div class="data-section">
                             <div class="data-section-title">机组结算</div>
                             <table class="gen-tbl">
                                 <tr><th>机组</th><th>出力</th><th>电价/收益</th></tr>
-                                <tr><td style="color:var(--green);font-weight:700">G1</td><td id="tbl_gen_g1">0</td><td id="tbl_rev_g1">0/0</td></tr>
-                                <tr><td style="color:var(--amber);font-weight:700">G2</td><td id="tbl_gen_g2">0</td><td id="tbl_rev_g2">0/0</td></tr>
-                                <tr><td style="color:var(--red);font-weight:700">G3</td><td id="tbl_gen_g3">0</td><td id="tbl_rev_g3">0/0</td></tr>
+                                <tr><td style="color:#10B981;font-weight:600">G1</td><td id="tbl_gen_g1">0</td><td id="tbl_rev_g1">0/0</td></tr>
+                                <tr><td style="color:#F59E0B;font-weight:600">G2</td><td id="tbl_gen_g2">0</td><td id="tbl_rev_g2">0/0</td></tr>
+                                <tr><td style="color:#EF4444;font-weight:600">G3</td><td id="tbl_gen_g3">0</td><td id="tbl_rev_g3">0/0</td></tr>
                             </table>
                         </div>
                     </div>
@@ -369,7 +389,7 @@
                 <div id="ai_messages"></div>
                 <div id="ai_input_bar">
                     <input id="ai_input" type="text" placeholder="输入问题，例如：为什么 B 点 LMP 更高？">
-                    <button id="ai_send_btn" type="button" onclick="sendAiMessage()">发送</button>
+                    <button id="ai_send_btn" type="button" onclick="sendAiMessage()">→</button>
                 </div>
             </div>
             <div id="ai_settings">
@@ -703,11 +723,11 @@ function updateFlowLine(lineId, txtId, flowValue, limit, x1, y1, x2, y2, arrowId
 
     line.style.animationDuration = Math.max(.4, 3 - ratio * 2.3) + "s";
 
-    // 颜色
-    let color = "#00d896", sw = "3";
-    if (ratio >= .98) { color = "#b55252"; sw = "4.5"; txt.style.fill = "#b55252"; }
-    else if (ratio >= .75) { color = "#a67c2e"; sw = "4"; txt.style.fill = "#a67c2e"; }
-    else { txt.style.fill = "#787774"; }
+    // 颜色（设计规范）
+    let color = "#2563EB", sw = "2.5";
+    if (ratio >= .98) { color = "#EF4444"; sw = "4"; txt.style.fill = "#EF4444"; }
+    else if (ratio >= .75) { color = "#F97316"; sw = "3.5"; txt.style.fill = "#F97316"; }
+    else { txt.style.fill = "#0F172A"; }
 
     line.setAttribute("stroke", color);
     line.setAttribute("stroke-width", sw);
@@ -721,7 +741,7 @@ function setDefaultAiContent(key) {
     const box = document.getElementById("ai_messages");
     if (!box) return;
     box.innerHTML = `<div class="chat-default">
-        <div style="color:var(--cyan);font-weight:700;margin-bottom:8px;font-size:13px">${exp.badge}</div>
+        <div style="color:var(--primary);font-weight:700;margin-bottom:8px;font-size:13px">${exp.badge}</div>
         <div style="margin-bottom:8px">${exp.border}</div>
         <div style="margin-bottom:8px">${exp.dispatch}</div>
         <div>${exp.pricing}</div>

@@ -1,125 +1,140 @@
-# 电力市场 SCED/LMP AI 教学问答系统
+# SCED / LMP 教学系统
 
-基于三节点 DC-SCED 演示器的 AI 教学助手。所有数值计算由浏览器确定性完成，AI 只负责解释和回答追问。
+> 一个交互式电力市场教学工具，帮助用户理解安全约束经济调度（SCED）、节点边际电价（LMP）和功率转移分布因子（PTDF）的计算逻辑与物理含义。
 
-## 快速启动
+---
+
+## 这是什么
+
+本系统是一个基于三节点直流潮流模型的电力市场教学推演平台。用户通过调节发电机组报价、容量、节点负荷和线路约束，实时观察电网潮流分布、节点电价和阻塞盈余的变化。系统内置 AI 教学助教，可以围绕当前计算结果回答用户的电力市场问题。
+
+**适用人群：** 电力市场学习者、调度/交易/仿真相关从业者、需要现场演示 SCED/LMP 机制的教学场景。
+
+---
+
+## 功能亮点
+
+### 🔧 交互式参数调节
+- 3 台发电机组（G1/G2/G3）的报价和容量可独立调节
+- 3 个节点负荷实时可调
+- 3 条输电线路的传输限额和电抗可独立设置
+- 所有参数支持滑块 + 数值输入双向联动
+
+### 📊 4 个预制教学场景
+| 场景 | 核心教学点 |
+|------|-----------|
+| 无约束出清 | 电价统一、边际机组决定价格 |
+| 线路拥堵 | 阻塞导致节点电价分裂 |
+| 节点负电价 | 网络拓扑约束下的价格奇观 |
+| 阻塞盈余 | 多线路同时绑定的复杂出清 |
+
+点击场景按钮后，所有参数强制加载预设值，立即重新计算并刷新全部结果。
+
+### 📐 完整计算推导
+- **总体出清情况**：KPI 指标、LMP 分解、机组结算
+- **潮流计算**：B' 矩阵构造 → 降阶 → 求逆 → 相角 → 线路潮流 → 限额对比，含验证区
+- **线路影子价格**：SCED 模型 → 拉格朗日函数 → KKT 条件 → 联立求解 → LMP 分解，含验证区
+- 所有公式使用 LaTeX 渲染，支持实时联动
+
+### 📖 内置教学文档
+点击「教学文档」Tab 打开完整教学文档，涵盖：
+- 从交流潮流到 DC 潮流的简化过程
+- DC 潮流的完整矩阵计算推导
+- PTDF 灵敏度分析
+- SCED 优化模型与约束条件
+- 拉格朗日函数与 KKT 条件
+- 影子价格的物理含义与验证
+- LMP 的分解公式与负电价成因
+- 中国电力市场实践（山东/广东）
+- 符号对照表 + 10 条常见问题 FAQ
+
+### 🤖 AI 教学助教
+- 基于当前页面计算状态回答问题（不脱离上下文）
+- 支持流式输出（逐字显示）
+- 用户可自配 API（Base URL + API Key + 模型）
+- 兼容 OpenAI / DeepSeek / 硅基流动等兼容接口
+
+### 🎨 专业视觉设计
+- 现代 SaaS 风格，浅色主题
+- 等边三角形拓扑图，节点白底灰边 + drop-shadow
+- 潮流动态箭头 + 颜色编码（蓝/黄/红）
+- 线路标签毛玻璃效果
+- 全局 LaTeX 公式渲染（KaTeX）
+- 1920 桌面优先，一屏完整展示
+
+---
+
+## 快速开始
 
 ```bash
-# 1. 进入项目目录
-cd e:\codes\lmp
+# 1. 克隆仓库
+git clone https://github.com/jursber/lmp-teaching.git
+cd lmp-teaching
 
-# 2. 启动本地代理（零依赖，无需 npm install）
+# 2. 启动服务（零依赖，无需 npm install）
 node server.js
 
-# 3. 浏览器打开
+# 3. 打开浏览器
 # http://127.0.0.1:8765
 ```
 
-## 配置 AI 模型
+> 系统要求：Node.js 14+，无需安装任何依赖包。
 
-在页面底部 AI 助教面板中点击 **⚙** 按钮，填写：
+---
 
-| 字段 | DeepSeek 示例 | OpenAI 示例 | 硅基流动示例 |
-|------|--------------|------------|-------------|
-| Base URL | `https://api.deepseek.com` | `https://api.openai.com` | `https://api.siliconflow.cn` |
-| Model | `deepseek-chat` | `gpt-4o` | `Qwen/Qwen2.5-72B-Instruct` |
-| API Key | `sk-xxx` | `sk-xxx` | `sk-xxx` |
+## 配置 AI 助教
 
-- **Temperature** 默认 0.2（低温度减少幻觉）
+点击 AI 面板右上角 **⚙** 按钮，填写：
+
+| 字段 | 示例 |
+|------|------|
+| Base URL | `https://api.deepseek.com` |
+| API Key | `sk-xxx` |
+| 模型 | `deepseek-chat` |
+| 温度 | 0.2（默认） |
+
 - API Key 默认存 sessionStorage（关闭标签页即丢失）
-- 勾选"记住 Key"后才写 localStorage
+- 勾选「记住 Key」后写入 localStorage
+- 服务端不记录任何 API Key（日志中脱敏显示）
+
+---
 
 ## 项目结构
 
 ```
 lmp/
 ├── sced_and_lmp_educational_system.html   # 主页面（HTML + CSS + JS 一体）
-├── server.js                              # 本地代理服务（Node.js 原生 http，零依赖）
-├── package.json                           # 项目描述
-├── README.md                              # 本文件
-└── old/                                   # 历史版本（勿动）
-    ├── index.html
-    ├── styles.css
-    └── app.js
+├── server.js                              # 本地代理服务（Node.js 原生，零依赖）
+├── package.json
+├── README.md
+├── reference/                             # 参考版本
+└── old/                                   # 历史版本
 ```
 
-## 架构说明
+---
 
-```
-浏览器 (HTML)                     本地代理 (server.js)              LLM API
-┌──────────────┐    POST /api/chat    ┌──────────────┐    POST /v1/chat    ┌──────────┐
-│ buildTeaching │ ──────────────────→  │  参数校验     │ ──────────────────→ │ DeepSeek │
-│ Context()     │                      │  Key 脱敏日志 │                     │ OpenAI   │
-│               │ ←──────────────────  │  错误转发     │ ←────────────────── │ 兼容接口  │
-│ 渲染回答       │    JSON response     └──────────────┘    JSON response    └──────────┘
-└──────────────┘
-```
+## 技术说明
 
-**核心原则**：所有 SCED 求解、PTDF 计算、LMP 扰动推导由浏览器 JS 完成（确定性、可追溯）。AI 只接收计算结果的结构化快照（teachingContext），负责解释、教学、回答追问。
+- **前端**：纯原生 HTML / CSS / JS，无框架依赖
+- **后端**：Node.js 原生 `http` 模块，零 npm 依赖
+- **潮流计算**：DC 潮流（直流近似），不含网损、无功、电压约束
+- **SCED 求解**：顶点枚举法（3 节点等价于 2D 线性规划）
+- **LMP 计算**：数值扰动法（有限差分）
+- **公式渲染**：KaTeX
+- **AI 代理**：支持 SSE 流式透传，兼容 OpenAI 格式接口
 
-## API 接口
-
-### GET /health
-```json
-{"status": "ok", "time": "2026-06-22T12:00:00.000Z", "index": "sced_and_lmp_educational_system.html"}
-```
-
-### POST /api/chat
-```json
-{
-  "baseUrl": "https://api.deepseek.com",
-  "apiKey": "sk-...",
-  "model": "deepseek-chat",
-  "temperature": 0.2,
-  "messages": [
-    {"role": "system", "content": "系统提示词..."},
-    {"role": "system", "content": "teachingContext JSON..."},
-    {"role": "user", "content": "节点 B 的 LMP 怎么算？"}
-  ]
-}
-```
-
-错误响应示例：
-```json
-{"error": "缺少 apiKey"}
-{"error": "上游返回 401: Authentication Fails..."}
-{"error": "上游请求超时（30s）"}
-```
-
-## 教学上下文 (teachingContext)
-
-每次用户提问时，前端自动从当前页面计算状态提取以下字段发送给 AI：
-
-- `scenario` — 当前场景名（base/congestion/negative/surplus）
-- `inputs` — 机组报价/容量、负荷、线路参数/限额
-- `solution` — GA/GB/GC 出力、总成本
-- `lmp` — 三个节点 LMP 值
-- `flows` — 三条线路潮流
-- `ptdf` — 6 个 PTDF 系数
-- `bindingConstraints` — 绑定约束列表
-- `totalLoadPaid` / `totalGenPaid` — 用电侧支付 / 发电侧结算
-- `congestionRent` — 阻塞盈余
-- `marginalGenerator` — 边际机组标识
-- `perturbation` — LMP 扰动计算的原始数据（delta、base cost、各节点扰动后 cost）
-- `scenarioExplanation` — 当前场景的教学说明文本
-
-## 预设问题
-
-面板内置 8 个快捷问题，覆盖：
-1. LMP 计算过程
-2. 节点电价分裂原因
-3. 拥塞价格形成机制
-4. PTDF 物理含义
-5. 成本计算
-6. 机组启停扩展方向
-7. 负电价成因
-8. 手算教学
+---
 
 ## 注意事项
 
-- 本项目无前端框架依赖，纯原生 HTML/CSS/JS
-- server.js 零 npm 依赖，仅用 Node.js 内置模块
-- API Key 不写入任何服务端文件或日志（日志中 key 显示为 `sk-xxxx***`）
-- 本系统采用 DC 潮流（直流近似），不含网损、无功、电压约束
-- SCED 通过顶点枚举求解（3 节点问题等价于 2D 线性规划）
-- LMP 通过数值扰动（有限差分）计算，非拉格朗日乘子法
+- 本系统用于教学演示，不适用于实际电力市场运行
+- DC 潮流是简化模型，真实系统需要 AC 潮流安全校核
+- 负电价在特定网络拓扑下出现，是数学结果而非系统故障
+- AI 助教的回答基于当前计算状态，配置 API 后方可使用
+- 服务端不存储任何用户数据，所有计算在浏览器本地完成
+
+---
+
+## 许可
+
+本项目仅供教学使用。

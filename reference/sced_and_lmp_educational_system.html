@@ -260,37 +260,20 @@
 
         /* ===== Tabs ===== */
         .tabs{display:flex;gap:0;border-bottom:1px solid var(--divider2);flex-shrink:0}
-        .tab-btn{
-            border:none;background:transparent;color:var(--muted);
-            padding:8px 14px;cursor:pointer;font-size:12px;font-weight:500;
-            border-bottom:2px solid transparent;transition:all .15s;
-            white-space:nowrap;
-        }
+        .tab-btn{border:none;background:transparent;color:var(--muted);padding:7px 14px;cursor:pointer;font-size:12px;font-weight:500;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
         .tab-btn:hover{color:var(--body)}
         .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
         .tab-content{display:none;overflow:auto}
         .tab-content.active{display:block}
-        .derivation{margin-bottom:12px}
-        .derivation summary{
-            cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);
-            padding:6px 0;list-style:none;display:flex;align-items:center;gap:6px;
-        }
+        .derivation{margin-bottom:10px}
+        .derivation summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);padding:5px 0;list-style:none;display:flex;align-items:center;gap:6px}
         .derivation summary::before{content:"▸";font-size:11px;color:var(--muted);transition:transform .15s}
         .derivation[open] summary::before{transform:rotate(90deg)}
-        .derivation .step{margin:8px 0 8px 16px;padding:8px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--primary)}
-        .derivation .step-title{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px}
-        .derivation .step-desc{font-size:13px;color:var(--body);line-height:1.6}
-        .formula-box{
-            margin:6px 0;padding:8px 12px;background:var(--card);border:1px solid var(--divider2);
-            border-radius:6px;overflow-x:auto;font-size:14px;
-        }
-        .verify-box{
-            margin-top:12px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;
-            border-radius:8px;font-size:13px;color:#166534;
-        }
-        .verify-box.fail{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+        .derivation .step{margin:6px 0 6px 14px;padding:8px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--primary)}
+        .derivation .step-desc{font-size:13px;color:var(--body);line-height:1.7}
+        .formula-box{margin:6px 0;padding:8px 12px;background:var(--card);border:1px solid var(--divider2);border-radius:6px;overflow-x:auto}
+        .verify-box{margin-top:10px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:13px;color:#166534;line-height:1.7}
         .katex{font-size:1em}
-        .katex-display{margin:4px 0}
 
         /* ===== Animations ===== */
         .ai-cursor{color:var(--primary);animation:blink 1s infinite}
@@ -385,84 +368,89 @@
 
         <!-- Center: Topology + Results -->
         <section class="center-stack">
-            <div class="panel" style="flex:1;min-height:0">
+            <div class="panel" style="flex:0 0 calc(50% - 150px);min-height:0">
                 <div class="panel-hd">
                     <h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7l8-4 8 4-8 4-8-4zm0 5l8 4 8-4M4 17l8 4 8-4"></path></svg>物理输网潮流拓扑</h2>
                     <span class="live-badge"><span class="live-dot"></span>实时仿真</span>
                 </div>
                 <div class="topology" style="flex:1;min-height:0">
-                    <svg id="network_svg" viewBox="0 0 880 300">
+                    <svg id="network_svg" viewBox="0 0 880 440">
                         <defs>
                             <filter id="nodeShadow"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.08"/></filter>
                         </defs>
+
+                        <!-- Grid dots background -->
                         <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                             <circle cx="10" cy="10" r="0.5" fill="#e2e8f0"/>
                         </pattern>
-                        <rect width="880" height="300" fill="url(#grid)" opacity="0.5"/>
+                        <rect width="880" height="440" fill="url(#grid)" opacity="0.5"/>
 
-                        <!-- A(440,50) B(690,270) C(190,270) -->
+                        <!-- Static lines -->
                         <g opacity=".5">
-                            <line x1="440" y1="50" x2="690" y2="270" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                            <line x1="690" y1="270" x2="190" y2="270" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
-                            <line x1="190" y1="270" x2="440" y2="50" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                            <line x1="440" y1="65" x2="690" y2="375" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                            <line x1="690" y1="375" x2="190" y2="375" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
+                            <line x1="190" y1="375" x2="440" y2="65" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/>
                         </g>
-                        <line id="flow_ab_path" x1="440" y1="50" x2="690" y2="270" class="flow-line" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
-                        <line id="flow_bc_path" x1="690" y1="270" x2="190" y2="270" class="flow-line" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
-                        <line id="flow_ca_path" x1="190" y1="270" x2="440" y2="50" class="flow-line" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
 
-                        <polygon id="arrow_ab" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(565,160)" style="animation:arrowPulse 1.2s infinite"/>
-                        <polygon id="arrow_bc" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(440,270)" style="animation:arrowPulse 1.2s infinite"/>
-                        <polygon id="arrow_ac" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(315,160)" style="animation:arrowPulse 1.2s infinite"/>
+                        <!-- Dynamic flow lines -->
+                        <line id="flow_ab_path" x1="440" y1="65" x2="690" y2="375" class="flow-line" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+                        <line id="flow_bc_path" x1="690" y1="375" x2="190" y2="375" class="flow-line" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+                        <line id="flow_ca_path" x1="190" y1="375" x2="440" y2="65" class="flow-line" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+
+                        <!-- Flow arrows -->
+                        <polygon id="arrow_ab" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(565,220)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_bc" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(440,375)" style="animation:arrowPulse 1.2s infinite"/>
+                        <polygon id="arrow_ac" points="0,-8 14,0 0,8" fill="#cbd5e1" transform="translate(315,220)" style="animation:arrowPulse 1.2s infinite"/>
 
                         <!-- Line labels -->
-                        <g transform="translate(520 125)">
+                        <g transform="translate(520 182)">
                             <rect x="-60" y="-16" width="120" height="46" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
                             <text text-anchor="middle" y="0" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">L<tspan font-size="8" baseline-shift="sub">AB</tspan>: <tspan id="flow_txt_ab">0</tspan>/<tspan id="flow_lim_ab">100</tspan>MW</text>
                             <text id="param_ab" text-anchor="start" x="-50" y="16" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono','SF Mono',Consolas,monospace"><tspan>X=1.0 p.u.</tspan><tspan x="-50" dy="12">L=100 MW</tspan></text>
                         </g>
-                        <g transform="translate(440 298)">
+                        <g transform="translate(440 405)">
                             <rect x="-60" y="-16" width="120" height="46" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
                             <text text-anchor="middle" y="0" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">L<tspan font-size="8" baseline-shift="sub">BC</tspan>: <tspan id="flow_txt_bc">0</tspan>/<tspan id="flow_lim_bc">100</tspan>MW</text>
                             <text id="param_bc" text-anchor="start" x="-50" y="16" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono','SF Mono',Consolas,monospace"><tspan>X=1.0 p.u.</tspan><tspan x="-50" dy="12">L=100 MW</tspan></text>
                         </g>
-                        <g transform="translate(350 125)">
+                        <g transform="translate(350 182)">
                             <rect x="-60" y="-16" width="120" height="46" rx="6" fill="rgba(255,255,255,0.92)" stroke="#d1d5db"/>
                             <text text-anchor="middle" y="0" fill="#1e293b" font-size="12" font-weight="600" font-family="'JetBrains Mono','SF Mono',Consolas,monospace">L<tspan font-size="8" baseline-shift="sub">AC</tspan>: <tspan id="flow_txt_ac">0</tspan>/<tspan id="flow_lim_ac">100</tspan>MW</text>
                             <text id="param_ac" text-anchor="start" x="-50" y="16" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono','SF Mono',Consolas,monospace"><tspan>X=1.0 p.u.</tspan><tspan x="-50" dy="12">L=100 MW</tspan></text>
                         </g>
 
                         <!-- Node A -->
-                        <g transform="translate(440,50)" filter="url(#nodeShadow)">
+                        <g transform="translate(440,65)" filter="url(#nodeShadow)">
                             <circle r="30" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
                             <text text-anchor="middle" y="-2" fill="#1e293b" font-weight="700" font-size="15">A</text>
                             <text id="lmp_lbl_a" text-anchor="middle" y="14" fill="#64748b" font-size="9" font-weight="500">---</text>
-                            <rect x="-92" y="-54" width="68" height="20" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
-                            <text x="-58" y="-40" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">Gen<tspan font-size="8" baseline-shift="sub">A</tspan>:<tspan id="node_a_gen">0</tspan>MW</text>
-                            <rect x="24" y="-54" width="72" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
-                            <text x="60" y="-40" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">Load<tspan font-size="8" baseline-shift="sub">A</tspan>:<tspan id="node_a_load">0</tspan>MW</text>
+                            <rect x="-90" y="-52" width="66" height="18" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+                            <text x="-57" y="-39" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">Gen<tspan font-size="8" baseline-shift="sub">A</tspan>:<tspan id="node_a_gen">0</tspan>MW</text>
+                            <rect x="24" y="-52" width="70" height="18" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
+                            <text x="59" y="-39" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">Load<tspan font-size="8" baseline-shift="sub">A</tspan>:<tspan id="node_a_load">0</tspan>MW</text>
                         </g>
 
                         <!-- Node B -->
-                        <g transform="translate(690,270)" filter="url(#nodeShadow)">
+                        <g transform="translate(690,375)" filter="url(#nodeShadow)">
                             <circle r="30" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
                             <text text-anchor="middle" y="-2" fill="#1e293b" font-weight="700" font-size="15">B</text>
                             <text id="lmp_lbl_b" text-anchor="middle" y="14" fill="#64748b" font-size="9" font-weight="500">---</text>
-                            <rect x="-100" y="-12" width="68" height="20" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
-                            <text x="-66" y="2" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">Gen<tspan font-size="8" baseline-shift="sub">B</tspan>:<tspan id="node_b_gen">0</tspan>MW</text>
-                            <rect x="32" y="-12" width="72" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
-                            <text x="68" y="2" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">Load<tspan font-size="8" baseline-shift="sub">B</tspan>:<tspan id="node_b_load">0</tspan>MW</text>
+                            <rect x="-98" y="-11" width="66" height="18" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+                            <text x="-65" y="2" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">Gen<tspan font-size="8" baseline-shift="sub">B</tspan>:<tspan id="node_b_gen">0</tspan>MW</text>
+                            <rect x="32" y="-11" width="70" height="18" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
+                            <text x="67" y="2" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">Load<tspan font-size="8" baseline-shift="sub">B</tspan>:<tspan id="node_b_load">0</tspan>MW</text>
                         </g>
 
                         <!-- Node C (reference) -->
-                        <g transform="translate(190,270)" filter="url(#nodeShadow)">
+                        <g transform="translate(190,375)" filter="url(#nodeShadow)">
                             <circle r="30" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 2"/>
                             <text text-anchor="middle" y="-2" fill="#1e293b" font-weight="700" font-size="15">C</text>
                             <text id="lmp_lbl_c" text-anchor="middle" y="14" fill="#64748b" font-size="9" font-weight="500">---</text>
                             <text text-anchor="middle" y="46" fill="#94a3b8" font-size="10" font-style="italic">平衡参考节点</text>
-                            <rect x="-100" y="-12" width="68" height="20" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
-                            <text x="-66" y="2" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">Gen<tspan font-size="8" baseline-shift="sub">C</tspan>:<tspan id="node_c_gen">0</tspan>MW</text>
-                            <rect x="32" y="-12" width="72" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
-                            <text x="68" y="2" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">Load<tspan font-size="8" baseline-shift="sub">C</tspan>:<tspan id="node_c_load">0</tspan>MW</text>
+                            <rect x="-98" y="-11" width="66" height="18" rx="5" fill="#f0fdf4" stroke="#bbf7d0"/>
+                            <text x="-65" y="2" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">Gen<tspan font-size="8" baseline-shift="sub">C</tspan>:<tspan id="node_c_gen">0</tspan>MW</text>
+                            <rect x="32" y="-11" width="70" height="18" rx="5" fill="#eff6ff" stroke="#bfdbfe"/>
+                            <text x="67" y="2" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="600">Load<tspan font-size="8" baseline-shift="sub">C</tspan>:<tspan id="node_c_load">0</tspan>MW</text>
                         </g>
                     </svg>
                     <div id="error_overlay" class="error-overlay hidden">
@@ -473,7 +461,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel" style="flex:0 0 auto">
+            <div class="panel" style="flex:1;min-height:0">
                 <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2></div>
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(0)">总体出清情况</button>
@@ -702,10 +690,7 @@ function runSCED() {
     const flow_ac=PTDF_AC_A*(sol.GA-LA)+PTDF_AC_B*(sol.GB-LB);
     const rev=sol.GA*priceA+sol.GB*priceB+sol.GC*priceC;
     const paid=LA*lmpA+LB*lmpB+LC*lmpC, gp=sol.GA*lmpA+sol.GB*lmpB+sol.GC*lmpC;
-    document.getElementById("total_cost").textContent=rev.toFixed(2)+" 元";
-    document.getElementById("congestion_rent").textContent=Math.max(0,paid-gp).toFixed(2)+" 元";
     const marginal=sol.GA>0&&sol.GA<GA_max?"G1":(sol.GB>0&&sol.GB<GB_max?"G2":"G3");
-    document.getElementById("marginal_unit").textContent=marginal;
 
     /* 边际机组节点线条深蓝（填充不变） */
     const nodeGroups = {
@@ -720,25 +705,7 @@ function runSCED() {
         circle.setAttribute("stroke", gName === marginal ? "#2563eb" : "#cbd5e1");
         circle.setAttribute("stroke-width", gName === marginal ? "3" : "2");
     });
-    const bp=lmpC;
-    document.getElementById("lmp_a_val").textContent=lmpA.toFixed(2);
-    document.getElementById("lmp_a_comp").textContent=`能量:${bp.toFixed(1)} 阻塞:${(lmpA-bp).toFixed(1)}`;
-    document.getElementById("lmp_b_val").textContent=lmpB.toFixed(2);
-    document.getElementById("lmp_b_comp").textContent=`能量:${bp.toFixed(1)} 阻塞:${(lmpB-bp).toFixed(1)}`;
-    document.getElementById("lmp_c_val").textContent=lmpC.toFixed(2);
-    document.getElementById("lmp_c_comp").textContent=`能量:${bp.toFixed(1)} 阻塞:${(lmpC-bp).toFixed(1)}`;
-    document.getElementById("tbl_gen_g1").textContent=sol.GA.toFixed(1);
-    document.getElementById("tbl_rev_g1").textContent=lmpA.toFixed(1)+"/"+(sol.GA*lmpA).toFixed(1);
-    document.getElementById("tbl_gen_g2").textContent=sol.GB.toFixed(1);
-    document.getElementById("tbl_rev_g2").textContent=lmpB.toFixed(1)+"/"+(sol.GB*lmpB).toFixed(1);
-    document.getElementById("tbl_gen_g3").textContent=sol.GC.toFixed(1);
-    document.getElementById("tbl_rev_g3").textContent=lmpC.toFixed(1)+"/"+(sol.GC*lmpC).toFixed(1);
-    document.getElementById("ptdf_val_ab_a").textContent=`PTDF(AB,A)=${PTDF_AB_A>=0?"+":""}${PTDF_AB_A.toFixed(2)}`;
-    document.getElementById("ptdf_val_ab_b").textContent=`PTDF(AB,B)=${PTDF_AB_B>=0?"+":""}${PTDF_AB_B.toFixed(2)}`;
-    document.getElementById("ptdf_val_bc_a").textContent=`PTDF(BC,A)=${PTDF_BC_A>=0?"+":""}${PTDF_BC_A.toFixed(2)}`;
-    document.getElementById("ptdf_val_bc_b").textContent=`PTDF(BC,B)=${PTDF_BC_B>=0?"+":""}${PTDF_BC_B.toFixed(2)}`;
-    document.getElementById("ptdf_val_ac_a").textContent=`PTDF(AC,A)=${PTDF_AC_A>=0?"+":""}${PTDF_AC_A.toFixed(2)}`;
-    document.getElementById("ptdf_val_ac_b").textContent=`PTDF(AC,B)=${PTDF_AC_B>=0?"+":""}${PTDF_AC_B.toFixed(2)}`;
+    renderAllTabs(result);
     document.getElementById("node_a_gen").textContent=sol.GA.toFixed(0);
     document.getElementById("node_b_gen").textContent=sol.GB.toFixed(0);
     document.getElementById("node_c_gen").textContent=sol.GC.toFixed(0);
@@ -757,10 +724,9 @@ function runSCED() {
     const paramAb=document.getElementById("param_ab");paramAb.querySelector("tspan:first-child").textContent=`X=${XAB} p.u.`;paramAb.querySelector("tspan:last-child").textContent=`L=${FAB_max} MW`;
     const paramBc=document.getElementById("param_bc");paramBc.querySelector("tspan:first-child").textContent=`X=${XBC} p.u.`;paramBc.querySelector("tspan:last-child").textContent=`L=${FBC_max} MW`;
     const paramAc=document.getElementById("param_ac");paramAc.querySelector("tspan:first-child").textContent=`X=${XAC} p.u.`;paramAc.querySelector("tspan:last-child").textContent=`L=${FAC_max} MW`;
-    updateFlowLine("flow_ab_path","flow_txt_ab",flow_ab,FAB_max,440,50,690,270,"arrow_ab");
-    updateFlowLine("flow_bc_path","flow_txt_bc",flow_bc,FBC_max,690,270,190,270,"arrow_bc");
-    updateFlowLine("flow_ca_path","flow_txt_ac",-flow_ac,FAC_max,190,270,440,50,"arrow_ac");
-    renderAllTabs(result);
+    updateFlowLine("flow_ab_path","flow_txt_ab",flow_ab,FAB_max,440,65,690,375,"arrow_ab");
+    updateFlowLine("flow_bc_path","flow_txt_bc",flow_bc,FBC_max,690,375,190,375,"arrow_bc");
+    updateFlowLine("flow_ca_path","flow_txt_ac",-flow_ac,FAC_max,190,375,440,65,"arrow_ac");
 }
 
 function updateFlowLine(lineId,txtId,flowValue,limit,x1,y1,x2,y2,arrowId) {
@@ -792,9 +758,7 @@ function addMsg(role,content,isHtml) {
     d.className="ai-msg "+role;
     d.innerHTML=isHtml?content:content.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");
     box.appendChild(d);box.scrollTop=box.scrollHeight;
-    renderKaTeX(d);
 }
-function renderKaTeX(el){if(typeof renderMathInElement==='function'){renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}]});}}
 
 function clearAiChat(){aiChatHistory=[];if(aiAbortController){aiAbortController.abort();aiAbortController=null;}setDefaultAiContent(currentActiveScenario);}
 function toggleAiSettings(){document.getElementById("ai_settings").classList.toggle("visible");}
@@ -832,42 +796,34 @@ document.querySelectorAll("#ai_base_url,#ai_api_key,#ai_model,#ai_temp,#ai_remem
 function tex(s){try{return katex.renderToString(s,{throwOnError:false,displayMode:false})}catch(e){return s}}
 function texD(s){try{return katex.renderToString(s,{throwOnError:false,displayMode:true})}catch(e){return '<div>'+s+'</div>'}}
 function switchTab(n){document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",i===n));document.querySelectorAll(".tab-content").forEach((c,i)=>c.classList.toggle("active",i===n));}
+function renderKaTeX(el){if(typeof renderMathInElement==='function'){renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}]});}}
 
-let _lastResult=null;
 function renderAllTabs(r){
     if(!r||r.error)return;
-    _lastResult=r;
     renderTab0(r);renderTab1(r);renderTab2(r);
-    if(typeof renderMathInElement==='function'){document.querySelectorAll(".tab-content").forEach(el=>renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}]}));}
+    document.querySelectorAll(".tab-content").forEach(el=>renderKaTeX(el));
 }
 
 /* Tab 0: 总体出清情况 */
 function renderTab0(r){
     const sol=r.base,lA=r.lmpA,lB=r.lmpB,lC=r.lmpC,bp=lC;
-    const el=document.getElementById("tab_0");
-    el.innerHTML=`
-    <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">购电总成本</div><div class="kpi-val">${sol.cost.toFixed(2)} 元</div></div>
-        <div class="kpi"><div class="kpi-label">阻塞盈余</div><div class="kpi-val">${Math.max(0,(parseFloat(document.getElementById("load_a").value)*lA+parseFloat(document.getElementById("load_b").value)*lB+parseFloat(document.getElementById("load_c").value)*lC)-(sol.GA*lA+sol.GB*lB+sol.GC*lC)).toFixed(2)} 元</div></div>
-        <div class="kpi"><div class="kpi-label">边际机组</div><div class="kpi-val" style="color:var(--primary)">${sol.GA>0&&sol.GA<parseFloat(document.getElementById("max_g1").value)?"G1":(sol.GB>0&&sol.GB<parseFloat(document.getElementById("max_g2").value)?"G2":"G3")}</div></div>
-    </div>
-    <div class="data-grid">
-        <div class="data-section">
-            <div class="data-section-title">各节点 LMP</div>
-            <div class="lmp-row"><span class="lmp-tag">A</span><div class="lmp-info"><strong>${lA.toFixed(2)}</strong><span class="lmp-comp">能量:${bp.toFixed(1)} 阻塞:${(lA-bp).toFixed(1)}</span></div></div>
-            <div class="lmp-row"><span class="lmp-tag">B</span><div class="lmp-info"><strong>${lB.toFixed(2)}</strong><span class="lmp-comp">能量:${bp.toFixed(1)} 阻塞:${(lB-bp).toFixed(1)}</span></div></div>
-            <div class="lmp-row"><span class="lmp-tag">C</span><div class="lmp-info"><strong>${lC.toFixed(2)}</strong><span class="lmp-comp">能量:${bp.toFixed(1)} 阻塞:${(lC-bp).toFixed(1)}</span></div></div>
-        </div>
-        <div class="data-section">
-            <div class="data-section-title">机组结算</div>
-            <table class="gen-tbl">
-                <tr><th>机组</th><th>出力</th><th>电价/收益</th></tr>
-                <tr><td style="color:var(--success);font-weight:600">G1</td><td>${sol.GA.toFixed(1)}</td><td>${lA.toFixed(1)} / ${(sol.GA*lA).toFixed(1)}</td></tr>
-                <tr><td style="color:var(--warning);font-weight:600">G2</td><td>${sol.GB.toFixed(1)}</td><td>${lB.toFixed(1)} / ${(sol.GB*lB).toFixed(1)}</td></tr>
-                <tr><td style="color:var(--error);font-weight:600">G3</td><td>${sol.GC.toFixed(1)}</td><td>${lC.toFixed(1)} / ${(sol.GC*lC).toFixed(1)}</td></tr>
-            </table>
-        </div>
-    </div>`;
+    const GA_m=parseFloat(document.getElementById("max_g1").value),GB_m=parseFloat(document.getElementById("max_g2").value);
+    const LA=parseFloat(document.getElementById("load_a").value),LB=parseFloat(document.getElementById("load_b").value),LC=parseFloat(document.getElementById("load_c").value);
+    const paid=LA*lA+LB*lB+LC*lC,gp=sol.GA*lA+sol.GB*lB+sol.GC*lC;
+    const marginal=sol.GA>0&&sol.GA<GA_m?"G1":(sol.GB>0&&sol.GB<GB_m?"G2":"G3");
+    document.getElementById("tab_0").innerHTML=`
+    <div class="kpi-row"><div class="kpi"><div class="kpi-label">购电总成本</div><div class="kpi-val">${sol.cost.toFixed(2)} 元</div></div>
+    <div class="kpi"><div class="kpi-label">阻塞盈余</div><div class="kpi-val">${Math.max(0,paid-gp).toFixed(2)} 元</div></div>
+    <div class="kpi"><div class="kpi-label">边际机组</div><div class="kpi-val" style="color:var(--primary)">${marginal}</div></div></div>
+    <div class="data-grid"><div class="data-section"><div class="data-section-title">各节点 LMP</div>
+    <div class="lmp-row"><span class="lmp-tag">A</span><div class="lmp-info"><strong>${lA.toFixed(2)}</strong><span class="lmp-comp">能量:${bp.toFixed(1)} 阻塞:${(lA-bp).toFixed(1)}</span></div></div>
+    <div class="lmp-row"><span class="lmp-tag">B</span><div class="lmp-info"><strong>${lB.toFixed(2)}</strong><span class="lmp-comp">能量:${bp.toFixed(1)} 阻塞:${(lB-bp).toFixed(1)}</span></div></div>
+    <div class="lmp-row"><span class="lmp-tag">C</span><div class="lmp-info"><strong>${lC.toFixed(2)}</strong><span class="lmp-comp">能量:${bp.toFixed(1)} 阻塞:${(lC-bp).toFixed(1)}</span></div></div></div>
+    <div class="data-section"><div class="data-section-title">机组结算</div>
+    <table class="gen-tbl"><tr><th>机组</th><th>出力</th><th>电价/收益</th></tr>
+    <tr><td style="color:var(--success);font-weight:600">G1</td><td>${sol.GA.toFixed(1)}</td><td>${lA.toFixed(1)} / ${(sol.GA*lA).toFixed(1)}</td></tr>
+    <tr><td style="color:var(--warning);font-weight:600">G2</td><td>${sol.GB.toFixed(1)}</td><td>${lB.toFixed(1)} / ${(sol.GB*lB).toFixed(1)}</td></tr>
+    <tr><td style="color:var(--error);font-weight:600">G3</td><td>${sol.GC.toFixed(1)}</td><td>${lC.toFixed(1)} / ${(sol.GC*lC).toFixed(1)}</td></tr></table></div></div>`;
 }
 
 /* Tab 1: 潮流计算推导 */
@@ -882,253 +838,143 @@ function renderTab1(r){
     const PA=sol.GA-LA,PB=sol.GB-LB,PC=sol.GC-LC;
     const BAA=1/XAB+1/XAC,BBB=1/XAB+1/XBC,BAB=-1/XAB,BAC=-1/XAC,BCB=-1/XBC;
     const det=BAA*BBB-BAB*BAB,ZAA=BBB/det,ZBB=BAA/det,ZAB=-BAB/det;
-    const thA=ZAA*PA+ZAB*PB, thB=ZAB*PA+ZBB*PB;
-    const fAB=(thA-thB)/XAB, fBC=thB/XBC, fAC=thA/XAC;
+    const thA=ZAA*PA+ZAB*PB,thB=ZAB*PA+ZBB*PB;
+    const fAB=(thA-thB)/XAB,fBC=thB/XBC,fAC=thA/XAC;
     const el=document.getElementById("tab_1");
     el.innerHTML=`
-    <details class="derivation" open><summary>1. 网络参数</summary>
-        <div class="step"><div class="step-desc">
-        三节点电网，节点集合 $\\mathcal{N}=\\{A,B,C\\}$，线路集合 $\\mathcal{L}=\\{AB,BC,AC\\}$。平衡参考节点为 C。<br><br>
-        <b>线路电抗参数：</b><br>
-        $x_{AB}=${XAB}$ p.u.，$x_{BC}=${XBC}$ p.u.，$x_{AC}=${XAC}$ p.u.<br><br>
-        <b>机组参数：</b><br>
-        G1（节点A）：报价 $c_1=${pA}$ 元/MWh，容量 $G_1^{\\max}=${GA}$ MW<br>
-        G2（节点B）：报价 $c_2=${pB}$ 元/MWh，容量 $G_2^{\\max}=${GB}$ MW<br>
-        G3（节点C）：报价 $c_3=${pC}$ 元/MWh，容量 $G_3^{\\max}=${GC}$ MW<br><br>
-        <b>节点负荷：</b><br>
-        $L_A=${LA}$ MW，$L_B=${LB}$ MW，$L_C=${LC}$ MW<br><br>
-        <b>出清结果：</b><br>
-        $G_1=${sol.GA.toFixed(1)}$ MW，$G_2=${sol.GB.toFixed(1)}$ MW，$G_3=${sol.GC.toFixed(1)}$ MW
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>1. 网络参数</summary><div class="step"><div class="step-desc">
+    三节点电网 $\\mathcal{N}=\\{A,B,C\\}$，线路 $\\mathcal{L}=\\{AB,BC,AC\\}$，平衡参考节点 C。<br><br>
+    电抗：$x_{AB}=${XAB}$ p.u.，$x_{BC}=${XBC}$ p.u.，$x_{AC}=${XAC}$ p.u.<br>
+    机组：G1($c_1=${pA}$元/MWh，$G_1^{\\max}=${GA}$MW)，G2($c_2=${pB}$元/MWh，$G_2^{\\max}=${GB}$MW)，G3($c_3=${pC}$元/MWh，$G_3^{\\max}=${GC}$MW)<br>
+    负荷：$L_A=${LA}$MW，$L_B=${LB}$MW，$L_C=${LC}$MW<br>
+    出清结果：$G_1=${sol.GA.toFixed(1)}$MW，$G_2=${sol.GB.toFixed(1)}$MW，$G_3=${sol.GC.toFixed(1)}$MW
+    </div></div></details>
 
-    <details class="derivation" open><summary>2. 构造节点导纳矩阵 $\\mathbf{B'}$</summary>
-        <div class="step"><div class="step-desc">
-        直流潮流下，$B'_{ij}$ 为节点导纳矩阵元素。对角元等于相连线路导纳之和，非对角元为线路导纳的负值。<br><br>
-        $B'_{AA} = \\frac{1}{x_{AB}} + \\frac{1}{x_{AC}} = \\frac{1}{${XAB}} + \\frac{1}{${XAC}} = ${(1/XAB).toFixed(4)} + ${(1/XAC).toFixed(4)} = ${BAA.toFixed(4)}$<br><br>
-        $B'_{BB} = \\frac{1}{x_{AB}} + \\frac{1}{x_{BC}} = \\frac{1}{${XAB}} + \\frac{1}{${XBC}} = ${(1/XAB).toFixed(4)} + ${(1/XBC).toFixed(4)} = ${BBB.toFixed(4)}$<br><br>
-        $B'_{CC} = \\frac{1}{x_{BC}} + \\frac{1}{x_{AC}} = ${(1/XBC).toFixed(4)} + ${(1/XAC).toFixed(4)} = ${(1/XBC+1/XAC).toFixed(4)}$<br><br>
-        $B'_{AB} = B'_{BA} = -\\frac{1}{x_{AB}} = -\\frac{1}{${XAB}} = ${BAB.toFixed(4)}$<br><br>
-        $B'_{AC} = B'_{CA} = -\\frac{1}{x_{AC}} = ${BAC.toFixed(4)}$<br><br>
-        $B'_{BC} = B'_{CB} = -\\frac{1}{x_{BC}} = ${BCB.toFixed(4)}$
-        <div class="formula-box">$$\\mathbf{B'} = \\begin{pmatrix} ${BAA.toFixed(4)} & ${BAB.toFixed(4)} & ${BAC.toFixed(4)} \\\\ ${BAB.toFixed(4)} & ${BBB.toFixed(4)} & ${BCB.toFixed(4)} \\\\ ${BAC.toFixed(4)} & ${BCB.toFixed(4)} & ${(1/XBC+1/XAC).toFixed(4)} \\end{pmatrix}$$</div>
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>2. 构造节点导纳矩阵 $\\mathbf{B'}$</summary><div class="step"><div class="step-desc">
+    对角元 = 相连线路导纳之和，非对角元 = $-1/x_{ij}$：<br>
+    $B'_{AA}=1/x_{AB}+1/x_{AC}=${(1/XAB).toFixed(4)}+${(1/XAC).toFixed(4)}=${BAA.toFixed(4)}$<br>
+    $B'_{BB}=1/x_{AB}+1/x_{BC}=${(1/XAB).toFixed(4)}+${(1/XBC).toFixed(4)}=${BBB.toFixed(4)}$<br>
+    $B'_{CC}=1/x_{BC}+1/x_{AC}=${(1/XBC).toFixed(4)}+${(1/XAC).toFixed(4)}=${(1/XBC+1/XAC).toFixed(4)}$<br>
+    $B'_{AB}=-1/x_{AB}=${BAB.toFixed(4)}$，$B'_{AC}=-1/x_{AC}=${BAC.toFixed(4)}$，$B'_{BC}=-1/x_{BC}=${BCB.toFixed(4)}$
+    <div class="formula-box">$$\\mathbf{B'}=\\begin{pmatrix}${BAA.toFixed(4)}&${BAB.toFixed(4)}&${BAC.toFixed(4)}\\\\${BAB.toFixed(4)}&${BBB.toFixed(4)}&${BCB.toFixed(4)}\\\\${BAC.toFixed(4)}&${BCB.toFixed(4)}&${(1/XBC+1/XAC).toFixed(4)}\\end{pmatrix}$$</div>
+    </div></div></details>
 
-    <details class="derivation" open><summary>3. 降阶处理（去掉平衡节点 C）</summary>
-        <div class="step"><div class="step-desc">
-        平衡节点 C 的相角固定为 $\\theta_C=0$，因此去掉第 3 行第 3 列，得到 2×2 降阶矩阵 $\\mathbf{B'_r}$：
-        <div class="formula-box">$$\\mathbf{B'_r} = \\begin{pmatrix} ${BAA.toFixed(4)} & ${BAB.toFixed(4)} \\\\ ${BAB.toFixed(4)} & ${BBB.toFixed(4)} \\end{pmatrix}$$</div>
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>3. 降阶处理（去掉平衡节点 C）</summary><div class="step"><div class="step-desc">
+    $\\theta_C=0$ 固定，去掉第 3 行第 3 列：
+    <div class="formula-box">$$\\mathbf{B'_r}=\\begin{pmatrix}${BAA.toFixed(4)}&${BAB.toFixed(4)}\\\\${BAB.toFixed(4)}&${BBB.toFixed(4)}\\end{pmatrix}$$</div>
+    </div></div></details>
 
-    <details class="derivation" open><summary>4. 矩阵求逆</summary>
-        <div class="step"><div class="step-desc">
-        2×2 矩阵求逆公式：$\\mathbf{A}^{-1} = \\frac{1}{\\det(\\mathbf{A})} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$<br><br>
-        行列式：$\\det = ${BAA.toFixed(4)} \\times ${BBB.toFixed(4)} - ${BAB.toFixed(4)}^2 = ${(BAA*BBB).toFixed(6)} - ${(BAB*BAB).toFixed(6)} = ${det.toFixed(6)}$<br><br>
-        逆矩阵元素：<br>
-        $Z_{AA} = B'_{BB}/\\det = ${BBB.toFixed(4)}/${det.toFixed(6)} = ${ZAA.toFixed(4)}$<br>
-        $Z_{BB} = B'_{AA}/\\det = ${BAA.toFixed(4)}/${det.toFixed(6)} = ${ZBB.toFixed(4)}$<br>
-        $Z_{AB} = -B'_{AB}/\\det = ${(-BAB).toFixed(4)}/${det.toFixed(6)} = ${ZAB.toFixed(4)}$
-        <div class="formula-box">$$\\mathbf{Z} = \\mathbf{B'^{-1}_r} = \\begin{pmatrix} ${ZAA.toFixed(4)} & ${ZAB.toFixed(4)} \\\\ ${ZAB.toFixed(4)} & ${ZBB.toFixed(4)} \\end{pmatrix}$$</div>
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>4. 矩阵求逆</summary><div class="step"><div class="step-desc">
+    $\\det=${BAA.toFixed(4)}\\times${BBB.toFixed(4)}-${BAB.toFixed(4)}^2=${det.toFixed(6)}$<br>
+    $Z_{AA}=B'_{BB}/\\det=${ZAA.toFixed(4)}$，$Z_{BB}=B'_{AA}/\\det=${ZBB.toFixed(4)}$，$Z_{AB}=-B'_{AB}/\\det=${ZAB.toFixed(4)}$
+    <div class="formula-box">$$\\mathbf{Z}=\\mathbf{B'^{-1}_r}=\\begin{pmatrix}${ZAA.toFixed(4)}&${ZAB.toFixed(4)}\\\\${ZAB.toFixed(4)}&${ZBB.toFixed(4)}\\end{pmatrix}$$</div>
+    </div></div></details>
 
-    <details class="derivation" open><summary>5. 求解节点相角</summary>
-        <div class="step"><div class="step-desc">
-        节点净注入功率：$P_i = G_i - L_i$<br><br>
-        $P_A = ${sol.GA.toFixed(1)} - ${LA} = ${PA.toFixed(1)}$ MW<br>
-        $P_B = ${sol.GB.toFixed(1)} - ${LB} = ${PB.toFixed(1)}$ MW<br>
-        $P_C = ${sol.GC.toFixed(1)} - ${LC} = ${PC.toFixed(1)}$ MW（平衡节点，自动平衡）<br><br>
-        相角求解：$\\begin{pmatrix} \\theta_A \\\\ \\theta_B \\end{pmatrix} = \\mathbf{Z} \\begin{pmatrix} P_A \\\\ P_B \\end{pmatrix}$<br><br>
-        $\\theta_A = ${ZAA.toFixed(4)} \\times ${PA.toFixed(1)} + ${ZAB.toFixed(4)} \\times ${PB.toFixed(1)} = ${(ZAA*PA).toFixed(4)} + ${(ZAB*PB).toFixed(4)} = ${thA.toFixed(4)}$ rad<br>
-        $\\theta_B = ${ZAB.toFixed(4)} \\times ${PA.toFixed(1)} + ${ZBB.toFixed(4)} \\times ${PB.toFixed(1)} = ${(ZAB*PA).toFixed(4)} + ${(ZBB*PB).toFixed(4)} = ${thB.toFixed(4)}$ rad<br>
-        $\\theta_C = 0$（平衡参考节点）
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>5. 求解节点相角</summary><div class="step"><div class="step-desc">
+    净注入：$P_A=G_1-L_A=${sol.GA.toFixed(1)}-${LA}=${PA.toFixed(1)}$MW，$P_B=${PB.toFixed(1)}$MW<br>
+    $\\theta_A=Z_{AA}P_A+Z_{AB}P_B=${ZAA.toFixed(4)}\\times${PA.toFixed(1)}+${ZAB.toFixed(4)}\\times${PB.toFixed(1)}=${thA.toFixed(4)}$ rad<br>
+    $\\theta_B=Z_{AB}P_A+Z_{BB}P_B=${ZAB.toFixed(4)}\\times${PA.toFixed(1)}+${ZBB.toFixed(4)}\\times${PB.toFixed(1)}=${thB.toFixed(4)}$ rad
+    </div></div></details>
 
-    <details class="derivation" open><summary>6. 计算线路潮流</summary>
-        <div class="step"><div class="step-desc">
-        线路潮流公式：$F_{ij} = \\frac{\\theta_i - \\theta_j}{x_{ij}}$<br><br>
-        $F_{AB} = \\frac{\\theta_A - \\theta_B}{x_{AB}} = \\frac{${thA.toFixed(4)} - ${thB.toFixed(4)}}{${XAB}} = \\frac${(thA-thB).toFixed(4)}{${XAB}} = ${fAB.toFixed(4)}$ MW<br><br>
-        $F_{BC} = \\frac{\\theta_B - \\theta_C}{x_{BC}} = \\frac{${thB.toFixed(4)} - 0}{${XBC}} = ${fBC.toFixed(4)}$ MW<br><br>
-        $F_{AC} = \\frac{\\theta_A - \\theta_C}{x_{AC}} = \\frac{${thA.toFixed(4)} - 0}{${XAC}} = ${fAC.toFixed(4)}$ MW
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>6. 计算线路潮流</summary><div class="step"><div class="step-desc">
+    $F_{ij}=(\\theta_i-\\theta_j)/x_{ij}$<br>
+    $F_{AB}=(${thA.toFixed(4)}-${thB.toFixed(4)})/${XAB}=${fAB.toFixed(4)}$MW<br>
+    $F_{BC}=(${thB.toFixed(4)}-0)/${XBC}=${fBC.toFixed(4)}$MW<br>
+    $F_{AC}=(${thA.toFixed(4)}-0)/${XAC}=${fAC.toFixed(4)}$MW
+    </div></div></details>
 
-    <details class="derivation" open><summary>7. 限额对比</summary>
-        <div class="step"><div class="step-desc">
-        <table class="gen-tbl">
-            <tr><th>线路</th><th>潮流(MW)</th><th>限额(MW)</th><th>利用率</th><th>状态</th></tr>
-            <tr><td>AB</td><td>${Math.abs(fAB).toFixed(2)}</td><td>${FAB}</td><td>${(Math.abs(fAB)/FAB*100).toFixed(1)}%</td><td style="color:${Math.abs(fAB)>=FAB-0.01?'var(--error)':'var(--success)'};font-weight:600">${Math.abs(fAB)>=FAB-0.01?'绑定(Binding)':'未绑定'}</td></tr>
-            <tr><td>BC</td><td>${Math.abs(fBC).toFixed(2)}</td><td>${FBC}</td><td>${(Math.abs(fBC)/FBC*100).toFixed(1)}%</td><td style="color:${Math.abs(fBC)>=FBC-0.01?'var(--error)':'var(--success)'};font-weight:600">${Math.abs(fBC)>=FBC-0.01?'绑定(Binding)':'未绑定'}</td></tr>
-            <tr><td>AC</td><td>${Math.abs(fAC).toFixed(2)}</td><td>${FAC}</td><td>${(Math.abs(fAC)/FAC*100).toFixed(1)}%</td><td style="color:${Math.abs(fAC)>=FAC-0.01?'var(--error)':'var(--success)'};font-weight:600">${Math.abs(fAC)>=FAC-0.01?'绑定(Binding)':'未绑定'}</td></tr>
-        </table>
-        </div></div>
-    </details>
+    <details class="derivation" open><summary>7. 限额对比</summary><div class="step"><div class="step-desc">
+    <table class="gen-tbl"><tr><th>线路</th><th>潮流</th><th>限额</th><th>利用率</th><th>状态</th></tr>
+    <tr><td>AB</td><td>${Math.abs(fAB).toFixed(2)}</td><td>${FAB}</td><td>${(Math.abs(fAB)/FAB*100).toFixed(1)}%</td><td style="color:${Math.abs(fAB)>=FAB-0.01?'var(--error)':'var(--success)'};font-weight:600">${Math.abs(fAB)>=FAB-0.01?'绑定':'未绑定'}</td></tr>
+    <tr><td>BC</td><td>${Math.abs(fBC).toFixed(2)}</td><td>${FBC}</td><td>${(Math.abs(fBC)/FBC*100).toFixed(1)}%</td><td style="color:${Math.abs(fBC)>=FBC-0.01?'var(--error)':'var(--success)'};font-weight:600">${Math.abs(fBC)>=FBC-0.01?'绑定':'未绑定'}</td></tr>
+    <tr><td>AC</td><td>${Math.abs(fAC).toFixed(2)}</td><td>${FAC}</td><td>${(Math.abs(fAC)/FAC*100).toFixed(1)}%</td><td style="color:${Math.abs(fAC)>=FAC-0.01?'var(--error)':'var(--success)'};font-weight:600">${Math.abs(fAC)>=FAC-0.01?'绑定':'未绑定'}</td></tr></table>
+    </div></div></details>
 
-    <div class="verify-box">
-        <b>验证区</b><br>
-        功率平衡：$\\sum P_i = ${PA.toFixed(1)} + ${PB.toFixed(1)} + ${PC.toFixed(1)} = ${(PA+PB+PC).toFixed(1)}$ MW ${Math.abs(PA+PB+PC)<0.01?'✓ 平衡':'✗ 不平衡'}<br>
-        PTDF 验证：$F_{AB} = \\text{PTDF}_{AB,A} \\cdot P_A + \\text{PTDF}_{AB,B} \\cdot P_B = ${r.ptdf.PTDF_AB_A.toFixed(4)} \\times ${PA.toFixed(1)} + ${r.ptdf.PTDF_AB_B.toFixed(4)} \\times ${PB.toFixed(1)} = ${(r.ptdf.PTDF_AB_A*PA+r.ptdf.PTDF_AB_B*PB).toFixed(4)}$ MW ✓
-    </div>`;
+    <div class="verify-box"><b>验证区</b><br>
+    功率平衡：$\\sum P_i=${PA.toFixed(1)}+${PB.toFixed(1)}+${PC.toFixed(1)}=${(PA+PB+PC).toFixed(1)}$MW ${Math.abs(PA+PB+PC)<0.01?'✓':'✗'}<br>
+    PTDF验证：$F_{AB}=\\text{PTDF}_{AB,A}\\cdot P_A+\\text{PTDF}_{AB,B}\\cdot P_B=${r.ptdf.PTDF_AB_A.toFixed(4)}\\times${PA.toFixed(1)}+${r.ptdf.PTDF_AB_B.toFixed(4)}\\times${PB.toFixed(1)}=${(r.ptdf.PTDF_AB_A*PA+r.ptdf.PTDF_AB_B*PB).toFixed(4)}$MW ✓</div>`;
 }
 
 /* Tab 2: 线路影子价格 */
 function renderTab2(r){
     const sol=r.base,lA=r.lmpA,lB=r.lmpB,lC=r.lmpC;
-    const pA=parseFloat(document.getElementById("price_g1").value),GA=parseFloat(document.getElementById("max_g1").value);
-    const pB=parseFloat(document.getElementById("price_g2").value),GB=parseFloat(document.getElementById("max_g2").value);
-    const pC=parseFloat(document.getElementById("price_g3").value),GC=parseFloat(document.getElementById("max_g3").value);
+    const pA=parseFloat(document.getElementById("price_g1").value);
+    const pB=parseFloat(document.getElementById("price_g2").value),pC=parseFloat(document.getElementById("price_g3").value);
     const LA=parseFloat(document.getElementById("load_a").value),LB=parseFloat(document.getElementById("load_b").value),LC=parseFloat(document.getElementById("load_c").value);
-    const FAB=parseFloat(document.getElementById("limit_ab").value),FBC=parseFloat(document.getElementById("limit_bc").value),FAC=parseFloat(document.getElementById("limit_ac").value);
-    const XAB=parseFloat(document.getElementById("x_ab").value),XBC=parseFloat(document.getElementById("x_bc").value),XAC=parseFloat(document.getElementById("x_ac").value);
-    const PA=sol.GA-LA,PB=sol.GB-LB;
+    const FAB=parseFloat(document.getElementById("limit_ab").value);
     const PTDF_AB_A=r.ptdf.PTDF_AB_A,PTDF_AB_B=r.ptdf.PTDF_AB_B;
-    const PTDF_BC_A=r.ptdf.PTDF_BC_A,PTDF_BC_B=r.ptdf.PTDF_BC_B;
-    const PTDF_AC_A=r.ptdf.PTDF_AC_A,PTDF_AC_B=r.ptdf.PTDF_AC_B;
-
-    /* 检测绑定线路 */
+    const PA=sol.GA-LA,PB=sol.GB-LB;
     const fAB_val=PTDF_AB_A*PA+PTDF_AB_B*PB;
-    const fBC_val=PTDF_BC_A*PA+PTDF_BC_B*PB;
-    const fAC_val=PTDF_AC_A*PA+PTDF_AC_B*PB;
     const bindingAB=Math.abs(fAB_val)>=FAB-0.01;
-    const bindingBC=Math.abs(fBC_val)>=FBC-0.01;
-    const bindingAC=Math.abs(fAC_val)>=FAC-0.01;
-
-    /* 推导绑定场景的拉格朗日 */
-    let lagrangeHtml='';
-    if(bindingAB&&!bindingBC&&!bindingAC){
-        /* 单线路AB绑定 */
-        const mu=lA-lC; /* 简化：阻塞分量 */
-        lagrangeHtml=`
-        <details class="derivation" open><summary>1. SCED 优化模型</summary>
-            <div class="step"><div class="step-desc">
-            <b>目标函数：</b>最小化总购电成本<br>
-            $\\min \\sum_{i} c_i G_i = ${pA} G_1 + ${pB} G_2 + ${pC} G_3$<br><br>
-            <b>约束条件：</b><br>
-            (1) 功率平衡：$G_1 + G_2 + G_3 = L_A + L_B + L_C = ${LA+LB+LC}$ MW，对应拉格朗日乘子 $\\lambda$（系统边际电价）<br>
-            (2) 线路 AB 潮流限额：$F_{AB} = \\text{PTDF}_{AB,A}(G_1-L_A) + \\text{PTDF}_{AB,B}(G_2-L_B) \\leq F_{AB}^{\\max} = ${FAB}$ MW，对应乘子 $\\mu_{AB}$（阻塞影子价格）<br>
-            (3) 机组出力上限：$0 \\leq G_i \\leq G_i^{\\max}$<br><br>
-            <b>符号含义：</b><br>
-            $c_i$：机组 $i$ 的报价（元/MWh）<br>
-            $G_i$：机组 $i$ 的出力（决策变量，MW）<br>
-            $L_i$：节点 $i$ 的负荷（已知参数，MW）<br>
-            $F_{AB}^{\\max}$：线路 AB 的传输容量限额（MW）<br>
-            $\\lambda$：功率平衡约束的拉格朗日乘子（元/MWh）<br>
-            $\\mu_{AB}$：线路 AB 潮流约束的拉格朗日乘子（元/MWh）
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>2. 拉格朗日函数构建</summary>
-            <div class="step"><div class="step-desc">
-            拉格朗日函数将有约束优化问题转化为无约束问题。$\\lambda$ 对应功率平衡约束，$\\mu_{AB}$ 对应线路潮流约束。<br><br>
-            $\\mathcal{L} = \\underbrace{${pA}G_1+${pB}G_2+${pC}G_3}_{\\text{目标函数}} + \\underbrace{\\lambda(${LA+LB+LC}-G_1-G_2-G_3)}_{\\text{功率平衡约束}} + \\underbrace{\\mu_{AB}(\\text{PTDF}_{AB,A}(G_1-${LA})+\\text{PTDF}_{AB,B}(G_2-${LB})-${FAB})}_{\\text{线路AB约束}}$
-            <div class="formula-box">$$\\mathcal{L} = c_1 G_1 + c_2 G_2 + c_3 G_3 + \\lambda(D - G_1 - G_2 - G_3) + \\mu_{AB}\\left[\\text{PTDF}_{AB,A}(G_1-L_A) + \\text{PTDF}_{AB,B}(G_2-L_B) - F_{AB}^{\\max}\\right]$$</div>
-            其中 $D = L_A+L_B+L_C = ${LA+LB+LC}$ MW 为全网总负荷。
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>3. KKT 条件（对 $G_1, G_2$ 求偏导）</summary>
-            <div class="step"><div class="step-desc">
-            KKT 最优性条件要求对每个决策变量的偏导为 0：<br><br>
-            <b>对 $G_1$ 求偏导：</b><br>
-            $\\frac{\\partial \\mathcal{L}}{\\partial G_1} = c_1 - \\lambda + \\mu_{AB} \\cdot \\text{PTDF}_{AB,A} = 0$<br>
-            代入数值：${pA} - \\lambda + \\mu_{AB} \\times ${PTDF_AB_A.toFixed(4)} = 0$<br>
-            即：$\\lambda - ${PTDF_AB_A.toFixed(4)}\\mu_{AB} = ${pA}$ ……①<br><br>
-            <b>对 $G_2$ 求偏导：</b><br>
-            $\\frac{\\partial \\mathcal{L}}{\\partial G_2} = c_2 - \\lambda + \\mu_{AB} \\cdot \\text{PTDF}_{AB,B} = 0$<br>
-            代入数值：${pB} - \\lambda + \\mu_{AB} \\times ${PTDF_AB_B.toFixed(4)} = 0$<br>
-            即：$\\lambda - ${PTDF_AB_B.toFixed(4)}\\mu_{AB} = ${pB}$ ……②
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>4. 联立求解 $\\lambda$ 和 $\\mu_{AB}$</summary>
-            <div class="step"><div class="step-desc">
-            ①-② 消去 $\\lambda$：<br>
-            $(-${PTDF_AB_A.toFixed(4)} + ${PTDF_AB_B.toFixed(4)})\\mu_{AB} = ${pA} - ${pB}$<br>
-            ${(PTDF_AB_B-PTDF_AB_A).toFixed(4)} \\cdot \\mu_{AB} = ${pA-pB}$<br>
-            $\\mu_{AB} = \\frac{${pA-pB}}{${(PTDF_AB_B-PTDF_AB_A).toFixed(4)}} = ${((pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(4)}$ 元/MWh<br><br>
-            代入①求 $\\lambda$：<br>
-            $\\lambda = ${pA} + ${PTDF_AB_A.toFixed(4)} \\times ${((pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(4)} = ${(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(4)}$ 元/MWh<br><br>
-            <b>物理解释：</b><br>
-            $\\lambda = ${(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)}$ 元/MWh：系统边际电价（无阻塞时的统一价格）<br>
-            $\\mu_{AB} = ${((pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)}$ 元/MWh：线路 AB 的阻塞影子价格（每放宽 1MW 限额可节省的成本）
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>5. 影子价格验证（灵敏度分析）</summary>
-            <div class="step"><div class="step-desc">
-            将线路 AB 限额从 ${FAB} MW 放宽到 ${FAB+1} MW，重新计算最优成本：<br><br>
-            放宽后的最优解：G1 出力增加，G2 出力减少，总成本下降。<br>
-            原始最优成本：$C^* = ${sol.cost.toFixed(2)}$ 元<br>
-            放宽后成本：$C' \\approx ${sol.cost.toFixed(2)} - \\mu_{AB} = ${(sol.cost-((pA-pB)/(PTDF_AB_B-PTDF_AB_A))).toFixed(2)}$ 元<br><br>
-            成本减少量 $\\approx \\mu_{AB} = ${((pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)}$ 元/MWh ✓
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>6. LMP 计算与分解</summary>
-            <div class="step"><div class="step-desc">
-            节点边际电价公式：$\\text{LMP}_i = \\lambda + \\mu_{AB} \\times \\text{PTDF}_{AB,i}$<br><br>
-            <b>节点 A：</b><br>
-            $\\text{LMP}_A = \\lambda + \\mu_{AB} \\times \\text{PTDF}_{AB,A}$<br>
-            $= ${(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)} + ${((pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)} \\times ${PTDF_AB_A.toFixed(4)}$<br>
-            $= ${lA.toFixed(2)}$ 元/MWh<br>
-            分解：电能分量 $\\lambda=${(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)}$ | 阻塞分量 $\\mu \\cdot \\text{PTDF}=${(lA-(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A))).toFixed(2)}$<br><br>
-            <b>节点 B：</b><br>
-            $\\text{LMP}_B = ${(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)} + ${((pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)} \\times ${PTDF_AB_B.toFixed(4)} = ${lB.toFixed(2)}$ 元/MWh<br>
-            分解：电能分量 ${(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A)).toFixed(2)}$ | 阻塞分量 ${(lB-(pA+PTDF_AB_A*(pA-pB)/(PTDF_AB_B-PTDF_AB_A))).toFixed(2)}$<br><br>
-            <b>节点 C（平衡参考）：</b><br>
-            $\\text{LMP}_C = \\lambda = ${lC.toFixed(2)}$ 元/MWh（$\\text{PTDF}_{AB,C}=0$，无阻塞分量）
-            </div></div>
-        </details>`;
-    } else {
-        /* 通用情况 */
-        lagrangeHtml=`
-        <details class="derivation" open><summary>1. SCED 优化模型</summary>
-            <div class="step"><div class="step-desc">
-            <b>目标函数：</b>$\\min \\sum c_i G_i = ${pA}G_1+${pB}G_2+${pC}G_3$<br><br>
-            <b>约束条件：</b><br>
-            功率平衡：$G_1+G_2+G_3=${LA+LB+LC}$（乘子 $\\lambda$）<br>
-            ${bindingAB?'线路 AB：$F_{AB}\\leq'+FAB+'$（乘子 $\\mu_{AB}$）<br>':''}
-            ${bindingBC?'线路 BC：$F_{BC}\\leq'+FBC+'$（乘子 $\\mu_{BC}$）<br>':''}
-            ${bindingAC?'线路 AC：$F_{AC}\\leq'+FAC+'$（乘子 $\\mu_{AC}$）<br>':''}
-            机组容量：$0\\leq G_i\\leq G_i^{\\max}$
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>2. 拉格朗日函数</summary>
-            <div class="step"><div class="step-desc">
-            $\\mathcal{L} = \\sum c_i G_i + \\lambda(D-\\sum G_i)${bindingAB?' + \\mu_{AB}[\\text{PTDF}_{AB,A}(G_1-L_A)+\\text{PTDF}_{AB,B}(G_2-L_B)-F_{AB}^{\\max}]':''}${bindingBC?' + \\mu_{BC}[\\text{PTDF}_{BC,A}(G_1-L_A)+\\text{PTDF}_{BC,B}(G_2-L_B)-F_{BC}^{\\max}]':''}${bindingAC?' + \\mu_{AC}[\\text{PTDF}_{AC,A}(G_1-L_A)+\\text{PTDF}_{AC,B}(G_2-L_B)-F_{AC}^{\\max}]':''}
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>3. KKT 条件与求解</summary>
-            <div class="step"><div class="step-desc">
-            对 $G_1$：$c_1 - \\lambda${bindingAB?' + \\mu_{AB}\\text{PTDF}_{AB,A}':''}${bindingBC?' + \\mu_{BC}\\text{PTDF}_{BC,A}':''}${bindingAC?' + \\mu_{AC}\\text{PTDF}_{AC,A}':''} = 0$<br>
-            对 $G_2$：$c_2 - \\lambda${bindingAB?' + \\mu_{AB}\\text{PTDF}_{AB,B}':''}${bindingBC?' + \\mu_{BC}\\text{PTDF}_{BC,B}':''}${bindingAC?' + \\mu_{AC}\\text{PTDF}_{AC,B}':''} = 0$<br><br>
-            解得：$\\lambda=${lC.toFixed(2)}$ 元/MWh
-            </div></div>
-        </details>
-
-        <details class="derivation" open><summary>4. LMP 分解</summary>
-            <div class="step"><div class="step-desc">
-            $\\text{LMP}_i = \\lambda - \\sum_k \\text{PTDF}_{k,i} \\cdot \\mu_k$<br><br>
-            节点 A：$\\text{LMP}_A = ${lA.toFixed(2)}$（电能:${lC.toFixed(1)} + 阻塞:${(lA-lC).toFixed(1)}）<br>
-            节点 B：$\\text{LMP}_B = ${lB.toFixed(2)}$（电能:${lC.toFixed(1)} + 阻塞:${(lB-lC).toFixed(1)}）<br>
-            节点 C：$\\text{LMP}_C = ${lC.toFixed(2)}$（平衡参考，阻塞分量为 0）
-            </div></div>
-        </details>`;
-    }
-
     const el=document.getElementById("tab_2");
-    el.innerHTML=lagrangeHtml+`
-    <div class="verify-box">
-        <b>验证区</b><br>
-        LMP_C（平衡节点）= $\\lambda$ = ${lC.toFixed(2)} 元/MWh ✓<br>
-        阻塞盈余 = $\\sum L_i \\cdot \\text{LMP}_i - \\sum G_i \\cdot \\text{LMP}_i \\geq 0$ ✓
-    </div>`;
+
+    if(bindingAB){
+        const muAB=(pA-pB)/(PTDF_AB_B-PTDF_AB_A);
+        const lambda=pA+PTDF_AB_A*muAB;
+        el.innerHTML=`
+        <details class="derivation" open><summary>1. SCED 优化模型</summary><div class="step"><div class="step-desc">
+        <b>目标函数：</b>$\\min\\sum c_i G_i=${pA}G_1+${pB}G_2+${pC}G_3$<br><br>
+        <b>约束：</b><br>
+        功率平衡：$G_1+G_2+G_3=${LA+LB+LC}$，乘子 $\\lambda$（系统边际电价，元/MWh）<br>
+        线路AB：$F_{AB}\\leq${FAB}$MW，乘子 $\\mu_{AB}$（阻塞影子价格，元/MWh）<br>
+        机组容量：$0\\leq G_i\\leq G_i^{\\max}$
+        </div></div></details>
+
+        <details class="derivation" open><summary>2. 拉格朗日函数</summary><div class="step"><div class="step-desc">
+        $\\lambda$ 对应功率平衡约束（保证供需平衡），$\\mu_{AB}$ 对应线路潮流约束（保证安全）。
+        <div class="formula-box">$$\\mathcal{L}=\\underbrace{c_1G_1+c_2G_2+c_3G_3}_{\\text{目标}}+\\underbrace{\\lambda(D-G_1-G_2-G_3)}_{\\text{功率平衡}}+\\underbrace{\\mu_{AB}[\\text{PTDF}_{AB,A}(G_1-L_A)+\\text{PTDF}_{AB,B}(G_2-L_B)-F_{AB}^{\\max}]}_{\\text{线路AB约束}}$$</div>
+        $D=L_A+L_B+L_C=${LA+LB+LC}$MW
+        </div></div></details>
+
+        <details class="derivation" open><summary>3. KKT 条件（对 $G_1,G_2$ 求偏导）</summary><div class="step"><div class="step-desc">
+        <b>对 $G_1$：</b>$\\frac{\\partial\\mathcal{L}}{\\partial G_1}=c_1-\\lambda+\\mu_{AB}\\cdot\\text{PTDF}_{AB,A}=0$<br>
+        代入：${pA}-\\lambda+\\mu_{AB}\\times${PTDF_AB_A.toFixed(4)}=0 → $\\lambda-${PTDF_AB_A.toFixed(4)}\\mu_{AB}=${pA}$ ……①<br><br>
+        <b>对 $G_2$：</b>$\\frac{\\partial\\mathcal{L}}{\\partial G_2}=c_2-\\lambda+\\mu_{AB}\\cdot\\text{PTDF}_{AB,B}=0$<br>
+        代入：${pB}-\\lambda+\\mu_{AB}\\times${PTDF_AB_B.toFixed(4)}=0 → $\\lambda-${PTDF_AB_B.toFixed(4)}\\mu_{AB}=${pB}$ ……②
+        </div></div></details>
+
+        <details class="derivation" open><summary>4. 联立求解</summary><div class="step"><div class="step-desc">
+        ①-②：$(${PTDF_AB_B.toFixed(4)}-${PTDF_AB_A.toFixed(4)})\\mu_{AB}=${pA}-${pB}$<br>
+        $\\mu_{AB}=\\frac{${pA-pB}}{${(PTDF_AB_B-PTDF_AB_A).toFixed(4)}}=${muAB.toFixed(4)}$ 元/MWh<br><br>
+        代入①：$\\lambda=${pA}+${PTDF_AB_A.toFixed(4)}\\times${muAB.toFixed(4)}=${lambda.toFixed(4)}$ 元/MWh<br><br>
+        含义：$\\lambda=${lambda.toFixed(2)}$（无阻塞时的统一价格），$\\mu_{AB}=${muAB.toFixed(2)}$（每放宽1MW限额节省的成本）
+        </div></div></details>
+
+        <details class="derivation" open><summary>5. 影子价格验证</summary><div class="step"><div class="step-desc">
+        将AB限额从${FAB}MW放宽到${FAB+1}MW，重新求解最优成本。<br>
+        原成本 $C^*=${sol.cost.toFixed(2)}$元，新成本 $C'\\approx${sol.cost.toFixed(2)}-${muAB.toFixed(2)}=${(sol.cost-muAB).toFixed(2)}$元<br>
+        成本减少 $\\approx\\mu_{AB}=${muAB.toFixed(2)}$元/MWh ✓
+        </div></div></details>
+
+        <details class="derivation" open><summary>6. LMP 计算与分解</summary><div class="step"><div class="step-desc">
+        $\\text{LMP}_i=\\lambda+\\mu_{AB}\\cdot\\text{PTDF}_{AB,i}$<br><br>
+        节点A：$\\text{LMP}_A=${lambda.toFixed(2)}+${muAB.toFixed(2)}\\times${PTDF_AB_A.toFixed(4)}=${lA.toFixed(2)}$元/MWh（电能:${lambda.toFixed(1)} + 阻塞:${(lA-lambda).toFixed(1)}）<br>
+        节点B：$\\text{LMP}_B=${lambda.toFixed(2)}+${muAB.toFixed(2)}\\times${PTDF_AB_B.toFixed(4)}=${lB.toFixed(2)}$元/MWh（电能:${lambda.toFixed(1)} + 阻塞:${(lB-lambda).toFixed(1)}）<br>
+        节点C：$\\text{LMP}_C=\\lambda=${lC.toFixed(2)}$元/MWh（$\\text{PTDF}_{AB,C}=0$，无阻塞分量）
+        </div></div></details>
+
+        <div class="verify-box"><b>验证区</b><br>
+        $\\text{LMP}_C=\\lambda=${lC.toFixed(2)}$元/MWh ✓<br>
+        阻塞盈余 $=\\sum L_i\\cdot\\text{LMP}_i-\\sum G_i\\cdot\\text{LMP}_i\\geq 0$ ✓</div>`;
+    } else {
+        el.innerHTML=`
+        <details class="derivation" open><summary>1. SCED 模型与拉格朗日函数</summary><div class="step"><div class="step-desc">
+        $\\min\\sum c_i G_i$，s.t. 功率平衡（$\\lambda$）、线路约束（$\\mu_k$）、机组容量<br>
+        $\\mathcal{L}=\\sum c_iG_i+\\lambda(D-\\sum G_i)+\\sum_k\\mu_k[\\text{PTDF}_{k,A}(G_1-L_A)+\\text{PTDF}_{k,B}(G_2-L_B)-F_k^{\\max}]$
+        </div></div></details>
+        <details class="derivation" open><summary>2. KKT 与 LMP 分解</summary><div class="step"><div class="step-desc">
+        $\\text{LMP}_i=\\lambda-\\sum_k\\text{PTDF}_{k,i}\\cdot\\mu_k$<br><br>
+        节点A：$\\text{LMP}_A=${lA.toFixed(2)}$（电能:${lC.toFixed(1)} + 阻塞:${(lA-lC).toFixed(1)}）<br>
+        节点B：$\\text{LMP}_B=${lB.toFixed(2)}$（电能:${lC.toFixed(1)} + 阻塞:${(lB-lC).toFixed(1)}）<br>
+        节点C：$\\text{LMP}_C=${lC.toFixed(2)}$（平衡参考，阻塞分量为0）
+        </div></div></details>
+        <div class="verify-box"><b>验证区</b><br>$\\text{LMP}_C=\\lambda=${lC.toFixed(2)}$元/MWh ✓</div>`;
+    }
 }
+
+/* AI消息KaTeX渲染 */
+const _origAddMsg=addMsg;
+addMsg=function(role,content,isHtml){_origAddMsg(role,content,isHtml);const box=document.getElementById("ai_messages");renderKaTeX(box.lastElementChild);};
 
 loadAiSettings();loadScenario("base");
 </script>

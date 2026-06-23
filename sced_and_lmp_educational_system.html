@@ -280,6 +280,10 @@
         .doc-hd h2{font-size:16px;font-weight:700;color:var(--ink)}
         .doc-close{border:none;background:var(--bg);color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center}
         .doc-close:hover{background:var(--divider2);color:var(--ink)}
+        .center-stack.fullscreen .panel:first-child{display:none}
+        .center-stack.fullscreen .panel:last-child{flex:1 !important}
+        .ico-btn-sm{width:24px;height:24px;display:grid;place-items:center;border:none;border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px;transition:all .15s}
+        .ico-btn-sm:hover{background:var(--bg);color:var(--ink)}
         .doc-body{flex:1;overflow:auto;padding:32px 48px;max-width:900px;margin:0 auto}
         .doc-body h3{font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--primary)}
         .doc-body h4{font-size:15px;font-weight:600;color:var(--ink);margin:20px 0 6px}
@@ -483,7 +487,10 @@
                 </div>
             </div>
             <div class="panel" style="flex:1;min-height:0">
-                <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2></div>
+                <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2>
+                <div style="display:flex;gap:4px">
+                    <button class="ico-btn-sm" onclick="toggleResultFull()" title="全屏/还原" id="btn_result_full">⛶</button>
+                </div></div>
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(0)">总体出清情况</button>
                     <button class="tab-btn" onclick="switchTab(1)">潮流计算</button>
@@ -818,7 +825,7 @@ document.querySelectorAll("#ai_base_url,#ai_api_key,#ai_model,#ai_temp,#ai_remem
 function tex(s){try{return katex.renderToString(s,{throwOnError:false,displayMode:false})}catch(e){return s}}
 function texD(s){try{return katex.renderToString(s,{throwOnError:false,displayMode:true})}catch(e){return '<div>'+s+'</div>'}}
 function switchTab(n){document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",i===n));document.querySelectorAll(".tab-content").forEach((c,i)=>c.classList.toggle("active",i===n));}
-function renderKaTeX(el){try{renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false,trust:true});}catch(e){}}
+function renderKaTeX(el){try{if(typeof renderMathInElement==='function'){renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false,trust:true,strict:false});}}catch(e){console.warn("KaTeX render error:",e);}}
 
 function renderAllTabs(r){
     if(!r||r.error)return;
@@ -1004,7 +1011,19 @@ const _origAddMsg=addMsg;
 addMsg=function(role,content,isHtml){_origAddMsg(role,content,isHtml);const box=document.getElementById("ai_messages");renderKaTeX(box.lastElementChild);};
 
 loadAiSettings();loadScenario("base");
-function toggleDoc(){document.getElementById("doc_overlay").classList.toggle("open");}
+function toggleDoc(){
+    const ov=document.getElementById("doc_overlay");
+    ov.classList.toggle("open");
+    if(ov.classList.contains("open")){
+        /* 延迟渲染确保DOM完全就绪 */
+        setTimeout(function(){renderKaTeX(ov.querySelector(".doc-body"));},50);
+    }
+}
+function toggleResultFull(){
+    const stack=document.querySelector(".center-stack");
+    stack.classList.toggle("fullscreen");
+    document.getElementById("btn_result_full").textContent=stack.classList.contains("fullscreen")?"❐":"⛶";
+}
 </script>
 
 <!-- ===== 教学文档 Overlay ===== -->

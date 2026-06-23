@@ -274,6 +274,27 @@
         .formula-box{margin:6px 0;padding:8px 12px;background:var(--card);border:1px solid var(--divider2);border-radius:6px;overflow-x:auto}
         .verify-box{margin-top:10px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:13px;color:#166534;line-height:1.7}
         .katex{font-size:1em}
+        .doc-overlay{display:none;position:fixed;inset:0;z-index:100;background:var(--bg)}
+        .doc-overlay.open{display:flex;flex-direction:column}
+        .doc-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--card-border);flex-shrink:0}
+        .doc-hd h2{font-size:16px;font-weight:700;color:var(--ink)}
+        .doc-close{border:none;background:var(--bg);color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;display:grid;place-items:center}
+        .doc-close:hover{background:var(--divider2);color:var(--ink)}
+        .doc-body{flex:1;overflow:auto;padding:32px 48px;max-width:900px;margin:0 auto}
+        .doc-body h3{font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--primary)}
+        .doc-body h4{font-size:15px;font-weight:600;color:var(--ink);margin:20px 0 6px}
+        .doc-body p{font-size:14px;line-height:1.8;color:var(--body);margin:8px 0}
+        .doc-body table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+        .doc-body table th{background:var(--bg);padding:8px 12px;text-align:left;font-weight:600;color:var(--muted);border-bottom:2px solid var(--divider)}
+        .doc-body table td{padding:8px 12px;border-bottom:1px solid var(--divider2)}
+        .doc-body blockquote{margin:12px 0;padding:10px 16px;border-left:3px solid var(--primary);background:var(--primary-light);border-radius:0 6px 6px 0;font-size:13px;color:var(--body)}
+        .doc-body .formula-block{margin:10px 0;padding:10px 14px;background:var(--card);border:1px solid var(--divider2);border-radius:6px;overflow-x:auto}
+        .doc-body ol,.doc-body ul{padding-left:24px;margin:8px 0}
+        .doc-body li{font-size:14px;line-height:1.8;color:var(--body);margin:4px 0}
+        .doc-body code{font-family:var(--mono);font-size:12px;background:var(--bg);padding:1px 4px;border-radius:3px}
+        .doc-disclaimer{margin-bottom:20px;padding:12px 16px;background:var(--warning-light);border:1px solid #fde68a;border-radius:8px;font-size:12px;color:#92400e;line-height:1.6}
+        .doc-step{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:14px}
+        .doc-step .arrow{color:var(--primary);font-weight:700}
 
         /* ===== Animations ===== */
         .ai-cursor{color:var(--primary);animation:blink 1s infinite}
@@ -467,6 +488,7 @@
                     <button class="tab-btn active" onclick="switchTab(0)">总体出清情况</button>
                     <button class="tab-btn" onclick="switchTab(1)">潮流计算</button>
                     <button class="tab-btn" onclick="switchTab(2)">线路影子价格</button>
+                    <button class="tab-btn" onclick="toggleDoc()" style="margin-left:auto">📖 教学文档</button>
                 </div>
                 <div class="panel-bd result-bd">
                     <div class="tab-content active" id="tab_0"></div>
@@ -982,6 +1004,346 @@ const _origAddMsg=addMsg;
 addMsg=function(role,content,isHtml){_origAddMsg(role,content,isHtml);const box=document.getElementById("ai_messages");renderKaTeX(box.lastElementChild);};
 
 loadAiSettings();loadScenario("base");
+function toggleDoc(){document.getElementById("doc_overlay").classList.toggle("open");}
 </script>
+
+<!-- ===== 教学文档 Overlay ===== -->
+<div id="doc_overlay" class="doc-overlay">
+<div class="doc-hd"><h2>📖 SCED / LMP 教学文档</h2><button class="doc-close" onclick="toggleDoc()">✕</button></div>
+<div class="doc-body">
+
+<div class="doc-disclaimer">⚠ 本文档基于当前系统默认参数编写，仅供教学参考。实际电力市场运行请以各省级电力交易中心发布的正式规则为准。</div>
+
+<h3>第一章：从交流电到 DC 潮流——为什么要简化</h3>
+<p><strong>本章核心：</strong>电力系统精确模型是复杂的非线性交流方程，DC 潮流通过三个物理合理的假设将其线性化，使大规模计算成为可能。</p>
+
+<h4>1.1 交流潮流的精确方程</h4>
+<p>本节展示交流系统中节点功率注入的精确数学表达式。节点 $i$ 的复功率注入方程为：</p>
+<div class="formula-block">$$\tilde{S}_i = P_i + jQ_i = \tilde{V}_i \cdot \tilde{I}_i^*$$</div>
+<p>其中每个符号的含义如下：</p>
+<ul>
+<li>$\tilde{S}_i$（节点 $i$ 的复功率，单位 MVA）是复数，头顶弯号表示该量为复数形式，与普通实数区分</li>
+<li>$P_i$（节点 $i$ 的有功功率，单位 MW）是 $\tilde{S}_i$ 的实部，代表实际做功的功率</li>
+<li>$Q_i$（节点 $i$ 的无功功率，单位 Mvar）是 $\tilde{S}_i$ 的虚部，用于维持电压水平</li>
+<li>$\tilde{V}_i$（节点 $i$ 的复电压，单位 p.u.）$= V_i e^{j\theta_i}$，其中 $V_i$ 为幅值，$\theta_i$ 为相角</li>
+<li>$\tilde{I}_i^*$（节点 $i$ 的复电流的共轭，单位 p.u.），共轭运算将虚部取反</li>
+</ul>
+<blockquote>工程师用<strong>相量</strong>（Phasor）将正弦波表示为复数，把时域微分方程转化为复数代数方程，这是电力系统分析的数学基础。</blockquote>
+
+<h4>1.2 精确有功功率的完整表达式</h4>
+<p>本节从复功率方程出发，推导出精确有功功率的表达式。从 $\tilde{I} = Y \cdot \tilde{V}$ 展开，得到节点 $i$ 的精确有功功率：</p>
+<div class="formula-block">$$P_i = \sum_j V_i V_j \left( G_{ij} \cos\theta_{ij} + B_{ij} \sin\theta_{ij} \right)$$</div>
+<p>其中：</p>
+<ul>
+<li>$V_i$（节点 $i$ 的电压幅值，单位 p.u.）和 $V_j$（节点 $j$ 的电压幅值，单位 p.u.）是节点电压的有效值</li>
+<li>$G_{ij}$（节点 $i$ 与 $j$ 之间的电导，单位 p.u.）反映线路电阻损耗</li>
+<li>$B_{ij}$（节点 $i$ 与 $j$ 之间的电纳，单位 p.u.）反映线路电抗特性</li>
+<li>$\theta_{ij}$（节点 $i$ 与 $j$ 之间的相角差，单位 rad）$= \theta_i - \theta_j$</li>
+</ul>
+<blockquote>这个方程包含电压幅值、相角差、三角函数、电导和电纳共五类变量，是一个<strong>非线性方程</strong>，无法直接用线性代数求解。</blockquote>
+
+<h4>1.3 DC 潮流的三个简化假设</h4>
+<p>本节说明工程师如何通过三个物理合理的假设，将非线性方程线性化：</p>
+<table>
+<tr><th>简化步骤</th><th>被忽略的物理量</th><th>近似处理</th><th>合理性依据</th></tr>
+<tr><td>第一步</td><td>电阻 $R_{ij}$</td><td>令电导 $G_{ij} \approx 0$</td><td>高压线路满足 $R \ll X$，电阻远小于电抗</td></tr>
+<tr><td>第二步</td><td>电压幅值变化</td><td>令 $V_i \approx 1$ p.u.</td><td>系统电压维持在额定值附近，偏差很小</td></tr>
+<tr><td>第三步</td><td>相角非线性</td><td>令 $\sin\theta_{ij} \approx \theta_{ij}$</td><td>正常运行时相角差很小（$< 30°$），正弦近似线性</td></tr>
+</table>
+
+<h4>1.4 简化后的 DC 潮流方程</h4>
+<p>经过三步简化，精确方程变为：</p>
+<div class="formula-block">$$P_i = \sum_j \frac{\theta_i - \theta_j}{x_{ij}}$$</div>
+<p>其中 $P_i$（节点 $i$ 的净注入有功功率，单位 MW），$\theta_i$（节点 $i$ 的电压相角，单位 rad），$x_{ij}$（线路 $i$-$j$ 的电抗，单位 p.u.）。分子 $\theta_i - \theta_j$ 是相角差，推动功率流动；分母 $x_{ij}$ 是线路电抗，阻碍功率流动。</p>
+
+<h3>第二章：DC 潮流计算——从矩阵到线路潮流</h3>
+<p><strong>本章核心：</strong>将单个节点的功率方程组装成矩阵方程，通过降阶和求逆得到各节点相角，最终计算出每条线路上的功率流。</p>
+
+<h4>2.1 节点导纳矩阵 $B'$</h4>
+<p>本节说明如何从线路参数构造节点导纳矩阵。对于三节点系统（A、B、C），$B'$ 矩阵的构造规则如下：</p>
+<ul>
+<li>对角元 $B'_{ii} = \sum_{j} \frac{1}{x_{ij}}$（与节点 $i$ 相连的所有线路导纳之和）</li>
+<li>非对角元 $B'_{ij} = -\frac{1}{x_{ij}}$（节点 $i$ 与 $j$ 之间直接相连的导纳的负值）</li>
+</ul>
+<p>以系统默认参数（$x_{AB}=1, x_{BC}=1, x_{AC}=1$ p.u.）为例：</p>
+<div class="formula-block">$$B' = \begin{pmatrix} 2 & -1 & -1 \\ -1 & 2 & -1 \\ -1 & -1 & 2 \end{pmatrix}$$</div>
+<p>$B'_{AA}=2$ 表示节点 A 与 B、C 两条线路相连，导纳之和为 $1/1+1/1=2$。$B'_{AB}=-1$ 表示 A 与 B 之间线路导纳为 $1/1=1$，取负值。</p>
+
+<h4>2.2 矩阵形式的功率方程</h4>
+<p>本节将节点方程组装为矩阵形式：</p>
+<div class="formula-block">$$P = B' \cdot \theta$$</div>
+<p>其中 $P$（节点净注入功率向量，单位 MW）$= [P_A, P_B, P_C]^T$，$B'$（节点导纳矩阵，单位 p.u.），$\theta$（节点相角向量，单位 rad）$= [\theta_A, \theta_B, \theta_C]^T$。</p>
+
+<h4>2.3 降阶处理——去掉平衡参考节点</h4>
+<p>本节说明为什么要降阶以及如何降阶。节点 C 被选为<strong>平衡参考节点</strong>（Slack Bus），其相角 $\theta_C$ 被强制固定为 0。因此，C 对应的行和列从方程组中移除。</p>
+<blockquote>三个原始方程线性相关（三行相加为零），只有 2 个独立方程。降阶后，未知数变为 $\theta_A$ 和 $\theta_B$，方程组有唯一解。</blockquote>
+<p>降阶后的 2×2 矩阵：</p>
+<div class="formula-block">$$B'_{\text{reduced}} = \begin{pmatrix} 2 & -1 \\ -1 & 2 \end{pmatrix}$$</div>
+
+<h4>2.4 矩阵求逆与相角求解</h4>
+<p>本节展示矩阵求逆的完整代数过程。2×2 矩阵求逆公式：</p>
+<div class="formula-block">$$\theta = (B'_{\text{reduced}})^{-1} \cdot P$$</div>
+<p>行列式：$\det = 2 \times 2 - (-1) \times (-1) = 3$</p>
+<p>逆矩阵元素：$(B'^{-1})_{AA} = 2/3 \approx 0.6667$，$(B'^{-1})_{BB} = 2/3 \approx 0.6667$，$(B'^{-1})_{AB} = 1/3 \approx 0.3333$</p>
+<div class="formula-block">$$(B'_{\text{reduced}})^{-1} = \frac{1}{3}\begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix} = \begin{pmatrix} 0.6667 & 0.3333 \\ 0.3333 & 0.6667 \end{pmatrix}$$</div>
+
+<h4>2.5 线路潮流计算</h4>
+<p>本节说明如何从相角计算线路潮流。对每条线路 $ij$，潮流公式为：</p>
+<div class="formula-block">$$F_{ij} = \frac{\theta_i - \theta_j}{x_{ij}}$$</div>
+<p>其中 $F_{ij}$（线路 $i$-$j$ 上的有功潮流，单位 MW）。将相角代入即可得到各线路潮流值，再与线路限额对比判断哪些线路处于绑定状态（Binding）。</p>
+
+<h4>2.6 验证</h4>
+<p>本节验证计算结果的正确性。功率平衡验证：$\sum_i P_i = 0$（所有节点净注入之和为零）。PTDF 验证：$F_k = \sum_i \text{PTDF}_{k,i} \cdot P_i$（为第三章铺垫）。</p>
+
+<h3>第三章：PTDF 功率转移分布因子——灵敏度分析</h3>
+<p><strong>本章核心：</strong>PTDF 将"节点注入变化"与"线路潮流变化"直接挂钩，是连接潮流计算与市场优化的桥梁。</p>
+
+<h4>3.1 PTDF 的定义</h4>
+<p>本节给出 PTDF 的数学定义：</p>
+<div class="formula-block">$$\text{PTDF}_{k,i} = \frac{\Delta F_k}{\Delta P_i}$$</div>
+<p>其中 $\text{PTDF}_{k,i}$（线路 $k$ 对节点 $i$ 的功率转移分布因子，无量纲），$\Delta F_k$（线路 $k$ 上的潮流变化量，单位 MW），$\Delta P_i$（节点 $i$ 的净注入变化量，单位 MW）。</p>
+<blockquote>PTDF 的物理含义：在节点 $i$ 注入 1MW 有功功率，同时在参考节点抽出 1MW 有功功率时，线路 $k$ 上的潮流变化量。</blockquote>
+
+<h4>3.2 PTDF 的推导</h4>
+<p>本节从 DC 潮流方程推导 PTDF。由于 DC 潮流是线性的，线路潮流 $F_k$ 是节点注入 $P_i$ 的线性函数：</p>
+<div class="formula-block">$$F_k = \sum_i \text{PTDF}_{k,i} \cdot P_i$$</div>
+<p>PTDF 就是这个线性函数的系数，等于偏导数 $\frac{\partial F_k}{\partial P_i}$。从相角方程 $\theta = (B'_{\text{red}})^{-1} P$ 和线路潮流方程 $F_k = (\theta_i - \theta_j)/x_{ij}$ 联立求导，即可得到 PTDF 与逆矩阵元素的关系。</p>
+
+<h4>3.3 参考节点与 PTDF</h4>
+<p>本节解释参考节点选择的影响：</p>
+<ul>
+<li>参考节点的选择是任意的，选不同的参考节点，PTDF 数值会变化</li>
+<li>但物理结果不变：线路实际潮流相同，过载判断相同</li>
+<li>真实电力系统使用分布式 Slack，不是单一节点承担全部不平衡</li>
+</ul>
+
+<h4>3.4 PTDF 矩阵</h4>
+<p>以表格形式展示所有线路对所有非参考节点的 PTDF 值。具体数值取决于线路电抗参数，读者可在系统中调整参数观察变化。</p>
+
+<h3>第四章：SCED 安全约束经济调度——市场出清模型</h3>
+<p><strong>本章核心：</strong>电力市场通过 SCED 优化模型，在满足功率平衡和线路安全约束的前提下，找到总发电成本最低的发电计划。</p>
+
+<h4>4.1 优化目标</h4>
+<p>本节给出 SCED 的目标函数：</p>
+<div class="formula-block">$$\min \quad \sum_i c_i \cdot G_i$$</div>
+<p>其中 $c_i$（机组 $i$ 的报价，单位元/MWh），$G_i$（机组 $i$ 的发电出力，决策变量，单位 MW）。目标是在满足所有约束的前提下，使总发电成本最小。</p>
+
+<h4>4.2 约束条件</h4>
+<p>本节逐一列出并解释 SCED 的三类约束：</p>
+<p><strong>约束一：功率平衡约束</strong></p>
+<div class="formula-block">$$\sum_i G_i = \sum_i L_i$$</div>
+<p>其中 $L_i$（节点 $i$ 的负荷，单位 MW）是已知常数。此约束确保发电总量等于负荷总量。</p>
+<p><strong>约束二：线路潮流约束</strong></p>
+<div class="formula-block">$$-F_k^{\max} \leq \sum_i \text{PTDF}_{k,i} \cdot (G_i - L_i) \leq F_k^{\max}$$</div>
+<p>其中 $F_k^{\max}$（线路 $k$ 的传输限额，单位 MW）。线路潮流等于 PTDF 矩阵乘以净注入向量，必须在限额范围内。</p>
+<p><strong>约束三：机组出力约束</strong></p>
+<div class="formula-block">$$G_i^{\min} \leq G_i \leq G_i^{\max}$$</div>
+<p>其中 $G_i^{\min}$（机组 $i$ 的最小出力，单位 MW），$G_i^{\max}$（机组 $i$ 的最大出力，单位 MW）。</p>
+
+<h4>4.3 为什么叫"安全约束"</h4>
+<p>本节对比纯经济调度与安全约束经济调度的区别：</p>
+<table>
+<tr><th>类型</th><th>是否考虑线路限额</th><th>结果</th></tr>
+<tr><td>纯经济调度（ED）</td><td>否</td><td>成本最低，但可能线路过载</td></tr>
+<tr><td>安全约束经济调度（SCED）</td><td>是</td><td>成本最低且线路安全</td></tr>
+</table>
+
+<h3>第五章：拉格朗日函数与 KKT 条件——求解优化问题</h3>
+<p><strong>本章核心：</strong>通过构建拉格朗日函数，将带约束的优化问题转化为无约束问题，再利用 KKT 条件建立方程组求解影子价格。</p>
+
+<h4>5.1 为什么需要拉格朗日函数</h4>
+<p>本节解释拉格朗日函数的思想。SCED 是一个有约束的优化问题，无法直接用微积分求极值。拉格朗日函数的思想是：把约束条件"融合"进目标函数，通过引入<strong>拉格朗日乘子</strong>（新变量），将问题转化为无约束优化。</p>
+
+<h4>5.2 拉格朗日函数的构建</h4>
+<p>以单线路绑定场景为例，写出完整的拉格朗日函数：</p>
+<div class="formula-block">$$\mathcal{L} = \sum_i c_i G_i + \lambda \left( \sum_i L_i - \sum_i G_i \right) + \mu_{AB} \left[ \sum_i \text{PTDF}_{AB,i} \cdot (G_i - L_i) - F_{AB}^{\max} \right]$$</div>
+<p>其中 $\mathcal{L}$（拉格朗日函数，单位元），$\lambda$（功率平衡约束的拉格朗日乘子，单位元/MWh），$\mu_{AB}$（线路 AB 限额约束的拉格朗日乘子，单位元/MWh）。</p>
+<ul>
+<li>第一项 $\sum c_i G_i$：原始目标函数（总发电成本）</li>
+<li>第二项 $\lambda(\sum L_i - \sum G_i)$：功率平衡约束的惩罚项，当功率平衡满足时括号内为 0</li>
+<li>第三项 $\mu_{AB}[\dots]$：线路 AB 限额约束的惩罚项，当线路潮流等于限额时括号内为 0</li>
+</ul>
+
+<h4>5.3 KKT 条件——对决策变量求偏导</h4>
+<p>本节对机组出力 $G_1$ 和 $G_2$ 分别求偏导，并令偏导数等于 0：</p>
+<p><strong>对 $G_1$ 求偏导：</strong></p>
+<div class="formula-block">$$\frac{\partial \mathcal{L}}{\partial G_1} = c_1 - \lambda + \mu_{AB} \cdot \text{PTDF}_{AB,1} = 0$$</div>
+<p>$c_1$ 前面是正号（来自目标函数），$-\lambda$ 来自功率平衡约束（$G_1$ 的系数为 $-1$），$\mu_{AB} \cdot \text{PTDF}_{AB,1}$ 来自线路约束（$G_1$ 的系数为 $\text{PTDF}_{AB,1}$）。</p>
+<p><strong>对 $G_2$ 求偏导：</strong></p>
+<div class="formula-block">$$\frac{\partial \mathcal{L}}{\partial G_2} = c_2 - \lambda + \mu_{AB} \cdot \text{PTDF}_{AB,2} = 0$$</div>
+
+<h4>5.4 KKT 条件——对乘子求偏导</h4>
+<p>本节对拉格朗日乘子求偏导，还原出约束条件本身：</p>
+<p><strong>对 $\lambda$ 求偏导：</strong></p>
+<div class="formula-block">$$\frac{\partial \mathcal{L}}{\partial \lambda} = \sum_i L_i - \sum_i G_i = 0$$</div>
+<p>对乘子求偏导，还原出功率平衡约束。</p>
+<p><strong>对 $\mu_{AB}$ 求偏导：</strong></p>
+<div class="formula-block">$$\frac{\partial \mathcal{L}}{\partial \mu_{AB}} = \sum_i \text{PTDF}_{AB,i} \cdot (G_i - L_i) - F_{AB}^{\max} = 0$$</div>
+<p>线路潮流等于限额，约束处于绑定状态。</p>
+
+<h4>5.5 多线路绑定的情况</h4>
+<p>当多条线路同时绑定时，拉格朗日函数包含多个 $\mu_k$ 项，KKT 条件形成更大的线性方程组。求解方法完全相同——联立所有 KKT 方程，解出 $\lambda$ 和所有 $\mu_k$。</p>
+
+<h3>第六章：影子价格——约束条件的稀缺价值</h3>
+<p><strong>本章核心：</strong>拉格朗日乘子 $\lambda$ 和 $\mu_k$ 分别反映了功率平衡资源和线路容量资源的稀缺程度，它们就是电力市场中的价格信号。</p>
+
+<h4>6.1 系统边际电价 $\lambda$</h4>
+<div class="formula-block">$$\lambda = \frac{d(\text{最优成本})}{d(\text{总负荷})}$$</div>
+<p>$\lambda$ 是功率平衡约束的影子价格。当系统总负荷增加 1MW 时，边际机组多发 1MW，系统总发电成本增加的量就是 $\lambda$。在电力市场中，$\lambda$ 被称为<strong>系统边际电价</strong>（System Marginal Price, SMP）。</p>
+
+<h4>6.2 线路影子价格 $\mu_k$</h4>
+<div class="formula-block">$$\mu_k = -\frac{d(\text{最优成本})}{d(F_k^{\max})}$$</div>
+<p>$\mu_k$ 是线路 $k$ 限额约束的影子价格。当线路 $k$ 的传输限额放宽 1MW 时，系统可以更多地利用便宜机组送电，总发电成本减少的量就是 $\mu_k$。$\mu_k$ 越大，说明该线路的容量越稀缺，阻塞越严重。</p>
+
+<h4>6.3 影子价格的验证方法</h4>
+<p>以线路 AB 为例，展示验证过程：</p>
+<ol>
+<li>记录当前限额 $F_{AB}^{\max}$ 下的最优成本 $C^*$</li>
+<li>将限额放宽到 $F_{AB}^{\max} + 1$ MW</li>
+<li>重新求解 SCED，得到新的最优成本 $C'$</li>
+<li>验证：$C^* - C' = \mu_{AB}$</li>
+</ol>
+
+<h4>6.4 影子价格与松弛变量</h4>
+<p>硬约束 $F_k \leq F_k^{\max}$ 可能无解，软约束 $F_k + s_k = F_k^{\max}$（$s_k \geq 0$）保证有解。当约束绑定时 $s_k=0$，$\mu_k>0$；当约束不绑定时 $s_k>0$，$\mu_k=0$。</p>
+
+<h3>第七章：节点边际电价 LMP——价格的最终形态</h3>
+<p><strong>本章核心：</strong>LMP 将系统边际成本与线路阻塞成本叠加，形成反映真实供电成本的节点级价格信号。</p>
+
+<h4>7.1 LMP 的分解公式</h4>
+<div class="formula-block">$$\text{LMP}_i = \lambda + \sum_k \mu_k \cdot \text{PTDF}_{k,i}$$</div>
+<p>其中 $\text{LMP}_i$（节点 $i$ 的节点边际电价，单位元/MWh），$\lambda$（电能分量，所有节点共享），$\sum_k \mu_k \cdot \text{PTDF}_{k,i}$（阻塞分量，各节点不同）。</p>
+
+<h4>7.2 为什么各节点电价不同</h4>
+<p>所有节点共享同一个 $\lambda$，但各节点对各条线路的 PTDF 不同。因此，阻塞分量在不同节点上表现不同，导致 LMP 出现差异。</p>
+
+<h4>7.3 正负 PTDF 对 LMP 的影响</h4>
+<table>
+<tr><th>PTDF 符号</th><th>机组发电对线路的影响</th><th>阻塞分量方向</th><th>结果</th></tr>
+<tr><td>正</td><td>加剧线路使用</td><td>正（叠加）</td><td>LMP 高于 $\lambda$</td></tr>
+<tr><td>负</td><td>减少线路使用</td><td>负（抵消）</td><td>LMP 低于 $\lambda$</td></tr>
+</table>
+
+<h4>7.4 负电价的产生</h4>
+<p>负 LMP 产生的条件：$\lambda$ 较小（边际机组便宜），$\mu_k$ 很大（阻塞严重），$\text{PTDF}_{k,i}$ 为负且绝对值大。此时 $\text{LMP}_i = \lambda + \mu_k \cdot (\text{负数}) < 0$。物理意义：在该节点增加 1MW 负荷，系统总采购成本反而减少。</p>
+
+<h4>7.5 阻塞盈余</h4>
+<p>用户按各节点 LMP 支付电费，发电侧按各节点 LMP 获得电费。阻塞盈余 = 用户总支付 − 发电侧总收入。该盈余由市场运营机构或电网企业收取，用于输电权（FTR）的红利结算。</p>
+
+<h3>第八章：中国电力市场实践——理论与现实的距离</h3>
+<p><strong>本章核心：</strong>中国山东、广东等现货市场采用 SCED+LMP 的理论框架进行出清计算，但结算环节做了简化，处于"计算用节点、结算用平均"的过渡模式。</p>
+
+<h4>8.1 中国现货市场的"两步走"模式</h4>
+<table>
+<tr><th>环节</th><th>计算方法</th><th>说明</th></tr>
+<tr><td>日前市场出清</td><td>DC 潮流 + SCED + 节点 LMP 计算</td><td>内部计算节点电价</td></tr>
+<tr><td>实时市场出清</td><td>DC 潮流 + SCED + 节点 LMP 计算</td><td>5-15 分钟周期</td></tr>
+<tr><td>安全校核</td><td>AC 潮流</td><td>验证电压、无功、N-1 安全</td></tr>
+<tr><td>发电侧结算</td><td>逐步向节点电价过渡</td><td>部分市场已按节点结算</td></tr>
+<tr><td>用户侧结算</td><td>统一结算点电价或分区电价</td><td>大部分用户未直接面对节点电价</td></tr>
+</table>
+
+<h4>8.2 与理论模型的差异</h4>
+<p>中国没有完全按节点 LMP 结算的原因：用户侧改革滞后，大多数用户通过中长期合同锁定价格；节点电价波动大，市场主体风险承受能力有限；渐进式改革路径，避免市场剧烈波动。</p>
+
+<h4>8.3 山东与广东的特点</h4>
+<ul>
+<li>山东：发电侧已按节点电价结算，用户侧逐步推进</li>
+<li>广东：采用统一结算点电价，通过金融输电权等工具处理阻塞</li>
+</ul>
+
+<h3>第九章：全流程总结</h3>
+<p><strong>本章核心：</strong>从网络参数到节点电价，全流程共 11 个步骤。</p>
+<div class="doc-step"><strong>步骤1：</strong>输入网络拓扑与线路电抗参数</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤2：</strong>构造节点导纳矩阵 $B'$</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤3：</strong>降阶处理（去掉平衡参考节点）</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤4：</strong>求逆矩阵，得到 $(B'_{\text{reduced}})^{-1}$</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤5：</strong>代入净注入功率 $P$，求解节点相角 $\theta$</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤6：</strong>计算线路潮流 $F_{ij} = (\theta_i - \theta_j)/x_{ij}$</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤7：</strong>计算 PTDF 矩阵（偏导数，即线性系数）</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤8：</strong>构建 SCED 优化模型（目标函数 + 功率平衡约束 + 线路限额约束）</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤9：</strong>构建拉格朗日函数，写出 KKT 条件</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤10：</strong>联立求解 $\lambda$（系统边际电价）和 $\mu_k$（线路影子价格）</div>
+<div class="doc-step"><span class="arrow">↓</span></div>
+<div class="doc-step"><strong>步骤11：</strong>计算各节点 $\text{LMP}_i = \lambda + \sum_k \mu_k \cdot \text{PTDF}_{k,i}$</div>
+
+<h3>附录 A：符号对照表</h3>
+<table>
+<tr><th>符号</th><th>中文含义</th><th>单位</th><th>首次出现</th></tr>
+<tr><td>$c_i$</td><td>机组 $i$ 的报价</td><td>元/MWh</td><td>第四章</td></tr>
+<tr><td>$F_{ij}$</td><td>线路 $i$-$j$ 上的有功潮流</td><td>MW</td><td>第二章</td></tr>
+<tr><td>$F_k^{\max}$</td><td>线路 $k$ 的传输限额</td><td>MW</td><td>第四章</td></tr>
+<tr><td>$G_i$</td><td>机组 $i$ 的发电出力（决策变量）</td><td>MW</td><td>第四章</td></tr>
+<tr><td>$G_i^{\max}$</td><td>机组 $i$ 的最大出力</td><td>MW</td><td>第四章</td></tr>
+<tr><td>$L_i$</td><td>节点 $i$ 的负荷</td><td>MW</td><td>第一章</td></tr>
+<tr><td>$P_i$</td><td>节点 $i$ 的净注入有功功率</td><td>MW</td><td>第一章</td></tr>
+<tr><td>$Q_i$</td><td>节点 $i$ 的无功功率</td><td>Mvar</td><td>第一章</td></tr>
+<tr><td>$B'$</td><td>节点导纳矩阵</td><td>p.u.</td><td>第二章</td></tr>
+<tr><td>$B_{ij}$</td><td>节点 $i$ 与 $j$ 之间的电纳</td><td>p.u.</td><td>第一章</td></tr>
+<tr><td>$G_{ij}$</td><td>节点 $i$ 与 $j$ 之间的电导</td><td>p.u.</td><td>第一章</td></tr>
+<tr><td>$V_i$</td><td>节点 $i$ 的电压幅值</td><td>p.u.</td><td>第一章</td></tr>
+<tr><td>$x_{ij}$</td><td>线路 $i$-$j$ 的电抗</td><td>p.u.</td><td>第一章</td></tr>
+<tr><td>$\lambda$</td><td>功率平衡约束的拉格朗日乘子（系统边际电价）</td><td>元/MWh</td><td>第五章</td></tr>
+<tr><td>$\mu_k$</td><td>线路 $k$ 限额约束的拉格朗日乘子（线路影子价格）</td><td>元/MWh</td><td>第五章</td></tr>
+<tr><td>$\theta_i$</td><td>节点 $i$ 的电压相角</td><td>rad</td><td>第一章</td></tr>
+<tr><td>$\mathcal{L}$</td><td>拉格朗日函数</td><td>元</td><td>第五章</td></tr>
+<tr><td>$\tilde{S}_i$</td><td>节点 $i$ 的复功率</td><td>MVA</td><td>第一章</td></tr>
+<tr><td>$\tilde{V}_i$</td><td>节点 $i$ 的复电压</td><td>p.u.</td><td>第一章</td></tr>
+<tr><td>$\text{PTDF}_{k,i}$</td><td>线路 $k$ 对节点 $i$ 的功率转移分布因子</td><td>无量纲</td><td>第三章</td></tr>
+</table>
+
+<h3>附录 B：常见问题 FAQ</h3>
+
+<h4>B.1 为什么相角差除以电抗就等于功率？</h4>
+<p><strong>核心结论：</strong>这是 DC 潮流三步简化的最终结果。</p>
+<p>详细解释：精确的交流功率方程包含电压幅值、相角差、三角函数和导纳。DC 潮流假设电压为 1 p.u.、忽略电阻、将 $\sin\theta \approx \theta$，三步简化后只剩下相角差除以电抗这一项。这不是近似"巧合"，而是物理假设的必然推论。</p>
+
+<h4>B.2 复数头顶的弯号是什么意思？</h4>
+<p><strong>核心结论：</strong>弯号（$\tilde{}$）表示该量为复数，与普通实数区分。</p>
+<p>详细解释：交流电压和电流是正弦波，工程师用相量将其表示为复数。复数的实部对应有功分量，虚部对应无功分量。弯号是一种约定记号，提醒读者"这是一个复数，不是标量"。</p>
+
+<h4>B.3 为什么要设计平衡节点？</h4>
+<p><strong>核心结论：</strong>数学需要（方程组线性相关）+ 物理兜底（功率实时平衡）。</p>
+<p>详细解释：三个节点的功率方程相加为零（$\sum P_i = 0$），只有 2 个独立方程。选择一个节点作为参考（Slack），固定其相角为 0，消除自由度。物理上，该节点承担系统中所有微小的功率不平衡，是电网安全运行的"兜底"角色。</p>
+
+<h4>B.4 调度指令真的只下发给平衡节点吗？</h4>
+<p><strong>核心结论：</strong>不是，所有机组都参与调度，只是分工不同。</p>
+<p>详细解释：SCED 的结果给出所有机组的出力计划，调度机构向所有机组下发调度指令。平衡节点机组的特殊之处在于：它需要响应实时的微小功率偏差（如负荷波动、机组爬坡），而其他机组按计划出力。这不是"只调一个"，而是"所有都调，一个兜底"。</p>
+
+<h4>B.5 PTDF 和潮流到底是什么关系？</h4>
+<p><strong>核心结论：</strong>PTDF 是潮流对注入的灵敏度，即线性系数。</p>
+<p>详细解释：在 DC 潮流的线性假设下，线路潮流 $F_k$ 可以写成所有节点注入 $P_i$ 的线性组合：$F_k = \sum_i \text{PTDF}_{k,i} \cdot P_i$。PTDF 就是这个线性组合的系数矩阵。知道了 PTDF，就可以直接从节点注入计算任意线路的潮流，不需要再解矩阵方程。</p>
+
+<h4>B.6 参考节点必须是 C 吗？</h4>
+<p><strong>核心结论：</strong>任意选择，物理结果不变。</p>
+<p>详细解释：选不同参考节点，PTDF 数值会变化，但线路实际潮流相同、过载判断相同。这是因为 PTDF 的变化恰好补偿了参考节点变化带来的偏移。本系统选择 C 作为参考，仅是教学方便。</p>
+
+<h4>B.7 为什么所有机组报价都大于 0，LMP 却可能是负的？</h4>
+<p><strong>核心结论：</strong>阻塞分量的负值超过了电能分量。</p>
+<p>详细解释：$\text{LMP}_i = \lambda + \sum_k \mu_k \cdot \text{PTDF}_{k,i}$。当某节点对某条阻塞线路的 PTDF 为负且绝对值很大时，$\mu_k \cdot \text{PTDF}_{k,i}$ 项可以是一个很大的负数，足以超过正的 $\lambda$，使 LMP 变为负值。物理上，这意味着在该节点增加负荷反而降低了系统总成本。</p>
+
+<h4>B.8 影子价格区分线路和节点吗？</h4>
+<p><strong>核心结论：</strong>影子价格对应约束（线路），LMP 是影子价格的组合结果（节点）。</p>
+<p>详细解释：$\mu_k$ 对应第 $k$ 条线路的约束，每条线路有一个 $\mu_k$。$\text{LMP}_i$ 是节点 $i$ 的价格，由 $\lambda$ 和所有 $\mu_k$ 按 PTDF 加权组合而成。影子价格是"约束的稀缺价值"，LMP 是"节点的供电成本"。</p>
+
+<h4>B.9 真实的电力系统真的用 DC 潮流算 LMP 吗？</h4>
+<p><strong>核心结论：</strong>出清用 DC，安全校核用 AC。</p>
+<p>详细解释：电力市场出清（SCED）使用 DC 潮流模型，因为计算速度快、结果可解释。出清完成后，系统运行人员使用 AC 潮流进行详细安全校核，检查电压、无功、N-1 安全等 DC 潮流无法覆盖的约束。如果 AC 校核发现问题，会调整出清结果。</p>
+
+<h4>B.10 松弛变量在现货规则中是什么意思？</h4>
+<p><strong>核心结论：</strong>松弛变量是软约束机制，保证模型有解。</p>
+<p>详细解释：硬约束 $F_k \leq F_k^{\max}$ 在极端工况下可能无可行解。引入松弛变量 $s_k \geq 0$，将约束改为 $F_k + s_k = F_k^{\max}$，并在目标函数中加入惩罚项 $M \cdot s_k$（$M$ 为极大正数）。这允许线路略微越限（$s_k > 0$），但惩罚极重，求解器会尽量避免。实际市场规则中，松弛变量对应"安全约束越限惩罚"机制。</p>
+
+</div>
+</div>
 </body>
 </html>

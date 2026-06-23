@@ -368,7 +368,7 @@
 
         <!-- Center: Topology + Results -->
         <section class="center-stack">
-            <div class="panel" style="flex:0 0 calc(50% - 150px);min-height:0">
+            <div class="panel" style="flex:0 0 50%;min-height:0">
                 <div class="panel-hd">
                     <h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7l8-4 8 4-8 4-8-4zm0 5l8 4 8-4M4 17l8 4 8-4"></path></svg>物理输网潮流拓扑</h2>
                     <span class="live-badge"><span class="live-dot"></span>实时仿真</span>
@@ -705,7 +705,6 @@ function runSCED() {
         circle.setAttribute("stroke", gName === marginal ? "#2563eb" : "#cbd5e1");
         circle.setAttribute("stroke-width", gName === marginal ? "3" : "2");
     });
-    renderAllTabs(result);
     document.getElementById("node_a_gen").textContent=sol.GA.toFixed(0);
     document.getElementById("node_b_gen").textContent=sol.GB.toFixed(0);
     document.getElementById("node_c_gen").textContent=sol.GC.toFixed(0);
@@ -727,6 +726,7 @@ function runSCED() {
     updateFlowLine("flow_ab_path","flow_txt_ab",flow_ab,FAB_max,440,65,690,375,"arrow_ab");
     updateFlowLine("flow_bc_path","flow_txt_bc",flow_bc,FBC_max,690,375,190,375,"arrow_bc");
     updateFlowLine("flow_ca_path","flow_txt_ac",-flow_ac,FAC_max,190,375,440,65,"arrow_ac");
+    try{renderAllTabs(result);}catch(e){console.warn("Tab render error:",e);}
 }
 
 function updateFlowLine(lineId,txtId,flowValue,limit,x1,y1,x2,y2,arrowId) {
@@ -800,6 +800,11 @@ function renderKaTeX(el){if(typeof renderMathInElement==='function'){renderMathI
 
 function renderAllTabs(r){
     if(!r||r.error)return;
+    /* 计算PTDF并附加到result */
+    const XAB=parseFloat(document.getElementById("x_ab").value),XBC=parseFloat(document.getElementById("x_bc").value),XAC=parseFloat(document.getElementById("x_ac").value);
+    const BAA=1/XAB+1/XAC,BBB=1/XAB+1/XBC,BAB=-1/XAB,det=BAA*BBB-BAB*BAB;
+    const ZAA=BBB/det,ZBB=BAA/det,ZAB=-BAB/det;
+    r.ptdf={PTDF_AB_A:(ZAA-ZAB)/XAB,PTDF_BC_A:ZAB/XBC,PTDF_AC_A:ZAA/XAC,PTDF_AB_B:(ZAB-ZBB)/XAB,PTDF_BC_B:ZBB/XBC,PTDF_AC_B:ZAB/XAC};
     renderTab0(r);renderTab1(r);renderTab2(r);
     document.querySelectorAll(".tab-content").forEach(el=>renderKaTeX(el));
 }

@@ -282,8 +282,14 @@
         .doc-close:hover{background:var(--divider2);color:var(--ink)}
         .center-stack.fullscreen .panel:first-child{display:none}
         .center-stack.fullscreen .panel:last-child{flex:1 !important}
-        .ico-btn-sm{width:24px;height:24px;display:grid;place-items:center;border:none;border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px;transition:all .15s}
-        .ico-btn-sm:hover{background:var(--bg);color:var(--ink)}
+        .btn-fullscreen{
+            border:none;cursor:pointer;font-size:11px;font-weight:600;
+            padding:4px 10px;border-radius:6px;transition:all .2s;
+            background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;
+            display:flex;align-items:center;gap:4px;white-space:nowrap;
+        }
+        .btn-fullscreen:hover{transform:scale(1.05);box-shadow:0 2px 8px rgba(37,99,235,0.3)}
+        .btn-fullscreen:active{transform:scale(0.97)}
         .doc-body{flex:1;overflow:auto;padding:32px 48px;max-width:900px;margin:0 auto}
         .doc-body h3{font-size:18px;font-weight:700;color:var(--ink);margin:28px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--primary)}
         .doc-body h4{font-size:15px;font-weight:600;color:var(--ink);margin:20px 0 6px}
@@ -488,9 +494,10 @@
             </div>
             <div class="panel" style="flex:1;min-height:0">
                 <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2>
-                <div style="display:flex;gap:4px">
-                    <button class="ico-btn-sm" onclick="toggleResultFull()" title="全屏/还原" id="btn_result_full">⛶</button>
-                </div></div>
+                <button class="btn-fullscreen" onclick="toggleResultFull()" id="btn_result_full">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/></svg>
+                    全屏查看
+                </button></div>
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(0)">总体出清情况</button>
                     <button class="tab-btn" onclick="switchTab(1)">潮流计算</button>
@@ -1021,8 +1028,13 @@ function toggleDoc(){
 }
 function toggleResultFull(){
     const stack=document.querySelector(".center-stack");
+    const btn=document.getElementById("btn_result_full");
     stack.classList.toggle("fullscreen");
-    document.getElementById("btn_result_full").textContent=stack.classList.contains("fullscreen")?"❐":"⛶";
+    if(stack.classList.contains("fullscreen")){
+        btn.innerHTML='<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 4v4H4m16-4v4h-4M8 20v-4H4m16 4v-4h-4"/></svg> 退出全屏';
+    }else{
+        btn.innerHTML='<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/></svg> 全屏查看';
+    }
 }
 </script>
 

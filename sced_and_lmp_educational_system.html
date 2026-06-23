@@ -494,10 +494,7 @@
             </div>
             <div class="panel" style="flex:1;min-height:0">
                 <div class="panel-hd"><h2><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V5m0 14h16M8 17v-5m4 5V7m4 10v-8"></path></svg>出清数据透视</h2>
-                <button class="btn-fullscreen" onclick="toggleResultFull()" id="btn_result_full">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/></svg>
-                    全屏查看
-                </button></div>
+                <button class="btn-fullscreen" onclick="toggleResultFull()" id="btn_result_full">全屏查看</button></div>
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(0)">总体出清情况</button>
                     <button class="tab-btn" onclick="switchTab(1)">潮流计算</button>
@@ -1030,11 +1027,7 @@ function toggleResultFull(){
     const stack=document.querySelector(".center-stack");
     const btn=document.getElementById("btn_result_full");
     stack.classList.toggle("fullscreen");
-    if(stack.classList.contains("fullscreen")){
-        btn.innerHTML='<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 4v4H4m16-4v4h-4M8 20v-4H4m16 4v-4h-4"/></svg> 退出全屏';
-    }else{
-        btn.innerHTML='<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/></svg> 全屏查看';
-    }
+    btn.textContent=stack.classList.contains("fullscreen")?"退出全屏":"全屏查看";
 }
 </script>
 

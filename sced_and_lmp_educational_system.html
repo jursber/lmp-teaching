@@ -187,7 +187,10 @@
         .ai-panel{position:relative}
         #ai_body{flex:1;min-height:0;display:flex;flex-direction:column}
         #ai_messages{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px}
-        .ai-msg{margin-bottom:10px;max-width:92%;font-size:14px;line-height:1.7;word-break:break-word}
+        .ai-msg{margin-bottom:10px;max-width:92%;font-size:14px;line-height:1.7;word-break:break-word;overflow-wrap:anywhere}
+        #ai_messages .katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden;text-align:initial;padding:2px 1px 6px;margin:.5em 0}
+        #ai_messages .katex-display::-webkit-scrollbar{height:6px}
+        #ai_messages .katex-display::-webkit-scrollbar-thumb{background:var(--divider);border-radius:3px}
         .ai-msg.user{
             margin-left:auto;padding:8px 12px;border-radius:8px;
             background:var(--primary-light);color:var(--ink);font-weight:500;
@@ -807,21 +810,25 @@ async function sendAiMessage(){
     saveAiSettings();addMsg("user",q);document.getElementById("ai_input").value="";document.getElementById("ai_send_btn").disabled=true;
     const box=document.getElementById("ai_messages"),msgDiv=document.createElement("div");msgDiv.className="ai-msg assistant";msgDiv.innerHTML='<span class="ai-cursor">▊</span>';box.appendChild(msgDiv);box.scrollTop=box.scrollHeight;
     const ctx=buildCtx();
-    const msgs=[{role:"system",content:"你是电力市场 SCED/LMP 教学助教。必须只基于 teachingContext 回答。全程中文，不能编造数值；涉及成本、潮流、PTDF、LMP 时必须引用当前上下文。"},{role:"system",content:"当前页面计算状态：\n```json\n"+JSON.stringify(ctx,null,2)+"\n```"},...aiChatHistory.slice(-AI_MAX*2),{role:"user",content:q}];
+    const msgs=[{role:"system",content:"你是电力市场 SCED/LMP 教学助教。必须只基于 teachingContext 回答。全程中文，不能编造数值；涉及成本、潮流、PTDF、LMP 时必须引用当前上下文。\n\n【数学公式排版规则，必须严格遵守，否则无法被前端渲染】\n1. 行内公式用 $...$ 或 \\(...\\)；块级公式用 $$...$$ 或 \\[...\\]。\n2. 每个公式必须完整写在同一行内；需要多行对齐时用 \\\\ 作为换行，绝不要在分隔符内部敲真正的回车换行。\n3. 不要把公式放进反引号或代码块（` 与 ``` 之内不会被渲染）。\n4. 表示金额时美元符号必须写成 \\$（例如 \\$50/MWh），以免与公式分隔符冲突。\n5. aligned、cases、matrix 等环境必须包在 $$...$$ 或 \\[...\\] 内，不要裸写 \\begin{...}。"},{role:"system",content:"当前页面计算状态：\n```json\n"+JSON.stringify(ctx,null,2)+"\n```"},...aiChatHistory.slice(-AI_MAX*2),{role:"user",content:q}];
     try{
         aiAbortController=new AbortController();
         const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({baseUrl:bu,apiKey:ak,model:md,messages:msgs,temperature:tp,stream:true}),signal:aiAbortController.signal});
         if(!r.ok){const e=await r.json().catch(()=>({}));msgDiv.innerHTML=e.error||r.statusText;msgDiv.classList.add("error");return;}
         const ct=r.headers.get("content-type")||"";
-        if(!ct.includes("text/event-stream")){const d=await r.json();const fullText=d.choices?.[0]?.message?.content||"（模型未返回内容）";msgDiv.innerHTML=renderMarkdown(fullText);aiChatHistory.push({role:"user",content:q},{role:"assistant",content:fullText});if(aiChatHistory.length>AI_MAX*2)aiChatHistory=aiChatHistory.slice(-AI_MAX*2);return;}
+        if(!ct.includes("text/event-stream")){const d=await r.json();const fullText=d.choices?.[0]?.message?.content||"（模型未返回内容）";msgDiv.innerHTML=renderMarkdown(fullText);renderKaTeX(msgDiv);aiChatHistory.push({role:"user",content:q},{role:"assistant",content:fullText});if(aiChatHistory.length>AI_MAX*2)aiChatHistory=aiChatHistory.slice(-AI_MAX*2);return;}
         const reader=r.body.getReader(),decoder=new TextDecoder();let fullText="",buffer="";
-        while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split("\n");buffer=lines.pop()||"";for(const line of lines){if(!line.startsWith("data: "))continue;const data=line.slice(6).trim();if(data==="[DONE]")continue;try{const parsed=JSON.parse(data);const token=parsed.choices?.[0]?.delta?.content;if(token){fullText+=token;msgDiv.innerHTML=renderMarkdown(fullText);renderKaTeX(msgDiv);box.scrollTop=box.scrollHeight;}}catch(e){}}}
-        if(!fullText)msgDiv.innerHTML="（模型未返回内容）";else msgDiv.innerHTML=renderMarkdown(fullText);
+        const RENDER_INTERVAL=60;let lastRender=0;
+        const paint=(streaming)=>{msgDiv.innerHTML=renderMarkdown(fullText)+(streaming?'<span class="ai-cursor">▊</span>':"");if(!streaming||texBalanced(fullText))renderKaTeX(msgDiv);box.scrollTop=box.scrollHeight;};
+        while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split("\n");buffer=lines.pop()||"";for(const line of lines){if(!line.startsWith("data: "))continue;const data=line.slice(6).trim();if(data==="[DONE]")continue;try{const parsed=JSON.parse(data);const token=parsed.choices?.[0]?.delta?.content;if(token){fullText+=token;const now=Date.now();if(now-lastRender>=RENDER_INTERVAL){lastRender=now;paint(true);}}}catch(e){}}}
+        if(!fullText)msgDiv.innerHTML="（模型未返回内容）";else paint(false);
         aiChatHistory.push({role:"user",content:q},{role:"assistant",content:fullText});if(aiChatHistory.length>AI_MAX*2)aiChatHistory=aiChatHistory.slice(-AI_MAX*2);
     }catch(e){if(e.name!=="AbortError"){msgDiv.innerHTML="请求失败："+e.message;msgDiv.classList.add("error");}}finally{aiAbortController=null;document.getElementById("ai_send_btn").disabled=false;}
 }
 
-function renderMarkdown(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");}
+function escHtml(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function mdProse(t){return escHtml(t).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");}
+function renderMarkdown(text){const re=/(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|(?<!\\)\$[^$\n]*?\$)/g;let out="",last=0,m;while((m=re.exec(text))){out+=mdProse(text.slice(last,m.index));out+=escHtml(m[0]);last=m.index+m[0].length;}out+=mdProse(text.slice(last));return out;}
 
 document.getElementById("ai_input").addEventListener("keydown",e=>{if(e.key==="Enter")sendAiMessage();});
 document.querySelectorAll("#ai_base_url,#ai_api_key,#ai_model,#ai_temp,#ai_remember_key").forEach(el=>el.addEventListener("change",updStatus));
@@ -829,7 +836,8 @@ document.querySelectorAll("#ai_base_url,#ai_api_key,#ai_model,#ai_temp,#ai_remem
 function tex(s){try{return katex.renderToString(s,{throwOnError:false,displayMode:false})}catch(e){return s}}
 function texD(s){try{return katex.renderToString(s,{throwOnError:false,displayMode:true})}catch(e){return '<div>'+s+'</div>'}}
 function switchTab(n){document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",i===n));document.querySelectorAll(".tab-content").forEach((c,i)=>c.classList.toggle("active",i===n));}
-function renderKaTeX(el){try{if(typeof renderMathInElement==='function'){renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false,trust:true,strict:false});}}catch(e){console.warn("KaTeX render error:",e);}}
+function renderKaTeX(el){try{if(typeof renderMathInElement==='function'){renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"\\[",right:"\\]",display:true},{left:"$",right:"$",display:false},{left:"\\(",right:"\\)",display:false}],throwOnError:false,trust:true,strict:false});}}catch(e){console.warn("KaTeX render error:",e);}}
+function texBalanced(s){let i=0,n=s.length,m=null;while(i<n){const t=s.slice(i,i+2);if(m===null){if(t==="\\["){m="b";i+=2;continue;}if(t==="\\("){m="p";i+=2;continue;}if(t==="$$"){m="d";i+=2;continue;}if(s[i]==="$"){m="i";i++;continue;}if(s[i]==="\\"){i+=2;continue;}i++;}else if(m==="b"){if(t==="\\]"){m=null;i+=2;continue;}if(s[i]==="\\"){i+=2;continue;}i++;}else if(m==="p"){if(t==="\\)"){m=null;i+=2;continue;}if(s[i]==="\\"){i+=2;continue;}i++;}else if(m==="d"){if(t==="$$"){m=null;i+=2;continue;}if(s[i]==="\\"){i+=2;continue;}i++;}else{if(s[i]==="$"){m=null;i++;continue;}if(s[i]==="\\"){i+=2;continue;}i++;}}return m===null;}
 
 function renderAllTabs(r){
     if(!r||r.error)return;

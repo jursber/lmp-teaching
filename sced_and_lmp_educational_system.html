@@ -166,7 +166,7 @@
         .kpi:not(:last-child){border-right:1px solid var(--divider)}
         .kpi-label{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
         .kpi-val{font-size:20px;font-weight:700;margin-top:4px;color:var(--ink);font-family:var(--mono)}
-        .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
         .data-section-title{color:var(--muted);font-size:11px;font-weight:600;margin-bottom:6px;letter-spacing:.03em;text-transform:uppercase}
         .lmp-row{
             display:flex;justify-content:space-between;align-items:center;
@@ -545,7 +545,7 @@
 const scenarios = {
     base:       {max_g1:100,price_g1:15, max_g2:80,price_g2:30, max_g3:60,price_g3:50, load_a:10,load_b:50,load_c:40, limit_ab:100,limit_bc:100,limit_ac:100, x_ab:1,x_bc:1,x_ac:1},
     congestion: {max_g1:100,price_g1:15, max_g2:80,price_g2:30, max_g3:60,price_g3:50, load_a:10,load_b:80,load_c:10, limit_ab:20,limit_bc:100,limit_ac:100, x_ab:1,x_bc:1,x_ac:1},
-    negative:   {max_g1:100,price_g1:10, max_g2:80,price_g2:150,max_g3:60,price_g3:50, load_a:0,load_b:90,load_c:0,  limit_ab:20,limit_bc:100,limit_ac:100, x_ab:0.5,x_bc:1,x_ac:1},
+    negative:   {max_g1:100,price_g1:10, max_g2:80,price_g2:150,max_g3:60,price_g3:50, load_a:4,load_b:88,load_c:0,  limit_ab:20,limit_bc:100,limit_ac:100, x_ab:0.5,x_bc:1,x_ac:1},
     surplus:    {max_g1:100,price_g1:10, max_g2:80,price_g2:40, max_g3:60,price_g3:100,load_a:5,load_b:65,load_c:30, limit_ab:15,limit_bc:50,limit_ac:50,  x_ab:1,x_bc:1,x_ac:1}
 };
 
@@ -564,9 +564,9 @@ const scenarioExplanations = {
     },
     negative: {
         badge: "3. 节点负电价奇观",
-        border: "<b>物理形态：</b>通道 AB 极度受限（仅 20 MW），且节点 B 正发生 90 MW 的极端重负荷。同时，发电机报价梯级拉开（G1=10元，中等的G3=50元，本地高昂的G2=150元）。",
-        dispatch: "<b>出清机制：</b>为了满足节点 B 的负荷并避免极其昂贵的本地 G2（150元）大面积出力，系统极力想要增加节点 A 的低成本 G1 出力。但受制于 Line AB 20 MW 阻塞限制，G1 增发受限。此时，如果节点 A 新增 1 MW 用电需求（负荷），这 1 MW 注入会有 1/3 的电力分流并倒灌 Line AB，这反而拓宽了 Line AB 上的安全裕度，使得 G1 能多发，从而减少了 G2 的购买开销。",
-        pricing: "<b>电价本质：</b>因基尔霍夫物理定律的分流作用，节点 A 的负荷每增加 1 MW，全网总采购成本反而减少了 50 元。这种「负电能增量成本」直接导致了<b>节点 A 电价坠入 -50.00 元/MWh 的负值！</b> 它是电网拓扑阻抗作用下最奇特、最严密的市场奇观。"
+        border: "<b>物理形态：</b>通道 AB 极度受限（仅 20 MW），节点 B 爆发 88 MW 重负荷。节点 A 有 4 MW 本地负荷但<b>廉价 G1 出力为零</b>——因为 AB 阻塞反向制约了 G1 的上送空间。发电机报价梯级拉开（G1=10元，G3=50元，G2=150元）。",
+        dispatch: "<b>出清机制：</b>节点 A 虽有 4 MW 负荷，但廉价 G1（10元/MWh）出力被 SCED 直接置零。因为 AB 线仅 20 MW，潮流耦合关系使得 G1 每增发 1 MW 反而会挤占 AB 通道，迫使更昂贵的 G2（150元）增加出力——违反经济调度原则。实际出清为 G1=0、G2=28、G3=58 MW。关键在于：节点 A 每增加 1 MW 负荷，通过基尔霍夫分流缓解 AB 阻塞，使得廉价 G3 可替代昂贵 G2，总成本反降 50 元。",
+        pricing: "<b>电价本质：</b>基尔霍夫定律的分流作用下，A 节点负荷增量反向缓解阻塞，全网总成本每 MW 降低 50 元。<b>节点 A 的 LMP 坠入 -50.00 元/MWh 负值。</b>此场景证明：<b>负电价≠零出力+零负荷的巧合</b>，而是电网拓扑阻抗与阻塞经济学的必然产物。"
     },
     surplus: {
         badge: "4. 高额阻塞盈余",
@@ -577,6 +577,7 @@ const scenarioExplanations = {
 };
 
 let currentActiveScenario = "base";
+let currentResult = null;
 let aiChatHistory = [];
 let aiAbortController = null;
 const AI_MAX = 8;
@@ -762,6 +763,7 @@ function runSCED() {
     updateFlowLine("flow_ab_path","flow_txt_ab",flow_ab,FAB_max,440,65,690,375,"arrow_ab");
     updateFlowLine("flow_bc_path","flow_txt_bc",flow_bc,FBC_max,690,375,190,375,"arrow_bc");
     updateFlowLine("flow_ca_path","flow_txt_ac",-flow_ac,FAC_max,190,375,440,65,"arrow_ac");
+    currentResult = result;
     try{renderAllTabs(result);}catch(e){console.warn("Tab render error:",e);}
 }
 
@@ -801,7 +803,37 @@ function toggleAiSettings(){document.getElementById("ai_settings").classList.tog
 function loadAiSettings(){const s=JSON.parse(sessionStorage.getItem("ai_s")||localStorage.getItem("ai_s")||"null");if(s){if(s.bu)ai_base_url.value=s.bu;if(s.md)ai_model.value=s.md;if(s.tp!==undefined)ai_temp.value=s.tp;if(s.rk)ai_remember_key.value="1";}const k=sessionStorage.getItem("ai_k")||localStorage.getItem("ai_k");if(k)ai_api_key.value=k;updStatus();}
 function saveAiSettings(){const p=JSON.stringify({bu:ai_base_url.value.trim(),md:ai_model.value.trim(),tp:+ai_temp.value||.2,rk:ai_remember_key.value==="1"});if(ai_remember_key.value==="1"){localStorage.setItem("ai_s",p);localStorage.setItem("ai_k",ai_api_key.value.trim());}else{sessionStorage.setItem("ai_s",p);sessionStorage.setItem("ai_k",ai_api_key.value.trim());localStorage.removeItem("ai_s");localStorage.removeItem("ai_k");}updStatus();}
 function updStatus(){const k=ai_api_key.value.trim(),u=ai_base_url.value.trim();document.getElementById("ai_dot").className=k&&u?"dot ok":"dot";document.getElementById("ai_stxt").textContent=k&&u?"已配置 · "+(ai_model.value.trim()||"deepseek-chat"):"未配置";}
-function buildCtx(){return{scenario:currentActiveScenario,generators:[{name:"G1",node:"A",price:+price_g1.value,max:+max_g1.value},{name:"G2",node:"B",price:+price_g2.value,max:+max_g2.value},{name:"G3",node:"C",price:+price_g3.value,max:+max_g3.value}],loads:{A:+load_a.value,B:+load_b.value,C:+load_c.value},lines:[{name:"AB",limit:+limit_ab.value,reactance:+x_ab.value},{name:"BC",limit:+limit_bc.value,reactance:+x_bc.value},{name:"AC",limit:+limit_ac.value,reactance:+x_ac.value}],explanation:scenarioExplanations[currentActiveScenario]};}
+function buildCtx(){
+    const ctx = {
+        scenario: currentActiveScenario,
+        generators: [
+            {name:"G1",node:"A",price:+price_g1.value,max:+max_g1.value},
+            {name:"G2",node:"B",price:+price_g2.value,max:+max_g2.value},
+            {name:"G3",node:"C",price:+price_g3.value,max:+max_g3.value}
+        ],
+        loads: {A:+load_a.value,B:+load_b.value,C:+load_c.value},
+        lines: [
+            {name:"AB",limit:+limit_ab.value,reactance:+x_ab.value},
+            {name:"BC",limit:+limit_bc.value,reactance:+x_bc.value},
+            {name:"AC",limit:+limit_ac.value,reactance:+x_ac.value}
+        ],
+        explanation: scenarioExplanations[currentActiveScenario]
+    };
+    if (currentResult && !currentResult.error) {
+        const sol = currentResult.base, gaMax = +max_g1.value, gbMax = +max_g2.value, gcMax = +max_g3.value;
+        ctx.dispatch = {
+            generators: [
+                {name:"G1", node:"A", output: +sol.GA.toFixed(2), capacity: gaMax, price: +price_g1.value, revenue: +(sol.GA * currentResult.lmpA).toFixed(2)},
+                {name:"G2", node:"B", output: +sol.GB.toFixed(2), capacity: gbMax, price: +price_g2.value, revenue: +(sol.GB * currentResult.lmpB).toFixed(2)},
+                {name:"G3", node:"C", output: +sol.GC.toFixed(2), capacity: gcMax, price: +price_g3.value, revenue: +(sol.GC * currentResult.lmpC).toFixed(2)}
+            ],
+            lmp: {A: +currentResult.lmpA.toFixed(2), B: +currentResult.lmpB.toFixed(2), C: +currentResult.lmpC.toFixed(2)},
+            totalCost: +sol.cost.toFixed(2),
+            marginalUnit: sol.GA > 0 && sol.GA < gaMax ? "G1" : (sol.GB > 0 && sol.GB < gbMax ? "G2" : "G3")
+        };
+    }
+    return ctx;
+}
 
 async function sendAiMessage(){
     const q=document.getElementById("ai_input").value.trim();if(!q)return;
@@ -869,7 +901,12 @@ function renderTab0(r){
     <table class="gen-tbl"><tr><th>机组</th><th>出力</th><th>电价/收益</th></tr>
     <tr><td style="color:var(--success);font-weight:600">G1</td><td>${sol.GA.toFixed(1)}</td><td>${lA.toFixed(1)} / ${(sol.GA*lA).toFixed(1)}</td></tr>
     <tr><td style="color:var(--warning);font-weight:600">G2</td><td>${sol.GB.toFixed(1)}</td><td>${lB.toFixed(1)} / ${(sol.GB*lB).toFixed(1)}</td></tr>
-    <tr><td style="color:var(--error);font-weight:600">G3</td><td>${sol.GC.toFixed(1)}</td><td>${lC.toFixed(1)} / ${(sol.GC*lC).toFixed(1)}</td></tr></table></div></div>`;
+    <tr><td style="color:var(--error);font-weight:600">G3</td><td>${sol.GC.toFixed(1)}</td><td>${lC.toFixed(1)} / ${(sol.GC*lC).toFixed(1)}</td></tr></table></div>
+    <div class="data-section"><div class="data-section-title">负荷结算</div>
+    <table class="gen-tbl"><tr><th>节点</th><th>负荷</th><th>LMP / 支出</th></tr>
+    <tr><td style="font-weight:600">A</td><td>${LA.toFixed(0)} MW</td><td>${lA.toFixed(1)} / ${(LA*lA).toFixed(1)}</td></tr>
+    <tr><td style="font-weight:600">B</td><td>${LB.toFixed(0)} MW</td><td>${lB.toFixed(1)} / ${(LB*lB).toFixed(1)}</td></tr>
+    <tr><td style="font-weight:600">C</td><td>${LC.toFixed(0)} MW</td><td>${lC.toFixed(1)} / ${(LC*lC).toFixed(1)}</td></tr></table></div></div>`;
 }
 
 /* Tab 1: 潮流计算推导 */
